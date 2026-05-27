@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediAgenda — Painel do Paciente</title>
+  <meta name="description" content="Painel do paciente MediAgenda — gerencie as suas consultas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="./styles.css" rel="stylesheet">
+  <link href="./custom-styles.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<div class="min-h-screen bg-gray-50 flex">
+
+  <!-- ===== SIDEBAR OVERLAY (mobile) ===== -->
+  <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/40 z-40 lg:hidden" onclick="closeSidebar()"></div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 z-50 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
+    <!-- Sidebar header -->
+    <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#C0152B"/>
+          <path d="M16 7v18M7 16h18" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <p class="font-bold text-gray-900 text-sm leading-tight">MediAgenda</p>
+          <p class="text-[10px] text-[#C0152B] font-medium uppercase tracking-widest">Hospital Público</p>
+        </div>
+      </a>
+      <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Patient info -->
+    <div class="p-5 border-b border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#C0152B] to-[#8B0D1E] flex items-center justify-center text-white font-bold text-sm shrink-0">
+          AB
+        </div>
+        <div class="min-w-0">
+          <p class="font-semibold text-gray-900 text-sm truncate">Ana Beatriz Sousa</p>
+          <p class="text-xs text-gray-500 truncate">SNS: 987 654 321</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 p-4 space-y-1">
+      <button onclick="setTab('overview')" id="nav-overview"
+        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 bg-red-50 text-[#C0152B]">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Visão Geral
+      </button>
+      <button onclick="setTab('upcoming')" id="nav-upcoming"
+        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Próximas Consultas
+      </button>
+      <button onclick="setTab('history')" id="nav-history"
+        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+        Histórico
+      </button>
+    </nav>
+
+    <!-- Sidebar footer -->
+    <div class="p-4 border-t border-gray-100 space-y-1">
+      <a href="index.html"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#C0152B] hover:bg-[#a01224] transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        Nova Consulta
+      </a>
+      <a href="#"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Top bar -->
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-30">
+      <div class="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          </button>
+          <div>
+            <h1 id="page-title" class="font-bold text-gray-900 text-base leading-tight">Visão Geral</h1>
+            <p class="text-xs text-gray-500 hidden sm:block">Bem-vinda, Ana Beatriz</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#C0152B] rounded-full"></span>
+          </button>
+          <a href="index.html"
+            class="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#C0152B] rounded-lg hover:bg-[#a01224] transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            Nova Consulta
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="flex-1 p-4 sm:p-6 overflow-auto">
+
+      <!-- ===== OVERVIEW TAB ===== -->
+      <div id="tab-overview" class="tab-content active space-y-6 animate-fade-in">
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div class="bg-white rounded-2xl p-4 card-shadow">
+            <div class="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center mb-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900">5</p>
+            <p class="text-xs text-gray-500 mt-0.5">Total de Consultas</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 card-shadow">
+            <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900">2</p>
+            <p class="text-xs text-gray-500 mt-0.5">Realizadas</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 card-shadow">
+            <div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center mb-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900">2</p>
+            <p class="text-xs text-gray-500 mt-0.5">Agendadas</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 card-shadow">
+            <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center mb-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900">1</p>
+            <p class="text-xs text-gray-500 mt-0.5">Canceladas</p>
+          </div>
+        </div>
+
+        <!-- Next appointment highlight -->
+        <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+          <div class="gradient-primary px-5 py-4">
+            <p class="text-red-200 text-xs font-semibold uppercase tracking-widest mb-1">Próxima Consulta</p>
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-white text-xl font-extrabold">❤️ Cardiologia</p>
+                <p class="text-red-200 text-sm mt-0.5">Dr. Manuel Ferreira</p>
+              </div>
+              <div class="text-right shrink-0">
+                <p class="text-white font-black text-2xl font-tabular">10:30</p>
+                <p class="text-red-200 text-xs">28 Mar 2026</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Hospital Público Central · Piso 3 · Balcão 3B</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                Confirmada
+              </span>
+              <button onclick="setTab('upcoming')" class="flex items-center gap-1 text-xs font-semibold text-[#C0152B] hover:underline">
+                Ver detalhes
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent appointments -->
+        <div class="bg-white rounded-2xl card-shadow">
+          <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="font-bold text-gray-900 text-sm">Consultas Recentes</h2>
+            <button onclick="setTab('history')" class="text-xs font-semibold text-[#C0152B] hover:underline flex items-center gap-1">
+              Ver histórico
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+          <div class="divide-y divide-gray-50" id="recent-appointments-list"></div>
+        </div>
+      </div>
+
+      <!-- ===== UPCOMING TAB ===== -->
+      <div id="tab-upcoming" class="tab-content space-y-4 animate-fade-in">
+        <div id="upcoming-list"></div>
+      </div>
+
+      <!-- ===== HISTORY TAB ===== -->
+      <div id="tab-history" class="tab-content space-y-4 animate-fade-in">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-sm text-gray-500 font-medium" id="history-count"></span>
+        </div>
+        <div id="history-list"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const appointments = [
+  { id: 'AGD-2026-00847', specialty: 'Cardiologia', specialtyEmoji: '❤️', doctor: 'Dr. Manuel Ferreira', date: '2026-03-28', time: '10:30', location: 'Piso 3 · Balcão 3B', status: 'confirmed', notes: 'Trazer resultados de análises anteriores' },
+  { id: 'AGD-2026-00712', specialty: 'Ortopedia', specialtyEmoji: '🦴', doctor: 'Dra. Sofia Mendes', date: '2026-04-05', time: '14:00', location: 'Piso 2 · Balcão 2A', status: 'pending' },
+  { id: 'AGD-2026-00634', specialty: 'Dermatologia', specialtyEmoji: '🩺', doctor: 'Dr. Carlos Neves', date: '2026-02-14', time: '09:00', location: 'Piso 1 · Balcão 1C', status: 'completed', notes: 'Consulta de rotina realizada com sucesso' },
+  { id: 'AGD-2026-00521', specialty: 'Neurologia', specialtyEmoji: '🧠', doctor: 'Dra. Ana Costa', date: '2026-01-20', time: '11:30', location: 'Piso 4 · Balcão 4A', status: 'completed' },
+  { id: 'AGD-2026-00489', specialty: 'Oftalmologia', specialtyEmoji: '👁️', doctor: 'Dr. Pedro Alves', date: '2026-01-08', time: '16:00', location: 'Piso 1 · Balcão 1A', status: 'cancelled', notes: 'Cancelado pelo paciente' },
+];
+
+const statusConfig = {
+  confirmed: { label: 'Confirmada', color: 'bg-green-100 text-green-700', dot: 'bg-green-500', iconPath: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+  completed:  { label: 'Realizada',  color: 'bg-blue-100 text-blue-700',  dot: 'bg-blue-500',  iconPath: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+  cancelled:  { label: 'Cancelada',  color: 'bg-red-100 text-red-700',    dot: 'bg-red-400',   iconPath: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>' },
+  pending:    { label: 'Pendente',   color: 'bg-amber-100 text-amber-700',dot: 'bg-amber-500', iconPath: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' },
+};
+
+// ===== HELPERS =====
+function formatDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return `${d} ${months[m-1]} ${y}`;
+}
+
+function formatDateFull(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const days = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const date = new Date(y, m-1, d);
+  return `${days[date.getDay()]}, ${d} de ${months[m-1]} de ${y}`;
+}
+
+// ===== SIDEBAR =====
+function openSidebar() {
+  document.getElementById('sidebar').classList.remove('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.remove('hidden');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.add('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.add('hidden');
+}
+
+// ===== TABS =====
+const TAB_TITLES = { overview: 'Visão Geral', upcoming: 'Próximas Consultas', history: 'Histórico de Consultas' };
+const NAV_IDS = ['overview', 'upcoming', 'history'];
+
+function setTab(tab) {
+  // Hide all tab content
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+
+  // Update nav styles
+  NAV_IDS.forEach(id => {
+    const btn = document.getElementById(`nav-${id}`);
+    if (id === tab) {
+      btn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 bg-red-50 text-[#C0152B]';
+    } else {
+      btn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900';
+    }
+  });
+
+  document.getElementById('page-title').textContent = TAB_TITLES[tab];
+  closeSidebar();
+}
+
+// ===== RENDER APPOINTMENT ROW (overview list) =====
+function renderAppointmentRow(apt) {
+  const cfg = statusConfig[apt.status];
+  return `
+    <div class="px-5 py-3.5 flex items-center gap-3 hover:bg-gray-50 transition-colors">
+      <div class="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">${apt.specialtyEmoji}</div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-900 truncate">${apt.specialty}</p>
+        <p class="text-xs text-gray-500 truncate">${apt.doctor}</p>
+      </div>
+      <div class="text-right shrink-0">
+        <p class="text-xs font-semibold text-gray-700">${formatDate(apt.date)}</p>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${cfg.color}">
+          <span class="w-1.5 h-1.5 rounded-full ${cfg.dot}"></span>
+          ${cfg.label}
+        </span>
+      </div>
+    </div>`;
+}
+
+// ===== RENDER APPOINTMENT CARD (upcoming/history) =====
+function renderAppointmentCard(apt, showDownload) {
+  const cfg = statusConfig[apt.status];
+  const notesHtml = apt.notes
+    ? `<div class="mt-3 bg-gray-50 rounded-xl px-3 py-2"><p class="text-xs text-gray-500">${apt.notes}</p></div>`
+    : '';
+  const downloadBtn = (showDownload && apt.status === 'completed')
+    ? `<button class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#C0152B] border border-[#C0152B]/30 rounded-lg hover:bg-red-50 transition-colors">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Comprovativo
+       </button>`
+    : '';
+  const cancelBtn = (apt.status === 'confirmed' || apt.status === 'pending')
+    ? `<button class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+        Cancelar
+       </button>`
+    : '';
+
+  return `
+    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+      <div class="p-4 sm:p-5">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-2xl shrink-0">${apt.specialtyEmoji}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2 flex-wrap">
+              <div>
+                <p class="font-bold text-gray-900">${apt.specialty}</p>
+                <p class="text-sm text-gray-600">${apt.doctor}</p>
+              </div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${cfg.color}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cfg.iconPath}</svg>
+                ${cfg.label}
+              </span>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div class="flex items-center gap-2 text-sm text-gray-600">
+                <svg class="shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>${formatDateFull(apt.date)}</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-gray-600">
+                <svg class="shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span class="font-semibold font-tabular">${apt.time}</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-gray-600">
+                <svg class="shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="truncate">${apt.location}</span>
+              </div>
+            </div>
+
+            ${notesHtml}
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-2 flex-wrap">
+          <p class="text-xs text-gray-400 font-tabular">#${apt.id}</p>
+          <div class="flex items-center gap-2">
+            ${downloadBtn}
+            ${cancelBtn}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ===== EMPTY STATE =====
+function renderEmptyState(iconPath, title, description, actionHref, actionLabel) {
+  const actionHtml = actionHref
+    ? `<a href="${actionHref}" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        ${actionLabel}
+       </a>`
+    : '';
+  return `
+    <div class="bg-white rounded-2xl card-shadow p-12 text-center">
+      <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${iconPath}</svg>
+      </div>
+      <h3 class="font-bold text-gray-900 mb-2">${title}</h3>
+      <p class="text-sm text-gray-500 mb-6 max-w-xs mx-auto">${description}</p>
+      ${actionHtml}
+    </div>`;
+}
+
+// ===== INIT RENDER =====
+function render() {
+  const upcoming = appointments.filter(a => a.status === 'confirmed' || a.status === 'pending');
+  const history  = appointments.filter(a => a.status === 'completed' || a.status === 'cancelled');
+
+  // Recent appointments (overview — first 4)
+  const recentList = document.getElementById('recent-appointments-list');
+  recentList.innerHTML = appointments.slice(0, 4).map(a => renderAppointmentRow(a)).join('');
+
+  // Upcoming tab
+  const upcomingList = document.getElementById('upcoming-list');
+  if (upcoming.length === 0) {
+    upcomingList.innerHTML = renderEmptyState(
+      '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+      'Sem consultas agendadas',
+      'Não tem consultas futuras. Agende uma nova consulta agora.',
+      'index.html',
+      'Agendar Consulta'
+    );
+  } else {
+    upcomingList.innerHTML = `<div class="space-y-4">${upcoming.map(a => renderAppointmentCard(a, false)).join('')}</div>`;
+  }
+
+  // History tab
+  document.getElementById('history-count').textContent = `${history.length} consultas no histórico`;
+  const historyList = document.getElementById('history-list');
+  if (history.length === 0) {
+    historyList.innerHTML = renderEmptyState(
+      '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+      'Histórico vazio',
+      'Ainda não tem consultas realizadas ou canceladas.'
+    );
+  } else {
+    historyList.innerHTML = `<div class="space-y-4">${history.map(a => renderAppointmentCard(a, true)).join('')}</div>`;
+  }
+}
+
+render();
+</script>
+</body>
+</html>

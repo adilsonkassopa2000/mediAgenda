@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediAgenda — Painel do Médico</title>
+  <meta name="description" content="Painel do médico — gerencie consultas, vagas e perfil." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="./styles.css" rel="stylesheet">
+  <link href="./custom-styles.css" rel="stylesheet">
+  <style>
+    /* Médico-specific overrides */
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- ============================================================
+     SIDEBAR OVERLAY (mobile)
+============================================================ -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 z-50 flex flex-col -translate-x-full lg:translate-x-0 lg:static lg:z-auto transition-transform duration-300">
+
+  <!-- Logo -->
+  <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#C0152B"/>
+        <path d="M16 7v18M7 16h18" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <p class="font-bold text-gray-900 text-sm leading-tight">MediAgenda</p>
+        <p class="text-[10px] text-[#C0152B] font-medium uppercase tracking-widest">Médico</p>
+      </div>
+    </a>
+    <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Doctor mini profile -->
+  <div class="p-5 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <div class="relative shrink-0">
+        <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+          <span id="sidebar-initials">MF</span>
+        </div>
+        <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
+      </div>
+      <div class="min-w-0">
+        <p class="font-semibold text-gray-900 text-sm truncate" id="sidebar-name">Dr. Manuel Ferreira</p>
+        <p class="text-xs text-gray-500" id="sidebar-specialty">❤️ Cardiologia</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="flex-1 p-4 space-y-1">
+    <button onclick="switchTab('dashboard')" data-tab="dashboard"
+      class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 bg-red-50 text-[#C0152B]">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </button>
+    <button onclick="switchTab('consultas')" data-tab="consultas"
+      class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Consultas
+    </button>
+    <button onclick="switchTab('vagas')" data-tab="vagas"
+      class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Adicionar Vaga
+    </button>
+    <button onclick="switchTab('perfil')" data-tab="perfil"
+      class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Perfil
+    </button>
+  </nav>
+
+  <!-- Logout -->
+  <div class="p-4 border-t border-gray-100">
+    <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </a>
+  </div>
+</aside>
+
+<!-- ============================================================
+     MAIN WRAPPER
+============================================================ -->
+<div class="w-full lg:ml-64 flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-30">
+    <div class="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        </button>
+        <h1 id="header-title" class="font-bold text-gray-900 text-base">Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-xs text-gray-500 hidden sm:block" id="header-date">26 de Março de 2026</div>
+        <div class="relative">
+          <button onclick="switchTab('perfil')" class="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-bold text-sm overflow-hidden shrink-0">
+            <span id="header-initials">MF</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main class="flex-1 p-4 sm:p-6 overflow-auto">
+
+    <!-- ===== DASHBOARD TAB ===== -->
+    <div id="tab-dashboard" class="tab-content active animate-fade-in">
+      <!-- Stats -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+        <div class="bg-white rounded-2xl p-4 card-shadow">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900 font-tabular">8</p>
+          <p class="text-xs text-gray-500 mt-0.5">Consultas Hoje</p>
+          <p class="text-[11px] text-gray-400 mt-1">3 realizadas</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 card-shadow">
+          <div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900 font-tabular">389</p>
+          <p class="text-xs text-gray-500 mt-0.5">Este Mês</p>
+          <p class="text-[11px] text-gray-400 mt-1">+12% vs anterior</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 card-shadow">
+          <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900">4.9</p>
+          <p class="text-xs text-gray-500 mt-0.5">Avaliação Média</p>
+          <p class="text-[11px] text-gray-400 mt-1">Baseado em 214 avaliações</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 card-shadow">
+          <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7e22ce" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900 font-tabular">1.247</p>
+          <p class="text-xs text-gray-500 mt-0.5">Total de Pacientes</p>
+          <p class="text-[11px] text-gray-400 mt-1">Histórico completo</p>
+        </div>
+      </div>
+
+      <!-- Chart + Next Appointment -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
+        <!-- Bar chart via canvas -->
+        <div class="lg:col-span-2 bg-white rounded-2xl card-shadow p-5">
+          <h2 class="font-bold text-gray-900 mb-1">Consultas por Mês</h2>
+          <p class="text-xs text-gray-500 mb-4">Realizadas e canceladas nos últimos 6 meses</p>
+          <div class="relative h-48" id="chart-container">
+            <!-- Simple SVG bar chart -->
+            <svg id="monthly-chart" viewBox="0 0 560 180" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+              <!-- Grid lines -->
+              <line x1="52" y1="10" x2="548" y2="10" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="52" y1="50" x2="548" y2="50" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="52" y1="90" x2="548" y2="90" stroke="#f0f0f0" stroke-width="1"/>
+              <line x1="52" y1="130" x2="548" y2="130" stroke="#f0f0f0" stroke-width="1"/>
+              <!-- Y labels -->
+              <text x="44" y="14" text-anchor="end" fill="#9ca3af" font-size="10">400</text>
+              <text x="44" y="54" text-anchor="end" fill="#9ca3af" font-size="10">300</text>
+              <text x="44" y="94" text-anchor="end" fill="#9ca3af" font-size="10">200</text>
+              <text x="44" y="134" text-anchor="end" fill="#9ca3af" font-size="10">100</text>
+              <!-- Bars group — each month: x spacing 82px, bar width 22 -->
+              <!-- Oct -->
+              <rect x="60" y="37.25" width="22" height="92.75" rx="4" fill="#C0152B"/>
+              <rect x="84" y="127.25" width="22" height="2.75" rx="4" fill="#fca5a5"/>
+              <text x="78" y="168" text-anchor="middle" fill="#9ca3af" font-size="11">Out</text>
+              <!-- Nov -->
+              <rect x="142" y="42.5" width="22" height="87.5" rx="4" fill="#C0152B"/>
+              <rect x="166" y="122.5" width="22" height="7.5" rx="4" fill="#fca5a5"/>
+              <text x="160" y="168" text-anchor="middle" fill="#9ca3af" font-size="11">Nov</text>
+              <!-- Dez -->
+              <rect x="224" y="53.75" width="22" height="76.25" rx="4" fill="#C0152B"/>
+              <rect x="248" y="124.5" width="22" height="5.5" rx="4" fill="#fca5a5"/>
+              <text x="242" y="168" text-anchor="middle" fill="#9ca3af" font-size="11">Dez</text>
+              <!-- Jan -->
+              <rect x="306" y="32" width="22" height="98" rx="4" fill="#C0152B"/>
+              <rect x="330" y="121.5" width="22" height="8.5" rx="4" fill="#fca5a5"/>
+              <text x="324" y="168" text-anchor="middle" fill="#9ca3af" font-size="11">Jan</text>
+              <!-- Fev -->
+              <rect x="388" y="20.25" width="22" height="109.75" rx="4" fill="#C0152B"/>
+              <rect x="412" y="120.75" width="22" height="9.25" rx="4" fill="#fca5a5"/>
+              <text x="406" y="168" text-anchor="middle" fill="#9ca3af" font-size="11">Fev</text>
+              <!-- Mar -->
+              <rect x="470" y="7.25" width="22" height="122.75" rx="4" fill="#C0152B"/>
+              <rect x="494" y="120.5" width="22" height="9.5" rx="4" fill="#fca5a5"/>
+              <text x="488" y="168" text-anchor="middle" fill="#9ca3af" font-size="11">Mar</text>
+              <!-- Legend -->
+              <rect x="52" y="178" width="12" height="8" rx="2" fill="#C0152B"/>
+              <text x="68" y="186" fill="#6b7280" font-size="10">Realizadas</text>
+              <rect x="130" y="178" width="12" height="8" rx="2" fill="#fca5a5"/>
+              <text x="146" y="186" fill="#6b7280" font-size="10">Canceladas</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Next appointment -->
+        <div class="bg-white rounded-2xl card-shadow p-5 flex flex-col">
+          <h2 class="font-bold text-gray-900 mb-1">Próxima Consulta</h2>
+          <p class="text-xs text-gray-500 mb-4">Agendada para hoje</p>
+          <div class="flex-1 flex flex-col gap-3">
+            <div class="gradient-primary rounded-xl p-4 text-white">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span class="text-xs font-semibold text-red-200">Em breve</span>
+              </div>
+              <p class="text-xl font-black font-tabular">10:30</p>
+              <p class="text-red-200 text-xs mt-0.5">Hoje, 26 de Março</p>
+              <div class="border-t border-red-400/30 mt-3 pt-3">
+                <p class="text-sm font-bold">Ana Beatriz Sousa</p>
+                <p class="text-xs text-red-200 mt-0.5">❤️ Cardiologia · Consulta de rotina</p>
+              </div>
+            </div>
+            <div class="space-y-2 mt-1">
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
+                <span class="text-xs text-gray-500">Nº SNS</span>
+                <span class="text-xs font-semibold text-gray-800 font-tabular">987 654 321</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
+                <span class="text-xs text-gray-500">Telemóvel</span>
+                <span class="text-xs font-semibold text-gray-800 font-tabular">912 345 678</span>
+              </div>
+            </div>
+            <button onclick="switchTab('consultas')" class="mt-auto w-full py-2.5 text-sm font-semibold text-[#C0152B] border border-red-200 rounded-xl hover:bg-red-50 transition-colors">
+              Ver todas as consultas
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's schedule -->
+      <div class="bg-white rounded-2xl card-shadow">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h2 class="font-bold text-gray-900 text-sm">Horário de Hoje</h2>
+            <p class="text-xs text-gray-500 mt-0.5">Quinta-feira, 26 de Março de 2026</p>
+          </div>
+          <button onclick="switchTab('consultas')" class="text-xs font-semibold text-[#C0152B] hover:underline">Ver tudo</button>
+        </div>
+        <div class="divide-y divide-gray-50" id="dashboard-schedule">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONSULTAS TAB ===== -->
+    <div id="tab-consultas" class="tab-content animate-fade-in">
+      <!-- Filter bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
+        <div class="relative flex-1 max-w-sm">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="consult-search" placeholder="Pesquisar paciente..." oninput="filterConsultas()"
+            class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button onclick="setStatusFilter('all')" data-filter="all" class="filter-btn px-3 py-2 text-xs font-semibold rounded-xl bg-[#C0152B] text-white transition-all">Todas</button>
+          <button onclick="setStatusFilter('confirmed')" data-filter="confirmed" class="filter-btn px-3 py-2 text-xs font-semibold rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">Confirmadas</button>
+          <button onclick="setStatusFilter('completed')" data-filter="completed" class="filter-btn px-3 py-2 text-xs font-semibold rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">Realizadas</button>
+          <button onclick="setStatusFilter('cancelled')" data-filter="cancelled" class="filter-btn px-3 py-2 text-xs font-semibold rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">Canceladas</button>
+          <button onclick="setStatusFilter('pending')" data-filter="pending" class="filter-btn px-3 py-2 text-xs font-semibold rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">Pendentes</button>
+        </div>
+      </div>
+
+      <!-- Consultas list -->
+      <div id="consultas-list" class="space-y-3">
+        <!-- Populated by JS -->
+      </div>
+      <div id="consultas-empty" class="hidden bg-white rounded-2xl card-shadow p-12 text-center">
+        <div class="text-5xl mb-4">🔍</div>
+        <p class="text-gray-500 text-sm">Nenhuma consulta encontrada</p>
+      </div>
+    </div>
+
+    <!-- ===== VAGAS TAB ===== -->
+    <div id="tab-vagas" class="tab-content animate-fade-in">
+      <div class="max-w-4xl">
+        <div class="mb-6">
+          <h2 class="text-xl font-extrabold text-gray-900">Adicionar Vaga</h2>
+          <p class="text-sm text-gray-500 mt-1">Selecione a data e defina os horários disponíveis para consultas.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+          <!-- Calendar -->
+          <div class="bg-white rounded-2xl border border-gray-100 card-shadow p-6">
+            <div class="flex items-center justify-between mb-5">
+              <button onclick="vagaPrevMonth()" class="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <h3 class="text-base font-bold text-gray-900" id="vaga-cal-month"></h3>
+              <button onclick="vagaNextMonth()" class="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+            <div class="grid grid-cols-7 mb-2" id="vaga-day-headers"></div>
+            <div class="grid grid-cols-7 gap-1" id="vaga-cal-grid"></div>
+            <div class="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
+              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-[#C0152B]"></div><span class="text-xs text-gray-500">Seleccionado</span></div>
+              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-green-100 border border-green-200"></div><span class="text-xs text-gray-500">Com vagas</span></div>
+              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-gray-100"></div><span class="text-xs text-gray-500">Passado</span></div>
+            </div>
+          </div>
+
+          <!-- Time slots panel -->
+          <div class="bg-white rounded-2xl border border-gray-100 card-shadow p-6">
+            <div class="flex items-center gap-2 mb-5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <h3 class="text-base font-bold text-gray-900" id="vaga-time-title">Selecione primeiro uma data</h3>
+            </div>
+
+            <!-- Empty state -->
+            <div id="vaga-time-empty" class="flex flex-col items-center justify-center py-12 text-center">
+              <div class="text-5xl mb-4">📅</div>
+              <p class="text-gray-500 font-medium">Selecione uma data no calendário</p>
+              <p class="text-sm text-gray-400 mt-1">Depois escolha os horários a disponibilizar</p>
+            </div>
+
+            <!-- Slots chooser -->
+            <div id="vaga-slots-container" class="hidden">
+              <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Manhã</p>
+              <div class="grid grid-cols-4 gap-2 mb-5" id="vaga-morning-slots"></div>
+              <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Tarde</p>
+              <div class="grid grid-cols-4 gap-2 mb-5" id="vaga-afternoon-slots"></div>
+
+              <div id="vaga-selected-summary" class="hidden p-3.5 bg-green-50 border border-green-200 rounded-xl animate-fade-in">
+                <p class="text-sm font-semibold text-green-800" id="vaga-summary-text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary strip -->
+        <div id="vaga-strip" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex flex-wrap items-center gap-4 animate-fade-in">
+          <div class="flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span class="text-sm font-semibold text-gray-800" id="vaga-strip-date"></span>
+          </div>
+          <div class="w-px h-5 bg-red-200"></div>
+          <span class="text-sm font-bold text-[#C0152B]" id="vaga-strip-slots"></span>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between mt-6">
+          <button onclick="clearVaga()" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-150">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+            Limpar
+          </button>
+          <button onclick="saveVaga()" id="btn-save-vaga" disabled
+            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 shadow-sm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Guardar Vagas
+          </button>
+        </div>
+
+        <!-- Saved vagas list -->
+        <div id="saved-vagas-section" class="mt-8 hidden">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-gray-900">Vagas Adicionadas</h3>
+            <span class="text-xs text-gray-500" id="saved-vagas-count"></span>
+          </div>
+          <div id="saved-vagas-list" class="space-y-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PERFIL TAB ===== -->
+    <div id="tab-perfil" class="tab-content animate-fade-in">
+      <div class="max-w-2xl">
+        <div class="mb-6">
+          <h2 class="text-xl font-extrabold text-gray-900">O Meu Perfil</h2>
+          <p class="text-sm text-gray-500 mt-1">Atualize os seus dados pessoais e profissionais.</p>
+        </div>
+
+        <!-- Avatar section -->
+        <div class="bg-white rounded-2xl card-shadow p-6 mb-5">
+          <h3 class="font-bold text-gray-900 text-sm mb-4">Foto de Perfil</h3>
+          <div class="flex items-center gap-5">
+            <div class="relative avatar-wrap shrink-0">
+              <div id="profile-avatar" class="w-20 h-20 rounded-2xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-bold text-2xl overflow-hidden">
+                <span id="profile-initials-display">MF</span>
+                <img id="profile-photo-img" src="" alt="" class="hidden w-full h-full object-cover absolute inset-0"/>
+              </div>
+              <label for="photo-upload" class="avatar-overlay absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center cursor-pointer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </label>
+              <input type="file" id="photo-upload" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)"/>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">Alterar foto</p>
+              <p class="text-xs text-gray-500 mt-1">JPG, PNG ou WebP. Máximo 2MB.</p>
+              <label for="photo-upload" class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#C0152B] border border-red-200 rounded-lg hover:bg-red-50 transition-colors cursor-pointer">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Carregar foto
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal data -->
+        <div class="bg-white rounded-2xl card-shadow p-6 mb-5">
+          <h3 class="font-bold text-gray-900 text-sm mb-5">Dados Pessoais</h3>
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
+                <input id="p-name" type="text" value="Dr. Manuel Ferreira"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+              </div>
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Ordem dos Médicos (CRM) <span class="text-red-500">*</span></label>
+                <input id="p-crm" type="text" value="45.821"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Telemóvel <span class="text-red-500">*</span></label>
+                <input id="p-phone" type="tel" value="963 210 987"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
+              </div>
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
+                <input id="p-email" type="email" value="m.ferreira@mediagenda.pt"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+              </div>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Especialidade</label>
+              <select id="p-specialty"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all">
+                <option value="cardiologia" selected>❤️ Cardiologia</option>
+                <option value="ortopedia">🦴 Ortopedia</option>
+                <option value="dermatologia">🩺 Dermatologia</option>
+                <option value="neurologia">🧠 Neurologia</option>
+                <option value="oftalmologia">👁️ Oftalmologia</option>
+                <option value="pediatria">👶 Pediatria</option>
+                <option value="medicina-geral">🏥 Medicina Geral e Familiar</option>
+                <option value="psiquiatria">🧬 Psiquiatria</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Biografia / Descrição</label>
+              <textarea id="p-bio" rows="3"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all resize-none">Especialista em Cardiologia com 15 anos de experiência. Formado pela Faculdade de Medicina da Universidade de Lisboa. Membro da Sociedade Portuguesa de Cardiologia.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="bg-white rounded-2xl card-shadow p-6 mb-5">
+          <h3 class="font-bold text-gray-900 text-sm mb-5">Segurança</h3>
+          <div class="space-y-4">
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Password Atual</label>
+              <input id="p-pwd-current" type="password" placeholder="••••••••"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Nova Password</label>
+                <input id="p-pwd-new" type="password" placeholder="••••••••"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+              </div>
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Confirmar Password</label>
+                <input id="p-pwd-confirm" type="password" placeholder="••••••••"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save button -->
+        <div class="flex justify-end">
+          <button onclick="saveProfile()"
+            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Guardar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ============================================================
+     MODAL: Ver Consulta
+============================================================ -->
+<div id="modal-view" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <div class="gradient-primary px-6 py-5 rounded-t-2xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-red-200 text-xs font-semibold uppercase tracking-widest mb-1">Detalhes da Consulta</p>
+          <p class="text-white font-bold text-lg" id="modal-appt-id"></p>
+        </div>
+        <button onclick="closeModal('modal-view')" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="p-6 space-y-4">
+      <div class="flex items-center gap-2" id="modal-status-badge"></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-[11px] text-gray-400 mb-1">Paciente</p>
+          <p class="text-sm font-semibold text-gray-800" id="modal-patient"></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-[11px] text-gray-400 mb-1">Nº SNS</p>
+          <p class="text-sm font-semibold text-gray-800 font-tabular" id="modal-sns"></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-[11px] text-gray-400 mb-1">Data</p>
+          <p class="text-sm font-semibold text-gray-800" id="modal-date"></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-[11px] text-gray-400 mb-1">Hora</p>
+          <p class="text-sm font-bold text-gray-800 font-tabular" id="modal-time"></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-[11px] text-gray-400 mb-1">Telemóvel</p>
+          <p class="text-sm font-semibold text-gray-800 font-tabular" id="modal-phone"></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-[11px] text-gray-400 mb-1">Especialidade</p>
+          <p class="text-sm font-semibold text-gray-800" id="modal-specialty"></p>
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-3">
+        <p class="text-[11px] text-gray-400 mb-1">Local</p>
+        <p class="text-sm font-semibold text-gray-800">Hospital Público Central</p>
+        <p class="text-xs text-gray-500">Av. Prof. Egas Moniz, 1649-035 Lisboa · Piso 3 · Balcão 3B</p>
+      </div>
+      <div class="flex gap-2 pt-2" id="modal-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: Cancelar Consulta
+============================================================ -->
+<div id="modal-cancel" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <div class="p-6">
+      <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <h3 class="text-center font-bold text-gray-900 text-lg mb-1">Cancelar Consulta</h3>
+      <p class="text-center text-sm text-gray-500 mb-5">Tem a certeza que deseja cancelar a consulta de <strong id="cancel-patient-name"></strong>?</p>
+      <div class="space-y-2 mb-5">
+        <label class="block text-sm font-semibold text-gray-700">Motivo do cancelamento <span class="text-red-500">*</span></label>
+        <select id="cancel-reason"
+          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all">
+          <option value="">Selecione um motivo...</option>
+          <option value="indisponibilidade">Indisponibilidade do médico</option>
+          <option value="urgencia">Emergência / Urgência</option>
+          <option value="pedido-paciente">Pedido do paciente</option>
+          <option value="reagendamento">Reagendamento</option>
+          <option value="outro">Outro motivo</option>
+        </select>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeModal('modal-cancel')" class="flex-1 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+          Manter Consulta
+        </button>
+        <button onclick="confirmCancel()" class="flex-1 py-3 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
+          Confirmar Cancelamento
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="flex items-center gap-3 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-xl text-sm font-medium">
+  <span id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+// ===== DATA =====
+const TODAY = new Date();
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+const STATUS_CONFIG = {
+  confirmed: { label: 'Confirmada', color: 'bg-green-100 text-green-700', dot: 'bg-green-500' },
+  completed:  { label: 'Realizada',  color: 'bg-blue-100 text-blue-700',  dot: 'bg-blue-500' },
+  cancelled:  { label: 'Cancelada',  color: 'bg-red-100 text-red-700',    dot: 'bg-red-400' },
+  pending:    { label: 'Pendente',   color: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500' },
+};
+
+const APPOINTMENTS = [
+  { id: 'AGD-2026-00841', patient: 'João Silva',         sns: '123 456 789', phone: '912 111 222', date: '2026-03-26', time: '08:00', specialty: '❤️ Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00842', patient: 'Maria Santos',       sns: '234 567 890', phone: '913 222 333', date: '2026-03-26', time: '09:00', specialty: '❤️ Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00843', patient: 'Ana Beatriz Sousa',  sns: '987 654 321', phone: '912 345 678', date: '2026-03-26', time: '10:30', specialty: '❤️ Cardiologia', status: 'confirmed' },
+  { id: 'AGD-2026-00844', patient: 'Pedro Rodrigues',    sns: '345 678 901', phone: '914 333 444', date: '2026-03-26', time: '11:00', specialty: '❤️ Cardiologia', status: 'confirmed' },
+  { id: 'AGD-2026-00845', patient: 'Carla Oliveira',     sns: '456 789 012', phone: '915 444 555', date: '2026-03-26', time: '14:00', specialty: '❤️ Cardiologia', status: 'pending' },
+  { id: 'AGD-2026-00846', patient: 'Rui Fernandes',      sns: '567 890 123', phone: '916 555 666', date: '2026-03-26', time: '15:30', specialty: '❤️ Cardiologia', status: 'pending' },
+  { id: 'AGD-2026-00831', patient: 'Luísa Cardoso',      sns: '678 901 234', phone: '917 666 777', date: '2026-03-25', time: '09:30', specialty: '❤️ Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00822', patient: 'António Soares',     sns: '789 012 345', phone: '918 777 888', date: '2026-03-24', time: '11:00', specialty: '❤️ Cardiologia', status: 'cancelled' },
+  { id: 'AGD-2026-00810', patient: 'Beatriz Lopes',      sns: '890 123 456', phone: '919 888 999', date: '2026-03-23', time: '14:30', specialty: '❤️ Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00805', patient: 'Carlos Mendes',      sns: '901 234 567', phone: '920 999 000', date: '2026-03-20', time: '10:00', specialty: '❤️ Cardiologia', status: 'cancelled' },
+];
+
+const ALL_SLOTS = [
+  '08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30',
+  '12:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00',
+];
+
+// ===== STATE =====
+let activeTab = 'dashboard';
+let consultaFilter = 'all';
+let vagaViewMonth = TODAY.getMonth();
+let vagaViewYear = TODAY.getFullYear();
+let vagaSelectedDate = '';
+let vagaSelectedSlots = new Set();
+let savedVagas = [];
+let cancelTargetId = null;
+let appointments = [...APPOINTMENTS];
+
+// ===== SIDEBAR =====
+function openSidebar() {
+  document.getElementById('sidebar').classList.remove('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.remove('hidden');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.add('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.add('hidden');
+}
+
+// ===== TAB SWITCHING =====
+const TAB_TITLES = {
+  dashboard: 'Dashboard',
+  consultas: 'Minhas Consultas',
+  vagas: 'Adicionar Vaga',
+  perfil: 'O Meu Perfil',
+};
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('header-title').textContent = TAB_TITLES[tab];
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    const isActive = btn.dataset.tab === tab;
+    btn.className = `nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+      isActive ? 'bg-red-50 text-[#C0152B]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+    }`;
+  });
+  closeSidebar();
+  if (tab === 'consultas') renderConsultas();
+  if (tab === 'vagas') initVagaCalendar();
+}
+
+// ===== TOAST =====
+function showToast(msg, success = true) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').innerHTML = success
+    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ===== MODALS =====
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+
+// ===== DASHBOARD: SCHEDULE =====
+function renderDashboardSchedule() {
+  const today = appointments.filter(a => a.date === '2026-03-26');
+  const container = document.getElementById('dashboard-schedule');
+  container.innerHTML = '';
+  today.slice(0, 4).forEach(a => {
+    const cfg = STATUS_CONFIG[a.status];
+    const row = document.createElement('div');
+    row.className = 'px-5 py-3.5 flex items-center gap-3 hover:bg-gray-50 transition-colors';
+    row.innerHTML = `
+      <div class="text-sm font-bold text-gray-700 font-tabular w-12 shrink-0">${a.time}</div>
+      <div class="w-2 h-2 rounded-full shrink-0 ${cfg.dot}"></div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-900 truncate">${a.patient}</p>
+        <p class="text-xs text-gray-500 truncate">${a.specialty}</p>
+      </div>
+      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${cfg.color}">${cfg.label}</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// ===== CONSULTAS =====
+function formatDatePT(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  return `${d} de ${MONTHS_PT[parseInt(m)-1]} de ${y}`;
+}
+
+function renderConsultas() {
+  const search = document.getElementById('consult-search').value.toLowerCase();
+  let filtered = appointments.filter(a => {
+    const matchSearch = a.patient.toLowerCase().includes(search) || a.id.toLowerCase().includes(search);
+    const matchFilter = consultaFilter === 'all' || a.status === consultaFilter;
+    return matchSearch && matchFilter;
+  });
+
+  const list = document.getElementById('consultas-list');
+  const empty = document.getElementById('consultas-empty');
+  list.innerHTML = '';
+
+  if (filtered.length === 0) {
+    list.classList.add('hidden');
+    empty.classList.remove('hidden');
+    return;
+  }
+  list.classList.remove('hidden');
+  empty.classList.add('hidden');
+
+  filtered.forEach(a => {
+    const cfg = STATUS_CONFIG[a.status];
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-2xl card-shadow p-4 sm:p-5';
+    card.innerHTML = `
+      <div class="flex items-start gap-4">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-bold text-sm shrink-0">
+          ${a.patient.split(' ').map(n=>n[0]).slice(0,2).join('')}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between gap-2 flex-wrap mb-2">
+            <div>
+              <p class="font-bold text-gray-900 text-sm">${a.patient}</p>
+              <p class="text-xs text-gray-500">${a.specialty} · Nº ${a.id}</p>
+            </div>
+            <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${cfg.color}">${cfg.label}</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div class="text-center bg-gray-50 rounded-xl py-2 px-1">
+              <p class="text-xs font-bold text-gray-800 font-tabular">${a.time}</p>
+              <p class="text-[10px] text-gray-400">Hora</p>
+            </div>
+            <div class="text-center bg-gray-50 rounded-xl py-2 px-1">
+              <p class="text-xs font-bold text-gray-800">${formatDatePT(a.date).split(' de ')[0] + ' ' + formatDatePT(a.date).split(' de ')[1].substring(0,3)}</p>
+              <p class="text-[10px] text-gray-400">Data</p>
+            </div>
+            <div class="text-center bg-gray-50 rounded-xl py-2 px-1 col-span-2 sm:col-span-1">
+              <p class="text-xs font-bold text-gray-800 font-tabular">${a.sns}</p>
+              <p class="text-[10px] text-gray-400">Nº SNS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
+        <button onclick="viewConsulta('${a.id}')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Ver
+        </button>
+        ${a.status === 'confirmed' || a.status === 'pending' ? `
+        <button onclick="openCancel('${a.id}')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Cancelar
+        </button>` : ''}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function filterConsultas() { renderConsultas(); }
+
+function setStatusFilter(status) {
+  consultaFilter = status;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const isActive = btn.dataset.filter === status;
+    btn.className = `filter-btn px-3 py-2 text-xs font-semibold rounded-xl transition-all ${
+      isActive ? 'bg-[#C0152B] text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+    }`;
+  });
+  renderConsultas();
+}
+
+function viewConsulta(id) {
+  const a = appointments.find(x => x.id === id);
+  if (!a) return;
+  const cfg = STATUS_CONFIG[a.status];
+  document.getElementById('modal-appt-id').textContent = '#' + a.id;
+  document.getElementById('modal-status-badge').innerHTML = `
+    <span class="w-2 h-2 rounded-full ${cfg.dot}"></span>
+    <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${cfg.color}">${cfg.label}</span>
+  `;
+  document.getElementById('modal-patient').textContent = a.patient;
+  document.getElementById('modal-sns').textContent = a.sns;
+  document.getElementById('modal-date').textContent = formatDatePT(a.date);
+  document.getElementById('modal-time').textContent = a.time;
+  document.getElementById('modal-phone').textContent = a.phone;
+  document.getElementById('modal-specialty').textContent = a.specialty;
+
+  const actions = document.getElementById('modal-actions');
+  actions.innerHTML = `
+    <button onclick="closeModal('modal-view')" class="flex-1 py-2.5 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+      Fechar
+    </button>
+    ${a.status === 'confirmed' || a.status === 'pending' ? `
+    <button onclick="closeModal('modal-view'); openCancel('${a.id}')" class="flex-1 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
+      Cancelar Consulta
+    </button>` : ''}
+  `;
+  document.getElementById('modal-view').classList.remove('hidden');
+}
+
+function openCancel(id) {
+  cancelTargetId = id;
+  const a = appointments.find(x => x.id === id);
+  document.getElementById('cancel-patient-name').textContent = a.patient;
+  document.getElementById('cancel-reason').value = '';
+  document.getElementById('modal-cancel').classList.remove('hidden');
+}
+
+function confirmCancel() {
+  const reason = document.getElementById('cancel-reason').value;
+  if (!reason) { showToast('Selecione um motivo de cancelamento', false); return; }
+  const idx = appointments.findIndex(x => x.id === cancelTargetId);
+  if (idx !== -1) appointments[idx].status = 'cancelled';
+  closeModal('modal-cancel');
+  renderConsultas();
+  renderDashboardSchedule();
+  showToast('Consulta cancelada com sucesso');
+}
+
+// ===== VAGAS: CALENDAR =====
+function initVagaCalendar() {
+  vagaViewMonth = TODAY.getMonth();
+  vagaViewYear = TODAY.getFullYear();
+  renderVagaCalendar();
+}
+
+function renderVagaCalendar() {
+  document.getElementById('vaga-cal-month').textContent = `${MONTHS_PT[vagaViewMonth]} ${vagaViewYear}`;
+
+  const headers = document.getElementById('vaga-day-headers');
+  headers.innerHTML = '';
+  DAYS_PT.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'text-center text-xs font-bold text-gray-400 py-1';
+    el.textContent = d;
+    headers.appendChild(el);
+  });
+
+  const grid = document.getElementById('vaga-cal-grid');
+  grid.innerHTML = '';
+  const firstDay = new Date(vagaViewYear, vagaViewMonth, 1).getDay();
+  const daysInMonth = new Date(vagaViewYear, vagaViewMonth + 1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${vagaViewYear}-${String(vagaViewMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isSelected = vagaSelectedDate === dateStr;
+    const isPast = new Date(vagaViewYear, vagaViewMonth, day) < new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+    const hasVaga = savedVagas.some(v => v.date === dateStr);
+    const isToday = day === TODAY.getDate() && vagaViewMonth === TODAY.getMonth() && vagaViewYear === TODAY.getFullYear();
+
+    const btn = document.createElement('button');
+    btn.style.aspectRatio = '1';
+    let cls = 'relative rounded-xl text-sm font-semibold transition-all duration-150 flex items-center justify-center ';
+    if (isSelected) cls += 'bg-[#C0152B] text-white shadow-md shadow-red-200 ';
+    else if (isPast) cls += 'text-gray-300 cursor-not-allowed ';
+    else if (hasVaga) cls += 'bg-green-50 text-green-700 border border-green-200 cursor-pointer cal-day-available ';
+    else cls += 'text-gray-700 hover:bg-gray-100 cursor-pointer ';
+    if (isToday && !isSelected) cls += 'ring-2 ring-[#C0152B] ring-offset-1 ';
+    btn.className = cls;
+    btn.disabled = isPast;
+    btn.innerHTML = `<span>${day}</span>`;
+    if (hasVaga && !isSelected) {
+      btn.innerHTML += `<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-green-500"></span>`;
+    }
+    btn.addEventListener('click', () => {
+      if (isPast) return;
+      vagaSelectedDate = dateStr;
+      vagaSelectedSlots = new Set();
+      renderVagaCalendar();
+      showVagaSlots();
+    });
+    grid.appendChild(btn);
+  }
+}
+
+function vagaPrevMonth() {
+  if (vagaViewMonth === 0) { vagaViewMonth = 11; vagaViewYear--; } else vagaViewMonth--;
+  renderVagaCalendar();
+}
+function vagaNextMonth() {
+  if (vagaViewMonth === 11) { vagaViewMonth = 0; vagaViewYear++; } else vagaViewMonth++;
+  renderVagaCalendar();
+}
+
+function showVagaSlots() {
+  document.getElementById('vaga-time-empty').classList.add('hidden');
+  document.getElementById('vaga-slots-container').classList.remove('hidden');
+  const [y, m, d] = vagaSelectedDate.split('-');
+  document.getElementById('vaga-time-title').textContent = `Horários — ${d} de ${MONTHS_PT[parseInt(m)-1]}`;
+
+  const morning = ALL_SLOTS.filter(t => parseInt(t) < 13);
+  const afternoon = ALL_SLOTS.filter(t => parseInt(t) >= 13);
+  renderVagaSlots('vaga-morning-slots', morning);
+  renderVagaSlots('vaga-afternoon-slots', afternoon);
+  updateVagaSummary();
+}
+
+function renderVagaSlots(containerId, slots) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  slots.forEach(time => {
+    const isSelected = vagaSelectedSlots.has(time);
+    const btn = document.createElement('button');
+    btn.className = `slot-btn py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 ${
+      isSelected
+        ? 'bg-[#C0152B] text-white shadow-md shadow-red-200'
+        : 'bg-gray-50 text-gray-700 border border-gray-200 hover:border-[#C0152B] hover:bg-red-50 hover:text-[#C0152B]'
+    }`;
+    btn.textContent = time;
+    btn.addEventListener('click', () => {
+      if (vagaSelectedSlots.has(time)) vagaSelectedSlots.delete(time);
+      else vagaSelectedSlots.add(time);
+      showVagaSlots();
+    });
+    el.appendChild(btn);
+  });
+}
+
+function updateVagaSummary() {
+  const summary = document.getElementById('vaga-selected-summary');
+  const strip = document.getElementById('vaga-strip');
+  const saveBtn = document.getElementById('btn-save-vaga');
+  const count = vagaSelectedSlots.size;
+
+  if (count > 0) {
+    summary.classList.remove('hidden');
+    document.getElementById('vaga-summary-text').textContent = `${count} horário${count > 1 ? 's' : ''} seleccionado${count > 1 ? 's' : ''}: ${[...vagaSelectedSlots].sort().join(', ')}`;
+    strip.classList.remove('hidden');
+    strip.style.display = 'flex';
+    const [y, m, d] = vagaSelectedDate.split('-');
+    document.getElementById('vaga-strip-date').textContent = `${d} de ${MONTHS_PT[parseInt(m)-1]} de ${y}`;
+    document.getElementById('vaga-strip-slots').textContent = `${count} vaga${count > 1 ? 's' : ''} disponível${count > 1 ? 'is' : ''}`;
+    saveBtn.disabled = false;
+  } else {
+    summary.classList.add('hidden');
+    strip.classList.add('hidden');
+    saveBtn.disabled = true;
+  }
+}
+
+function saveVaga() {
+  if (!vagaSelectedDate || vagaSelectedSlots.size === 0) return;
+  const existing = savedVagas.findIndex(v => v.date === vagaSelectedDate);
+  if (existing !== -1) savedVagas[existing].slots = [...vagaSelectedSlots].sort();
+  else savedVagas.push({ date: vagaSelectedDate, slots: [...vagaSelectedSlots].sort() });
+  savedVagas.sort((a, b) => a.date.localeCompare(b.date));
+  renderSavedVagas();
+  showToast(`Vaga guardada: ${vagaSelectedSlots.size} horário${vagaSelectedSlots.size > 1 ? 's' : ''} para ${formatDatePT(vagaSelectedDate)}`);
+  renderVagaCalendar();
+}
+
+function renderSavedVagas() {
+  const section = document.getElementById('saved-vagas-section');
+  const list = document.getElementById('saved-vagas-list');
+  const count = document.getElementById('saved-vagas-count');
+  if (savedVagas.length === 0) { section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  count.textContent = `${savedVagas.length} dia${savedVagas.length > 1 ? 's' : ''} com vagas`;
+  list.innerHTML = '';
+  savedVagas.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-2xl card-shadow p-4 flex items-center gap-4';
+    card.innerHTML = `
+      <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-bold text-gray-900">${formatDatePT(v.date)}</p>
+        <p class="text-xs text-gray-500 mt-0.5">${v.slots.length} horário${v.slots.length > 1 ? 's' : ''}: ${v.slots.join(', ')}</p>
+      </div>
+      <button onclick="removeVaga('${v.date}')" class="p-2 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function removeVaga(date) {
+  savedVagas = savedVagas.filter(v => v.date !== date);
+  renderSavedVagas();
+  renderVagaCalendar();
+  showToast('Vaga removida');
+}
+
+function clearVaga() {
+  vagaSelectedDate = '';
+  vagaSelectedSlots = new Set();
+  document.getElementById('vaga-time-empty').classList.remove('hidden');
+  document.getElementById('vaga-slots-container').classList.add('hidden');
+  document.getElementById('vaga-time-title').textContent = 'Selecione primeiro uma data';
+  document.getElementById('vaga-strip').classList.add('hidden');
+  document.getElementById('btn-save-vaga').disabled = true;
+  renderVagaCalendar();
+}
+
+// ===== PROFILE =====
+function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Ficheiro muito grande. Máximo 2MB.', false); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('profile-photo-img');
+    const initials = document.getElementById('profile-initials-display');
+    img.src = e.target.result;
+    img.classList.remove('hidden');
+    initials.classList.add('hidden');
+    // Update sidebar avatar
+    document.getElementById('sidebar-initials').classList.add('hidden');
+    const sa = document.getElementById('sidebar-avatar');
+    sa.style.backgroundImage = `url(${e.target.result})`;
+    sa.style.backgroundSize = 'cover';
+    sa.style.backgroundPosition = 'center';
+    showToast('Foto actualizada com sucesso');
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveProfile() {
+  const name = document.getElementById('p-name').value.trim();
+  if (!name) { showToast('Nome obrigatório', false); return; }
+
+  const pwdNew = document.getElementById('p-pwd-new').value;
+  const pwdConfirm = document.getElementById('p-pwd-confirm').value;
+  if (pwdNew && pwdNew !== pwdConfirm) { showToast('As passwords não coincidem', false); return; }
+  if (pwdNew && pwdNew.length < 8) { showToast('Password deve ter pelo menos 8 caracteres', false); return; }
+
+  // Update sidebar name
+  document.getElementById('sidebar-name').textContent = name;
+  const initials = name.split(' ').filter(Boolean).map(n=>n[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('sidebar-initials').textContent = initials;
+  document.getElementById('profile-initials-display').textContent = initials;
+  document.getElementById('header-initials').textContent = initials;
+
+  const specialtyEl = document.getElementById('p-specialty');
+  const specialtyText = specialtyEl.options[specialtyEl.selectedIndex].text;
+  document.getElementById('sidebar-specialty').textContent = specialtyText;
+
+  // Clear password fields
+  document.getElementById('p-pwd-current').value = '';
+  document.getElementById('p-pwd-new').value = '';
+  document.getElementById('p-pwd-confirm').value = '';
+
+  showToast('Perfil actualizado com sucesso');
+}
+
+// ===== DATE DISPLAY =====
+function setHeaderDate() {
+  const now = new Date();
+  const weekdays = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  document.getElementById('header-date').textContent = `${now.getDate()} de ${MONTHS_PT[now.getMonth()]} de ${now.getFullYear()}`;
+}
+
+// ===== INIT =====
+renderDashboardSchedule();
+renderConsultas();
+setHeaderDate();
+</script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar / Criar Conta — MediAgenda</title>
+  <meta name="description" content="Aceda à sua conta MediAgenda ou crie uma nova conta de paciente." />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="./styles.css" rel="stylesheet">
+  <link href="./custom-styles.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    .tab-active {
+      color: #C0152B;
+      border-bottom: 2px solid #C0152B;
+      background-color: rgba(254,242,242,0.3);
+    }
+    .tab-inactive { color: #6b7280; }
+    .tab-inactive:hover { color: #374151; background-color: #f9fafb; }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    .success-panel { display: none; }
+    .success-panel.active { display: block; }
+  </style>
+</head>
+<body class="min-h-screen flex">
+
+  <!-- LEFT PANEL — Brand -->
+  <div class="hidden lg:flex lg:w-[45%] xl:w-[40%] gradient-primary flex-col justify-between p-10 xl:p-14 relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-white/5"></div>
+      <div class="absolute bottom-0 -left-16 w-80 h-80 rounded-full bg-black/10"></div>
+      <div class="absolute top-1/2 right-0 w-64 h-64 rounded-full bg-white/5"></div>
+    </div>
+
+    <!-- Logo -->
+    <div class="relative">
+      <a href="lading-page.html" class="flex items-center gap-3">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.3);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold text-white block leading-tight">MediAgenda</span>
+          <span class="text-xs text-red-200 font-medium tracking-widest uppercase">Hospital Público</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Content -->
+    <div class="relative space-y-8">
+      <div>
+        <h2 class="text-3xl xl:text-4xl font-extrabold text-white leading-tight mb-4">
+          A sua saúde, gerida de forma simples
+        </h2>
+        <p class="text-red-100 text-base xl:text-lg leading-relaxed">
+          Aceda ao sistema de consultas externas do hospital. Marque, consulte e gira os seus agendamentos sem sair de casa.
+        </p>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+          <p class="text-2xl font-black text-white">48.000+</p>
+          <p class="text-xs text-red-200 mt-0.5">Consultas realizadas</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+          <p class="text-2xl font-black text-white">96%</p>
+          <p class="text-xs text-red-200 mt-0.5">Taxa de satisfação</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+          <p class="text-2xl font-black text-white">28</p>
+          <p class="text-xs text-red-200 mt-0.5">Especialidades</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+          <p class="text-2xl font-black text-white">&lt; 3 dias</p>
+          <p class="text-xs text-red-200 mt-0.5">Tempo de espera</p>
+        </div>
+      </div>
+
+      <!-- Highlights -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+            <i data-lucide="shield" style="width:16px;height:16px;color:white;"></i>
+          </div>
+          <span class="text-sm text-red-100">Dados protegidos — RGPD compliant</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+            <i data-lucide="clock" style="width:16px;height:16px;color:white;"></i>
+          </div>
+          <span class="text-sm text-red-100">Disponível 24 horas por dia</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:white;"></i>
+          </div>
+          <span class="text-sm text-red-100">Confirmação instantânea por email</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative text-xs text-red-300">© 2026 MediAgenda · SNS · Ministério da Saúde</div>
+  </div>
+
+  <!-- RIGHT PANEL — Form -->
+  <div class="flex-1 flex flex-col min-h-screen bg-gray-50">
+
+    <!-- Mobile header -->
+    <div class="lg:hidden flex items-center justify-between px-4 py-4 bg-white border-b border-gray-100">
+      <a href="lading-page.html" class="flex items-center gap-2">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#C0152B,#8b0e1e);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <span class="font-bold text-gray-900">MediAgenda</span>
+      </a>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center p-4 sm:p-8">
+      <div class="w-full max-w-lg">
+
+        <!-- Card -->
+        <div class="bg-white rounded-2xl border border-gray-100 card-shadow overflow-hidden">
+
+          <!-- Tabs -->
+          <div class="flex border-b border-gray-100">
+            <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-active">
+              Entrar na Conta
+            </button>
+            <button id="tab-register" onclick="switchTab('register')" class="flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-inactive">
+              Criar Conta
+            </button>
+          </div>
+
+          <!-- Form content -->
+          <div class="p-6 sm:p-8">
+
+            <!-- LOGIN FORM -->
+            <div id="panel-login" class="form-panel active">
+              <form id="login-form" novalidate class="space-y-5">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-1">Bem-vindo de volta</h3>
+                  <p class="text-sm text-gray-500">Introduza os seus dados para aceder à sua conta.</p>
+                </div>
+
+                <!-- Auth error -->
+                <div id="login-error" class="hidden flex items-start gap-2.5 p-3.5 bg-red-50 border border-red-200 rounded-xl">
+                  <i data-lucide="alert-circle" style="width:16px;height:16px;color:#dc2626;flex-shrink:0;margin-top:2px;"></i>
+                  <p id="login-error-msg" class="text-sm text-red-700"></p>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1.5">
+                  <label for="login-email" class="block text-sm font-semibold text-gray-700">Email ou NIF</label>
+                  <input id="login-email" type="email" autocomplete="email" placeholder="paciente@email.pt"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  <p id="login-email-err" class="hidden text-xs text-red-600 flex items-center gap-1">
+                    <i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span>
+                  </p>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <label for="login-password" class="block text-sm font-semibold text-gray-700">Senha</label>
+                    <a href="#" class="text-xs text-[#C0152B] hover:underline font-medium">Esqueceu a senha?</a>
+                  </div>
+                  <div class="relative">
+                    <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••••"
+                      class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                    <button type="button" onclick="togglePassword('login-password','login-pw-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                      <i id="login-pw-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
+                    </button>
+                  </div>
+                  <p id="login-pw-err" class="hidden text-xs text-red-600 flex items-center gap-1">
+                    <i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span>
+                  </p>
+                </div>
+
+                <!-- Remember -->
+                <div class="flex items-center gap-2.5">
+                  <input id="login-remember" type="checkbox" class="w-4 h-4 rounded border-gray-300" style="accent-color:#C0152B;" />
+                  <label for="login-remember" class="text-sm text-gray-600">Manter sessão iniciada</label>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" id="login-btn"
+                  class="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-150 shadow-sm"
+                  style="min-height:48px;">
+                  <i data-lucide="log-in" style="width:18px;height:18px;"></i>
+                  Entrar na Conta
+                </button>
+
+                <!-- Switch -->
+                <p class="text-center text-sm text-gray-500">
+                  Não tem conta?
+                  <button type="button" onclick="switchTab('register')" class="text-[#C0152B] font-semibold hover:underline">Criar conta gratuita</button>
+                </p>
+              </form>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div id="panel-register" class="form-panel">
+
+              <!-- Success state -->
+              <div id="register-success" class="success-panel text-center space-y-4 py-6">
+                <div class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto">
+                  <i data-lucide="check-circle-2" style="width:32px;height:32px;color:#16a34a;"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900">Conta criada com sucesso!</h3>
+                <p class="text-sm text-gray-500 max-w-xs mx-auto">Verifique o seu email para confirmar o registo. Depois poderá entrar na sua conta.</p>
+                <button onclick="switchTab('login')" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-all">
+                  Ir para o Login
+                </button>
+              </div>
+
+              <!-- Register form -->
+              <form id="register-form" novalidate class="space-y-4">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-1">Criar conta gratuita</h3>
+                  <p class="text-sm text-gray-500">Preencha os seus dados para se registar no sistema.</p>
+                </div>
+
+                <!-- Full name -->
+                <div class="space-y-1.5">
+                  <label for="reg-name" class="block text-sm font-semibold text-gray-700">Nome completo</label>
+                  <input id="reg-name" type="text" placeholder="João Silva"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  <p id="reg-name-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1.5">
+                  <label for="reg-email" class="block text-sm font-semibold text-gray-700">Email</label>
+                  <input id="reg-email" type="email" placeholder="joao@email.pt"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  <p id="reg-email-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                </div>
+
+                <!-- NIF + SNS -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="space-y-1.5">
+                    <label for="reg-nif" class="block text-sm font-semibold text-gray-700">NIF</label>
+                    <input id="reg-nif" type="text" placeholder="123456789" maxlength="9"
+                      class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                    <p id="reg-nif-err" class="hidden text-xs text-red-600"><span></span></p>
+                  </div>
+                  <div class="space-y-1.5">
+                    <label for="reg-sns" class="block text-sm font-semibold text-gray-700">Nº SNS</label>
+                    <input id="reg-sns" type="text" placeholder="123456789" maxlength="9"
+                      class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                    <p id="reg-sns-err" class="hidden text-xs text-red-600"><span></span></p>
+                  </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="space-y-1.5">
+                  <label for="reg-phone" class="block text-sm font-semibold text-gray-700">Telemóvel</label>
+                  <input id="reg-phone" type="tel" placeholder="9XX XXX XXX"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  <p id="reg-phone-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-1.5">
+                  <label for="reg-password" class="block text-sm font-semibold text-gray-700">Senha</label>
+                  <div class="relative">
+                    <input id="reg-password" type="password" placeholder="Mínimo 8 caracteres"
+                      class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                    <button type="button" onclick="togglePassword('reg-password','reg-pw-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      <i id="reg-pw-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
+                    </button>
+                  </div>
+                  <p id="reg-pw-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="space-y-1.5">
+                  <label for="reg-confirm" class="block text-sm font-semibold text-gray-700">Confirmar Senha</label>
+                  <div class="relative">
+                    <input id="reg-confirm" type="password" placeholder="Repita a senha"
+                      class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                    <button type="button" onclick="togglePassword('reg-confirm','reg-confirm-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      <i id="reg-confirm-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
+                    </button>
+                  </div>
+                  <p id="reg-confirm-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                </div>
+
+                <!-- Terms -->
+                <div class="flex items-start gap-2.5">
+                  <input id="reg-terms" type="checkbox" class="w-4 h-4 rounded border-gray-300 mt-0.5" style="accent-color:#C0152B;" />
+                  <label for="reg-terms" class="text-sm text-gray-600">
+                    Aceito os <a href="#" class="text-[#C0152B] hover:underline font-medium">Termos de Utilização</a> e a <a href="#" class="text-[#C0152B] hover:underline font-medium">Política de Privacidade</a>
+                  </label>
+                </div>
+                <p id="reg-terms-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+
+                <!-- Submit -->
+                <button type="submit" id="register-btn"
+                  class="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-150 shadow-sm"
+                  style="min-height:48px;">
+                  <i data-lucide="user-plus" style="width:18px;height:18px;"></i>
+                  Criar Conta Gratuita
+                </button>
+
+                <!-- Switch -->
+                <p class="text-center text-sm text-gray-500">
+                  Já tem conta?
+                  <button type="button" onclick="switchTab('login')" class="text-[#C0152B] font-semibold hover:underline">Entrar na conta</button>
+                </p>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Demo credentials -->
+        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+          <p class="text-xs font-bold text-blue-700 mb-1">Credenciais de demonstração</p>
+          <p class="text-xs text-blue-600">Email: paciente@mediagenda.pt · Senha: Demo@2026</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+  lucide.createIcons();
+
+  // ===== TAB SWITCHING =====
+  function switchTab(tab) {
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const panelLogin = document.getElementById('panel-login');
+    const panelRegister = document.getElementById('panel-register');
+
+    if (tab === 'login') {
+      tabLogin.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-active';
+      tabRegister.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-inactive';
+      panelLogin.classList.add('active');
+      panelRegister.classList.remove('active');
+    } else {
+      tabRegister.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-active';
+      tabLogin.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-inactive';
+      panelRegister.classList.add('active');
+      panelLogin.classList.remove('active');
+      // Reset success state
+      document.getElementById('register-success').classList.remove('active');
+      document.getElementById('register-form').style.display = '';
+    }
+  }
+
+  // ===== TOGGLE PASSWORD =====
+  function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+    lucide.createIcons();
+  }
+
+  // ===== FIELD ERROR HELPERS =====
+  function showErr(id, msg) {
+    const el = document.getElementById(id);
+    el.classList.remove('hidden');
+    el.querySelector('span').textContent = msg;
+  }
+  function hideErr(id) {
+    document.getElementById(id).classList.add('hidden');
+  }
+  function setInputError(inputId, hasError) {
+    const input = document.getElementById(inputId);
+    if (hasError) {
+      input.classList.add('border-red-300');
+      input.classList.remove('border-gray-200');
+    } else {
+      input.classList.remove('border-red-300');
+      input.classList.add('border-gray-200');
+    }
+  }
+
+  // ===== LOGIN FORM =====
+  document.getElementById('login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    // Validate email
+    if (!email) {
+      showErr('login-email-err', 'O email é obrigatório'); setInputError('login-email', true); valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showErr('login-email-err', 'Introduza um email válido'); setInputError('login-email', true); valid = false;
+    } else {
+      hideErr('login-email-err'); setInputError('login-email', false);
+    }
+
+    // Validate password
+    if (!password) {
+      showErr('login-pw-err', 'A senha é obrigatória'); setInputError('login-password', true); valid = false;
+    } else if (password.length < 6) {
+      showErr('login-pw-err', 'Mínimo 6 caracteres'); setInputError('login-password', true); valid = false;
+    } else {
+      hideErr('login-pw-err'); setInputError('login-password', false);
+    }
+
+    if (!valid) return;
+
+    // Loading state
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A autenticar...`;
+    document.getElementById('login-error').classList.add('hidden');
+
+    await new Promise(r => setTimeout(r, 1400));
+
+    if (email === 'paciente@mediagenda.pt' && password === 'Demo@2026') {
+      window.location.href = 'appointment-booking-flow.html';
+    } else {
+      document.getElementById('login-error').classList.remove('hidden');
+      document.getElementById('login-error-msg').textContent = 'Credenciais inválidas. Experimente: paciente@mediagenda.pt / Demo@2026';
+      btn.disabled = false;
+      btn.innerHTML = `<i data-lucide="log-in" style="width:18px;height:18px;"></i> Entrar na Conta`;
+      lucide.createIcons();
+    }
+  });
+
+  // ===== REGISTER FORM =====
+  document.getElementById('register-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const nif = document.getElementById('reg-nif').value.trim();
+    const sns = document.getElementById('reg-sns').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirm = document.getElementById('reg-confirm').value;
+    const terms = document.getElementById('reg-terms').checked;
+
+    // Name
+    if (!name || name.length < 3) {
+      showErr('reg-name-err', !name ? 'O nome é obrigatório' : 'Mínimo 3 caracteres');
+      setInputError('reg-name', true); valid = false;
+    } else { hideErr('reg-name-err'); setInputError('reg-name', false); }
+
+    // Email
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showErr('reg-email-err', !email ? 'O email é obrigatório' : 'Email inválido');
+      setInputError('reg-email', true); valid = false;
+    } else { hideErr('reg-email-err'); setInputError('reg-email', false); }
+
+    // NIF
+    if (!/^\d{9}$/.test(nif)) {
+      showErr('reg-nif-err', !nif ? 'Obrigatório' : '9 dígitos');
+      setInputError('reg-nif', true); valid = false;
+    } else { hideErr('reg-nif-err'); setInputError('reg-nif', false); }
+
+    // SNS
+    if (!/^\d{9}$/.test(sns)) {
+      showErr('reg-sns-err', !sns ? 'Obrigatório' : '9 dígitos');
+      setInputError('reg-sns', true); valid = false;
+    } else { hideErr('reg-sns-err'); setInputError('reg-sns', false); }
+
+    // Phone
+    if (!/^[9][0-9]{8}$/.test(phone)) {
+      showErr('reg-phone-err', !phone ? 'O telemóvel é obrigatório' : 'Número inválido');
+      setInputError('reg-phone', true); valid = false;
+    } else { hideErr('reg-phone-err'); setInputError('reg-phone', false); }
+
+    // Password
+    if (!password || password.length < 8) {
+      showErr('reg-pw-err', !password ? 'A senha é obrigatória' : 'Mínimo 8 caracteres');
+      setInputError('reg-password', true); valid = false;
+    } else { hideErr('reg-pw-err'); setInputError('reg-password', false); }
+
+    // Confirm
+    if (confirm !== password) {
+      showErr('reg-confirm-err', 'As senhas não coincidem');
+      setInputError('reg-confirm', true); valid = false;
+    } else { hideErr('reg-confirm-err'); setInputError('reg-confirm', false); }
+
+    // Terms
+    if (!terms) {
+      showErr('reg-terms-err', 'Deve aceitar os termos'); valid = false;
+    } else { hideErr('reg-terms-err'); }
+
+    if (!valid) return;
+
+    // Loading
+    const btn = document.getElementById('register-btn');
+    btn.disabled = true;
+    btn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A criar conta...`;
+
+    await new Promise(r => setTimeout(r, 1600));
+
+    // Show success
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('register-success').classList.add('active');
+    btn.disabled = false;
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>

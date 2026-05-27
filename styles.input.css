@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles que estavam no inline <style> */
+body { 
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+}
+
+.card-shadow { 
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.06), 0 1px 2px -1px rgba(0,0,0,.06); 
+}
+
+.gradient-primary { 
+  background: linear-gradient(135deg, #C0152B 0%, #8b0f1e 100%); 
+}
+
+.font-tabular { 
+  font-variant-numeric: tabular-nums; 
+}
+
+@keyframes fade-in { 
+  from { opacity:0; transform:translateY(8px); } 
+  to { opacity:1; transform:translateY(0); } 
+}
+
+@keyframes slide-up { 
+  from { opacity:0; transform:translateY(20px); } 
+  to { opacity:1; transform:translateY(0); } 
+}
+
+.animate-fade-in { 
+  animation: fade-in 0.3s ease both; 
+}
+
+.animate-slide-up { 
+  animation: slide-up 0.4s ease both; 
+}
+
+@keyframes spin { 
+  to { transform: rotate(360deg); } 
+}
+
+.animate-spin { 
+  animation: spin 1s linear infinite; 
+}
+
+@keyframes pulse { 
+  0%,100%{opacity:1} 
+  50%{opacity:.5} 
+}
+
+.animate-pulse { 
+  animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; 
+}
+
+.step-content { 
+  display: none; 
+}
+
+.step-content.active { 
+  display: block; 
+}
+
+input:focus { 
+  outline: none; 
+}
+
+.hover\:-translate-y-0\.5:hover { 
+  transform: translateY(-2px); 
+}
+
+.active\:scale-95:active { 
+  transform: scale(0.95); 
+}
