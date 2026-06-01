@@ -27,6 +27,7 @@
 
     .success-panel { display: none; }
     .success-panel.active { display: block; }
+    .user_radio{display: flex; gap: 1rem;}
   </style>
 </head>
 <body class="min-h-screen flex">
@@ -156,13 +157,27 @@
                   <p id="login-error-msg" class="text-sm text-red-700"></p>
                 </div>
 
+                <!--laternar entre usuarios medico/paciete-->
+                <div class="user_radio">
+                  <div>
+                    <input type="radio" id="radioPaciente" name="radioPaciente">
+                    <label for="radioPaciente">Paciente</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="radioMedico" name="radioMedico">
+                    <label for="radioMedico">Medico</label>
+                  </div>
+
+                </div>
+
                 <!-- Email -->
                 <div class="space-y-1.5">
                   <label for="login-email" class="block text-sm font-semibold text-gray-700">Email ou NIF</label>
                   <input id="login-email" type="email" autocomplete="email" placeholder="paciente@email.pt"
-                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
-                  <p id="login-email-err" class="hidden text-xs text-red-600 flex items-center gap-1">
-                    <i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span>
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all"
+                    name="loginEmail" />
+                  <p  class="hidden text-xs text-red-600 flex items-center gap-1">
+                    <i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="login-email-err"></span>
                   </p>
                 </div>
 
@@ -174,9 +189,9 @@
                   </div>
                   <div class="relative">
                     <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••••"
-                      class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                      class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" name="loginSenha"/>
                     <button type="button" onclick="togglePassword('login-password','login-pw-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                      <i id="login-pw-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
+                      <i  id="login-pw-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
                     </button>
                   </div>
                   <p id="login-pw-err" class="hidden text-xs text-red-600 flex items-center gap-1">
@@ -193,7 +208,7 @@
                 <!-- Submit -->
                 <button type="submit" id="login-btn"
                   class="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-150 shadow-sm"
-                  style="min-height:48px;">
+                  style="min-height:48px;" name="loginSubmitBtn">
                   <i data-lucide="log-in" style="width:18px;height:18px;"></i>
                   Entrar na Conta
                 </button>
@@ -332,8 +347,9 @@
     </div>
   </div>
 
+  <script type="module" src="./scripts/login.js"></script>
 <script>
-  lucide.createIcons();
+  //lucide.createIcons();
 
   // ===== TAB SWITCHING =====
   function switchTab(tab) {
@@ -424,15 +440,15 @@
 
     await new Promise(r => setTimeout(r, 1400));
 
-    if (email === 'paciente@mediagenda.pt' && password === 'Demo@2026') {
-      window.location.href = 'appointment-booking-flow.html';
-    } else {
-      document.getElementById('login-error').classList.remove('hidden');
-      document.getElementById('login-error-msg').textContent = 'Credenciais inválidas. Experimente: paciente@mediagenda.pt / Demo@2026';
-      btn.disabled = false;
-      btn.innerHTML = `<i data-lucide="log-in" style="width:18px;height:18px;"></i> Entrar na Conta`;
-      lucide.createIcons();
-    }
+    // if (email === 'paciente@mediagenda.pt' && password === 'Demo@2026') {
+    //   window.location.href = 'appointment-booking-flow.html';
+    // } else {
+    //   document.getElementById('login-error').classList.remove('hidden');
+    //   document.getElementById('login-error-msg').textContent = 'Credenciais inválidas. Experimente: paciente@mediagenda.pt / Demo@2026';
+    //   btn.disabled = false;
+    //   btn.innerHTML = `<i data-lucide="log-in" style="width:18px;height:18px;"></i> Entrar na Conta`;
+    //   lucide.createIcons();
+    // }
   });
 
   // ===== REGISTER FORM =====

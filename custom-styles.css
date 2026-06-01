@@ -103,3 +103,9 @@
   background: #e5e7eb;
   border-radius: 3px;
 }
+.blackBackground{
+  background-color: black;
+}
+.floatLeft{
+  float: left;
+}

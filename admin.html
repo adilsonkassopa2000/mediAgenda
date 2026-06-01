@@ -14,470 +14,473 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-<!-- ========== SIDEBAR OVERLAY (mobile) ========== -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 lg:hidden" onclick="closeSidebar()"></div>
+  <div class="min-h-screen bg-gray-50 flex">
+      <!-- ========== SIDEBAR OVERLAY (mobile) ========== -->
+      <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 lg:hidden" onclick="closeSidebar()"></div>
 
-<!-- ========== SIDEBAR ========== -->
-<aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 z-50 flex flex-col -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
-  <!-- Logo -->
-  <div class="p-5 border-b border-gray-100 flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-2.5">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="32" height="32" rx="8" fill="#C0152B"/>
-        <path d="M16 7v18M7 16h18" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-      </svg>
-      <div>
-        <p class="font-bold text-gray-900 text-sm leading-tight">MediAgenda</p>
-        <p class="text-[10px] text-[#C0152B] font-medium uppercase tracking-widest">Administração</p>
-      </div>
-    </a>
-    <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
-      <i data-lucide="x" class="w-[18px] h-[18px]"></i>
-    </button>
-  </div>
-
-  <!-- Admin info -->
-  <div class="p-5 border-b border-gray-100">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#C0152B] to-[#8B0D1E] flex items-center justify-center text-white font-bold text-sm shrink-0">AD</div>
-      <div class="min-w-0">
-        <p class="font-semibold text-gray-900 text-sm truncate">Administrador</p>
-        <p class="text-xs text-gray-500">admin@mediagenda.pt</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Nav -->
-  <nav class="flex-1 p-4 space-y-1">
-    <button onclick="switchTab('overview')" id="nav-overview"
-      class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 bg-red-50 text-[#C0152B]">
-      <i data-lucide="home" class="w-[18px] h-[18px] shrink-0"></i> Visão Geral
-    </button>
-    <button onclick="switchTab('doctors')" id="nav-doctors"
-      class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-      <i data-lucide="stethoscope" class="w-[18px] h-[18px] shrink-0"></i> Médicos
-    </button>
-    <button onclick="switchTab('specialties')" id="nav-specialties"
-      class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-      <i data-lucide="layers" class="w-[18px] h-[18px] shrink-0"></i> Especialidades
-    </button>
-    <button onclick="switchTab('schedule')" id="nav-schedule"
-      class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-      <i data-lucide="calendar" class="w-[18px] h-[18px] shrink-0"></i> Horários de Hoje
-    </button>
-    <button onclick="switchTab('statistics')" id="nav-statistics"
-      class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-      <i data-lucide="bar-chart-2" class="w-[18px] h-[18px] shrink-0"></i> Estatísticas
-    </button>
-  </nav>
-
-  <!-- Logout -->
-  <div class="p-4 border-t border-gray-100">
-    <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
-      <i data-lucide="log-out" class="w-[18px] h-[18px] shrink-0"></i> Sair
-    </a>
-  </div>
-</aside>
-
-<!-- ========== MAIN WRAPPER ========== -->
-<div class="lg:ml-64 flex flex-col min-h-screen">
-
-  <!-- Header -->
-  <header class="bg-white border-b border-gray-100 sticky top-0 z-30">
-    <div class="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100">
-          <i data-lucide="menu" class="w-5 h-5"></i>
-        </button>
-        <h1 id="page-title" class="font-bold text-gray-900 text-base">Painel de Administração</h1>
-      </div>
-      <div class="text-xs text-gray-500 hidden sm:block">26 de Março de 2026</div>
-    </div>
-  </header>
-
-  <!-- Content -->
-  <main class="flex-1 p-4 sm:p-6 overflow-auto">
-
-    <!-- ===== OVERVIEW ===== -->
-    <div id="tab-overview" class="tab-content active animate-fade-in space-y-6">
-      <!-- KPI cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div class="bg-white rounded-2xl p-4 card-shadow">
-          <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-3">
-            <i data-lucide="calendar" class="w-[18px] h-[18px] text-blue-700"></i>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900">6</p>
-          <p class="text-xs text-gray-500 mt-0.5">Consultas Hoje</p>
-          <p class="text-[11px] text-gray-400 mt-1">2 realizadas</p>
+      <!-- ========== SIDEBAR ========== -->
+      <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 z-50 flex flex-col -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
+        <!-- Logo -->
+        <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+          <a href="index.html" class="flex items-center gap-2.5">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="#C0152B"/>
+              <path d="M16 7v18M7 16h18" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <p class="font-bold text-gray-900 text-sm leading-tight">MediAgenda</p>
+              <p class="text-[10px] text-[#C0152B] font-medium uppercase tracking-widest">Administração</p>
+            </div>
+          </a>
+          <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
+            <i data-lucide="x" class="w-[18px] h-[18px]"></i>
+          </button>
         </div>
-        <div class="bg-white rounded-2xl p-4 card-shadow">
-          <div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center mb-3">
-            <i data-lucide="stethoscope" class="w-[18px] h-[18px] text-green-700"></i>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900">4</p>
-          <p class="text-xs text-gray-500 mt-0.5">Médicos Ativos</p>
-          <p class="text-[11px] text-gray-400 mt-1">6 total</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 card-shadow">
-          <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center mb-3">
-            <i data-lucide="trending-up" class="w-[18px] h-[18px] text-[#C0152B]"></i>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900">389</p>
-          <p class="text-xs text-gray-500 mt-0.5">Este Mês</p>
-          <p class="text-[11px] text-gray-400 mt-1">+9% vs mês anterior</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 card-shadow">
-          <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center mb-3">
-            <i data-lucide="check-circle-2" class="w-[18px] h-[18px] text-purple-700"></i>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900">92.8%</p>
-          <p class="text-xs text-gray-500 mt-0.5">Taxa de Conclusão</p>
-          <p class="text-[11px] text-gray-400 mt-1">Média mensal</p>
-        </div>
-      </div>
 
-      <!-- Chart -->
-      <div class="bg-white rounded-2xl card-shadow p-5">
-        <h2 class="font-bold text-gray-900 mb-4">Consultas por Mês</h2>
-        <div class="h-48 sm:h-64">
-          <canvas id="chart-monthly-overview"></canvas>
-        </div>
-      </div>
-
-      <!-- Today schedule preview -->
-      <div class="bg-white rounded-2xl card-shadow">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 class="font-bold text-gray-900 text-sm">Horário de Hoje</h2>
-          <button onclick="switchTab('schedule')" class="text-xs font-semibold text-[#C0152B] hover:underline">Ver tudo</button>
-        </div>
-        <div class="divide-y divide-gray-50" id="schedule-preview"></div>
-      </div>
-    </div>
-
-    <!-- ===== DOCTORS ===== -->
-    <div id="tab-doctors" class="tab-content animate-fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="relative flex-1 max-w-sm">
-          <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
-          <input type="text" id="doctor-search" placeholder="Pesquisar médico ou especialidade..."
-            oninput="renderDoctors()"
-            class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B]" />
-        </div>
-        <button onclick="openDoctorModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors shrink-0">
-          <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Médico
-        </button>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="doctors-grid"></div>
-      <div id="doctors-empty" class="hidden bg-white rounded-2xl card-shadow p-12 text-center">
-        <p class="text-gray-500 text-sm">Nenhum médico encontrado.</p>
-      </div>
-    </div>
-
-    <!-- ===== SPECIALTIES ===== -->
-    <div id="tab-specialties" class="tab-content animate-fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="relative flex-1 max-w-sm">
-          <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
-          <input type="text" id="specialty-admin-search" placeholder="Pesquisar especialidade..."
-            oninput="renderSpecialtiesAdmin()"
-            class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B]" />
-        </div>
-        <button onclick="openSpecialtyModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors shrink-0">
-          <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Especialidade
-        </button>
-      </div>
-
-      <!-- Stats row -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div class="bg-white rounded-2xl p-4 card-shadow text-center">
-          <p class="text-2xl font-extrabold text-gray-900" id="sp-total-count">16</p>
-          <p class="text-xs text-gray-500 mt-1">Total</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 card-shadow text-center">
-          <p class="text-2xl font-extrabold text-green-600" id="sp-active-count">14</p>
-          <p class="text-xs text-gray-500 mt-1">Ativas</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 card-shadow text-center">
-          <p class="text-2xl font-extrabold text-amber-600" id="sp-low-count">3</p>
-          <p class="text-xs text-gray-500 mt-1">Poucas Vagas</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 card-shadow text-center">
-          <p class="text-2xl font-extrabold text-gray-900" id="sp-total-slots">128</p>
-          <p class="text-xs text-gray-500 mt-1">Vagas Totais</p>
-        </div>
-      </div>
-
-      <!-- Grid of specialty cards -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="specialties-admin-grid"></div>
-      <div id="specialties-empty" class="hidden bg-white rounded-2xl card-shadow p-12 text-center">
-        <p class="text-gray-500 text-sm">Nenhuma especialidade encontrada.</p>
-      </div>
-    </div>
-
-    <!-- ===== SCHEDULE ===== -->
-    <div id="tab-schedule" class="tab-content animate-fade-in space-y-4">
-      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-100 gradient-primary">
-          <p class="text-red-200 text-xs font-semibold uppercase tracking-widest mb-1">Horário</p>
-          <p class="text-white font-bold text-lg">Quinta-feira, 26 de Março de 2026</p>
-          <p class="text-red-200 text-sm">6 consultas · 2 realizadas · 4 pendentes</p>
-        </div>
-        <div class="divide-y divide-gray-50" id="schedule-full"></div>
-      </div>
-    </div>
-
-    <!-- ===== STATISTICS ===== -->
-    <div id="tab-statistics" class="tab-content animate-fade-in space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white rounded-2xl card-shadow p-5">
-          <h2 class="font-bold text-gray-900 mb-1">Evolução Mensal</h2>
-          <p class="text-xs text-gray-500 mb-4">Total de consultas nos últimos 6 meses</p>
-          <div class="h-48"><canvas id="chart-line"></canvas></div>
-        </div>
-        <div class="bg-white rounded-2xl card-shadow p-5">
-          <h2 class="font-bold text-gray-900 mb-1">Por Especialidade</h2>
-          <p class="text-xs text-gray-500 mb-4">Consultas este mês por especialidade</p>
-          <div class="h-48"><canvas id="chart-specialty"></canvas></div>
-        </div>
-      </div>
-
-      <!-- Doctor performance table -->
-      <div class="bg-white rounded-2xl card-shadow">
-        <div class="px-5 py-4 border-b border-gray-100">
-          <h2 class="font-bold text-gray-900 text-sm">Desempenho dos Médicos</h2>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr class="border-b border-gray-100">
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Médico</th>
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Especialidade</th>
-                <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
-                <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Hoje</th>
-                <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rating</th>
-              </tr>
-            </thead>
-            <tbody id="perf-table" class="divide-y divide-gray-50"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- ========== MODAL: ADD DOCTOR ========== -->
-<div id="modal-doctor" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-doctor')">
-  <div class="bg-white rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in">
-    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-      <div>
-        <h2 class="font-bold text-gray-900 text-base">Adicionar Médico</h2>
-        <p class="text-xs text-gray-500 mt-0.5">Preencha os dados do novo médico</p>
-      </div>
-      <button onclick="closeDoctorModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-
-    <form id="doctor-form" class="px-6 py-5 space-y-4" onsubmit="submitDoctorForm(event)" novalidate>
-      <!-- Name -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
-        <input id="f-name" type="text" placeholder="Ex: Dr. João Silva"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-        <p id="err-f-name" class="text-xs text-red-600 hidden">Nome obrigatório</p>
-      </div>
-
-      <!-- Specialty -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Especialidade <span class="text-red-500">*</span></label>
-        <select id="f-specialty"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all">
-          <option value="">Selecionar especialidade...</option>
-        </select>
-        <p id="err-f-specialty" class="text-xs text-red-600 hidden">Especialidade obrigatória</p>
-      </div>
-
-      <!-- CRM -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">CRM <span class="text-red-500">*</span></label>
-        <input id="f-crm" type="text" placeholder="Ex: 45.821"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
-        <p id="err-f-crm" class="text-xs text-red-600 hidden">CRM obrigatório</p>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Experience -->
-        <div class="space-y-1.5">
-          <label class="block text-sm font-semibold text-gray-700">Anos de Experiência</label>
-          <input id="f-experience" type="number" min="0" max="60" placeholder="Ex: 12"
-            class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-        </div>
-        <!-- Status -->
-        <div class="space-y-1.5">
-          <label class="block text-sm font-semibold text-gray-700">Estado <span class="text-red-500">*</span></label>
-          <select id="f-status"
-            class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all">
-            <option value="active">Ativo</option>
-            <option value="inactive">Inativo</option>
-            <option value="on_leave">De Licença</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Phone -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Telemóvel</label>
-        <input id="f-phone" type="tel" placeholder="Ex: 912 345 678"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
-      </div>
-
-      <!-- Email -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Email</label>
-        <input id="f-email" type="email" placeholder="Ex: medico@hospital.pt"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-        <p id="err-f-email" class="text-xs text-red-600 hidden">Email inválido</p>
-      </div>
-
-      <!-- Education -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Formação Académica</label>
-        <input id="f-education" type="text" placeholder="Ex: Faculdade de Medicina de Lisboa"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-      </div>
-
-      <!-- Languages -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Idiomas</label>
-        <div class="flex flex-wrap gap-2" id="lang-chips">
-          <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
-            <input type="checkbox" name="lang" value="Português" class="hidden" checked /> Português
-          </label>
-          <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
-            <input type="checkbox" name="lang" value="Inglês" class="hidden" /> Inglês
-          </label>
-          <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
-            <input type="checkbox" name="lang" value="Francês" class="hidden" /> Francês
-          </label>
-          <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
-            <input type="checkbox" name="lang" value="Espanhol" class="hidden" /> Espanhol
-          </label>
-        </div>
-      </div>
-
-      <!-- Avatar color -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Cor do Avatar</label>
-        <div class="flex gap-2" id="color-chips">
-          <button type="button" onclick="selectColor(this,'from-red-500 to-red-700')" data-color="from-red-500 to-red-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-700 ring-2 ring-offset-2 ring-transparent hover:ring-red-400 transition-all selected-color"></button>
-          <button type="button" onclick="selectColor(this,'from-blue-500 to-blue-700')" data-color="from-blue-500 to-blue-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 ring-2 ring-offset-2 ring-transparent hover:ring-blue-400 transition-all"></button>
-          <button type="button" onclick="selectColor(this,'from-green-500 to-green-700')" data-color="from-green-500 to-green-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-green-700 ring-2 ring-offset-2 ring-transparent hover:ring-green-400 transition-all"></button>
-          <button type="button" onclick="selectColor(this,'from-purple-500 to-purple-700')" data-color="from-purple-500 to-purple-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 ring-2 ring-offset-2 ring-transparent hover:ring-purple-400 transition-all"></button>
-          <button type="button" onclick="selectColor(this,'from-amber-500 to-amber-700')" data-color="from-amber-500 to-amber-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 ring-2 ring-offset-2 ring-transparent hover:ring-amber-400 transition-all"></button>
-          <button type="button" onclick="selectColor(this,'from-pink-500 to-pink-700')" data-color="from-pink-500 to-pink-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-pink-700 ring-2 ring-offset-2 ring-transparent hover:ring-pink-400 transition-all"></button>
-          <button type="button" onclick="selectColor(this,'from-teal-500 to-teal-700')" data-color="from-teal-500 to-teal-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 ring-2 ring-offset-2 ring-transparent hover:ring-teal-400 transition-all"></button>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
-        <button type="button" onclick="closeDoctorModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
-          Cancelar
-        </button>
-        <button type="submit" class="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
-          <i data-lucide="user-plus" class="w-4 h-4"></i> Adicionar Médico
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ========== MODAL: ADD SPECIALTY ========== -->
-<div id="modal-specialty" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-specialty')">
-  <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in">
-    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-      <div>
-        <h2 class="font-bold text-gray-900 text-base">Adicionar Especialidade</h2>
-        <p class="text-xs text-gray-500 mt-0.5">Configure a nova especialidade</p>
-      </div>
-      <button onclick="closeSpecialtyModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-
-    <form id="specialty-form" class="px-6 py-5 space-y-4" onsubmit="submitSpecialtyForm(event)" novalidate>
-      <!-- Name -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Nome da Especialidade <span class="text-red-500">*</span></label>
-        <input id="sf-name" type="text" placeholder="Ex: Cardiologia"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-        <p id="err-sf-name" class="text-xs text-red-600 hidden">Nome obrigatório</p>
-      </div>
-
-      <!-- Description -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Descrição <span class="text-red-500">*</span></label>
-        <input id="sf-description" type="text" placeholder="Ex: Doenças do coração e vasos sanguíneos"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-        <p id="err-sf-description" class="text-xs text-red-600 hidden">Descrição obrigatória</p>
-      </div>
-
-      <!-- Emoji -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Emoji / Ícone <span class="text-red-500">*</span></label>
-        <div class="flex items-center gap-3">
-          <input id="sf-emoji" type="text" placeholder="Ex: 🫀" maxlength="4"
-            class="w-24 px-4 py-3 text-2xl text-center border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-          <div class="flex-1">
-            <p class="text-xs text-gray-400">Sugestões:</p>
-            <div class="flex flex-wrap gap-1.5 mt-1" id="emoji-suggestions">
-              <!-- filled by JS -->
+        <!-- Admin info -->
+        <div class="p-5 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#C0152B] to-[#8B0D1E] flex items-center justify-center text-white font-bold text-sm shrink-0">AD</div>
+            <div class="min-w-0">
+              <p class="font-semibold text-gray-900 text-sm truncate">Administrador</p>
+              <p class="text-xs text-gray-500">admin@mediagenda.pt</p>
             </div>
           </div>
         </div>
-        <p id="err-sf-emoji" class="text-xs text-red-600 hidden">Emoji obrigatório</p>
+
+        <!-- Nav -->
+        <nav class="flex-1 p-4 space-y-1">
+          <button onclick="switchTab('overview')" id="nav-overview"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 bg-red-50 text-[#C0152B]">
+            <i data-lucide="home" class="w-[18px] h-[18px] shrink-0"></i> Visão Geral
+          </button>
+          <button onclick="switchTab('doctors')" id="nav-doctors"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+            <i data-lucide="stethoscope" class="w-[18px] h-[18px] shrink-0"></i> Médicos
+          </button>
+          <button onclick="switchTab('specialties')" id="nav-specialties"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+            <i data-lucide="layers" class="w-[18px] h-[18px] shrink-0"></i> Especialidades
+          </button>
+          <button onclick="switchTab('schedule')" id="nav-schedule"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+            <i data-lucide="calendar" class="w-[18px] h-[18px] shrink-0"></i> Horários de Hoje
+          </button>
+          <button onclick="switchTab('statistics')" id="nav-statistics"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+            <i data-lucide="bar-chart-2" class="w-[18px] h-[18px] shrink-0"></i> Estatísticas
+          </button>
+        </nav>
+
+        <!-- Logout -->
+        <div class="p-4 border-t border-gray-100">
+          <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+            <i data-lucide="log-out" class="w-[18px] h-[18px] shrink-0"></i> Sair
+          </a>
+        </div>
+      </aside>
+
+      <!-- ========== MAIN WRAPPER ========== -->
+       <!--lg:ml-64-->
+      <div class="w-full flex flex-col min-h-screen">
+
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-100 sticky top-0 z-30">
+          <div class="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+              </button>
+              <h1 id="page-title" class="font-bold text-gray-900 text-base">Painel de Administração</h1>
+            </div>
+            <div class="text-xs text-gray-500 hidden sm:block">26 de Março de 2026</div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 p-4 sm:p-6 overflow-auto">
+
+          <!-- ===== OVERVIEW ===== -->
+          <div id="tab-overview" class="tab-content active animate-fade-in space-y-6">
+            <!-- KPI cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div class="bg-white rounded-2xl p-4 card-shadow">
+                <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-3">
+                  <i data-lucide="calendar" class="w-[18px] h-[18px] text-blue-700"></i>
+                </div>
+                <p class="text-2xl font-extrabold text-gray-900">6</p>
+                <p class="text-xs text-gray-500 mt-0.5">Consultas Hoje</p>
+                <p class="text-[11px] text-gray-400 mt-1">2 realizadas</p>
+              </div>
+              <div class="bg-white rounded-2xl p-4 card-shadow">
+                <div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center mb-3">
+                  <i data-lucide="stethoscope" class="w-[18px] h-[18px] text-green-700"></i>
+                </div>
+                <p class="text-2xl font-extrabold text-gray-900">4</p>
+                <p class="text-xs text-gray-500 mt-0.5">Médicos Ativos</p>
+                <p class="text-[11px] text-gray-400 mt-1">6 total</p>
+              </div>
+              <div class="bg-white rounded-2xl p-4 card-shadow">
+                <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center mb-3">
+                  <i data-lucide="trending-up" class="w-[18px] h-[18px] text-[#C0152B]"></i>
+                </div>
+                <p class="text-2xl font-extrabold text-gray-900">389</p>
+                <p class="text-xs text-gray-500 mt-0.5">Este Mês</p>
+                <p class="text-[11px] text-gray-400 mt-1">+9% vs mês anterior</p>
+              </div>
+              <div class="bg-white rounded-2xl p-4 card-shadow">
+                <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center mb-3">
+                  <i data-lucide="check-circle-2" class="w-[18px] h-[18px] text-purple-700"></i>
+                </div>
+                <p class="text-2xl font-extrabold text-gray-900">92.8%</p>
+                <p class="text-xs text-gray-500 mt-0.5">Taxa de Conclusão</p>
+                <p class="text-[11px] text-gray-400 mt-1">Média mensal</p>
+              </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="bg-white rounded-2xl card-shadow p-5">
+              <h2 class="font-bold text-gray-900 mb-4">Consultas por Mês</h2>
+              <div class="h-48 sm:h-64">
+                <canvas id="chart-monthly-overview"></canvas>
+              </div>
+            </div>
+
+            <!-- Today schedule preview -->
+            <div class="bg-white rounded-2xl card-shadow">
+              <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h2 class="font-bold text-gray-900 text-sm">Horário de Hoje</h2>
+                <button onclick="switchTab('schedule')" class="text-xs font-semibold text-[#C0152B] hover:underline">Ver tudo</button>
+              </div>
+              <div class="divide-y divide-gray-50" id="schedule-preview"></div>
+            </div>
+          </div>
+
+          <!-- ===== DOCTORS ===== -->
+          <div id="tab-doctors" class="tab-content animate-fade-in space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="relative flex-1 max-w-sm">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                <input type="text" id="doctor-search" placeholder="Pesquisar médico ou especialidade..."
+                  oninput="renderDoctors()"
+                  class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B]" />
+              </div>
+              <button onclick="openDoctorModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors shrink-0">
+                <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Médico
+              </button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="doctors-grid"></div>
+            <div id="doctors-empty" class="hidden bg-white rounded-2xl card-shadow p-12 text-center">
+              <p class="text-gray-500 text-sm">Nenhum médico encontrado.</p>
+            </div>
+          </div>
+
+          <!-- ===== SPECIALTIES ===== -->
+          <div id="tab-specialties" class="tab-content animate-fade-in space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="relative flex-1 max-w-sm">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                <input type="text" id="specialty-admin-search" placeholder="Pesquisar especialidade..."
+                  oninput="renderSpecialtiesAdmin()"
+                  class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B]" />
+              </div>
+              <button onclick="openSpecialtyModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors shrink-0">
+                <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Especialidade
+              </button>
+            </div>
+
+            <!-- Stats row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="bg-white rounded-2xl p-4 card-shadow text-center">
+                <p class="text-2xl font-extrabold text-gray-900" id="sp-total-count">16</p>
+                <p class="text-xs text-gray-500 mt-1">Total</p>
+              </div>
+              <div class="bg-white rounded-2xl p-4 card-shadow text-center">
+                <p class="text-2xl font-extrabold text-green-600" id="sp-active-count">14</p>
+                <p class="text-xs text-gray-500 mt-1">Ativas</p>
+              </div>
+              <div class="bg-white rounded-2xl p-4 card-shadow text-center">
+                <p class="text-2xl font-extrabold text-amber-600" id="sp-low-count">3</p>
+                <p class="text-xs text-gray-500 mt-1">Poucas Vagas</p>
+              </div>
+              <div class="bg-white rounded-2xl p-4 card-shadow text-center">
+                <p class="text-2xl font-extrabold text-gray-900" id="sp-total-slots">128</p>
+                <p class="text-xs text-gray-500 mt-1">Vagas Totais</p>
+              </div>
+            </div>
+
+            <!-- Grid of specialty cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="specialties-admin-grid"></div>
+            <div id="specialties-empty" class="hidden bg-white rounded-2xl card-shadow p-12 text-center">
+              <p class="text-gray-500 text-sm">Nenhuma especialidade encontrada.</p>
+            </div>
+          </div>
+
+          <!-- ===== SCHEDULE ===== -->
+          <div id="tab-schedule" class="tab-content animate-fade-in space-y-4">
+            <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+              <div class="px-5 py-4 border-b border-gray-100 gradient-primary">
+                <p class="text-red-200 text-xs font-semibold uppercase tracking-widest mb-1">Horário</p>
+                <p class="text-white font-bold text-lg">Quinta-feira, 26 de Março de 2026</p>
+                <p class="text-red-200 text-sm">6 consultas · 2 realizadas · 4 pendentes</p>
+              </div>
+              <div class="divide-y divide-gray-50" id="schedule-full"></div>
+            </div>
+          </div>
+
+          <!-- ===== STATISTICS ===== -->
+          <div id="tab-statistics" class="tab-content animate-fade-in space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="bg-white rounded-2xl card-shadow p-5">
+                <h2 class="font-bold text-gray-900 mb-1">Evolução Mensal</h2>
+                <p class="text-xs text-gray-500 mb-4">Total de consultas nos últimos 6 meses</p>
+                <div class="h-48"><canvas id="chart-line"></canvas></div>
+              </div>
+              <div class="bg-white rounded-2xl card-shadow p-5">
+                <h2 class="font-bold text-gray-900 mb-1">Por Especialidade</h2>
+                <p class="text-xs text-gray-500 mb-4">Consultas este mês por especialidade</p>
+                <div class="h-48"><canvas id="chart-specialty"></canvas></div>
+              </div>
+            </div>
+
+            <!-- Doctor performance table -->
+            <div class="bg-white rounded-2xl card-shadow">
+              <div class="px-5 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-900 text-sm">Desempenho dos Médicos</h2>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-gray-100">
+                      <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Médico</th>
+                      <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Especialidade</th>
+                      <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
+                      <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Hoje</th>
+                      <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rating</th>
+                    </tr>
+                  </thead>
+                  <tbody id="perf-table" class="divide-y divide-gray-50"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </main>
       </div>
 
-      <!-- Slots -->
-      <div class="space-y-1.5">
-        <label class="block text-sm font-semibold text-gray-700">Vagas Disponíveis <span class="text-red-500">*</span></label>
-        <input id="sf-slots" type="number" min="1" max="50" placeholder="Ex: 10"
-          class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
-        <p id="err-sf-slots" class="text-xs text-red-600 hidden">Vagas obrigatórias (mín. 1)</p>
-      </div>
+      <!-- ========== MODAL: ADD DOCTOR ========== -->
+      <div id="modal-doctor" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-doctor')">
+        <div class="bg-white rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in">
+          <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div>
+              <h2 class="font-bold text-gray-900 text-base">Adicionar Médico</h2>
+              <p class="text-xs text-gray-500 mt-0.5">Preencha os dados do novo médico</p>
+            </div>
+            <button onclick="closeDoctorModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
 
-      <!-- Preview -->
-      <div id="sp-preview" class="hidden border-2 border-dashed border-gray-200 rounded-xl p-4">
-        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Pré-visualização</p>
-        <div class="text-left p-4 rounded-2xl border-2 border-gray-100 bg-white card-shadow w-full max-w-[180px]">
-          <div class="text-3xl mb-2" id="prev-emoji">🫀</div>
-          <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight" id="prev-name">Especialidade</h3>
-          <p class="text-[11px] text-gray-400 mb-2 leading-tight" id="prev-desc">Descrição</p>
-          <span class="text-[11px] font-bold text-green-600" id="prev-slots">10 vagas</span>
+          <form id="doctor-form" class="px-6 py-5 space-y-4" onsubmit="submitDoctorForm(event)" novalidate>
+            <!-- Name -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
+              <input id="f-name" type="text" placeholder="Ex: Dr. João Silva"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+              <p id="err-f-name" class="text-xs text-red-600 hidden">Nome obrigatório</p>
+            </div>
+
+            <!-- Specialty -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Especialidade <span class="text-red-500">*</span></label>
+              <select id="f-specialty"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all">
+                <option value="">Selecionar especialidade...</option>
+              </select>
+              <p id="err-f-specialty" class="text-xs text-red-600 hidden">Especialidade obrigatória</p>
+            </div>
+
+            <!-- CRM -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">CRM <span class="text-red-500">*</span></label>
+              <input id="f-crm" type="text" placeholder="Ex: 45.821"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
+              <p id="err-f-crm" class="text-xs text-red-600 hidden">CRM obrigatório</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Experience -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Anos de Experiência</label>
+                <input id="f-experience" type="number" min="0" max="60" placeholder="Ex: 12"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+              </div>
+              <!-- Status -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Estado <span class="text-red-500">*</span></label>
+                <select id="f-status"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all">
+                  <option value="active">Ativo</option>
+                  <option value="inactive">Inativo</option>
+                  <option value="on_leave">De Licença</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Telemóvel</label>
+              <input id="f-phone" type="tel" placeholder="Ex: 912 345 678"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
+            </div>
+
+            <!-- Email -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Email</label>
+              <input id="f-email" type="email" placeholder="Ex: medico@hospital.pt"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+              <p id="err-f-email" class="text-xs text-red-600 hidden">Email inválido</p>
+            </div>
+
+            <!-- Education -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Formação Académica</label>
+              <input id="f-education" type="text" placeholder="Ex: Faculdade de Medicina de Lisboa"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+            </div>
+
+            <!-- Languages -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Idiomas</label>
+              <div class="flex flex-wrap gap-2" id="lang-chips">
+                <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
+                  <input type="checkbox" name="lang" value="Português" class="hidden" checked /> Português
+                </label>
+                <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
+                  <input type="checkbox" name="lang" value="Inglês" class="hidden" /> Inglês
+                </label>
+                <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
+                  <input type="checkbox" name="lang" value="Francês" class="hidden" /> Francês
+                </label>
+                <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium cursor-pointer hover:border-[#C0152B] transition-colors has-[:checked]:border-[#C0152B] has-[:checked]:bg-red-50 has-[:checked]:text-[#C0152B]">
+                  <input type="checkbox" name="lang" value="Espanhol" class="hidden" /> Espanhol
+                </label>
+              </div>
+            </div>
+
+            <!-- Avatar color -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Cor do Avatar</label>
+              <div class="flex gap-2" id="color-chips">
+                <button type="button" onclick="selectColor(this,'from-red-500 to-red-700')" data-color="from-red-500 to-red-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-700 ring-2 ring-offset-2 ring-transparent hover:ring-red-400 transition-all selected-color"></button>
+                <button type="button" onclick="selectColor(this,'from-blue-500 to-blue-700')" data-color="from-blue-500 to-blue-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 ring-2 ring-offset-2 ring-transparent hover:ring-blue-400 transition-all"></button>
+                <button type="button" onclick="selectColor(this,'from-green-500 to-green-700')" data-color="from-green-500 to-green-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-green-700 ring-2 ring-offset-2 ring-transparent hover:ring-green-400 transition-all"></button>
+                <button type="button" onclick="selectColor(this,'from-purple-500 to-purple-700')" data-color="from-purple-500 to-purple-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 ring-2 ring-offset-2 ring-transparent hover:ring-purple-400 transition-all"></button>
+                <button type="button" onclick="selectColor(this,'from-amber-500 to-amber-700')" data-color="from-amber-500 to-amber-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 ring-2 ring-offset-2 ring-transparent hover:ring-amber-400 transition-all"></button>
+                <button type="button" onclick="selectColor(this,'from-pink-500 to-pink-700')" data-color="from-pink-500 to-pink-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-pink-700 ring-2 ring-offset-2 ring-transparent hover:ring-pink-400 transition-all"></button>
+                <button type="button" onclick="selectColor(this,'from-teal-500 to-teal-700')" data-color="from-teal-500 to-teal-700" class="color-chip w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 ring-2 ring-offset-2 ring-transparent hover:ring-teal-400 transition-all"></button>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+              <button type="button" onclick="closeDoctorModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" class="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Adicionar Médico
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
-        <button type="button" onclick="closeSpecialtyModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
-          Cancelar
-        </button>
-        <button type="submit" class="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
-          <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Especialidade
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+      <!-- ========== MODAL: ADD SPECIALTY ========== -->
+      <div id="modal-specialty" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-specialty')">
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in">
+          <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div>
+              <h2 class="font-bold text-gray-900 text-base">Adicionar Especialidade</h2>
+              <p class="text-xs text-gray-500 mt-0.5">Configure a nova especialidade</p>
+            </div>
+            <button onclick="closeSpecialtyModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
 
-<!-- ========== TOAST ========== -->
-<div id="toast" class="fixed bottom-6 right-6 z-[300] hidden">
-  <div class="flex items-center gap-3 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-xl text-sm font-medium animate-fade-in">
-    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-400 shrink-0"></i>
-    <span id="toast-msg">Operação concluída</span>
+          <form id="specialty-form" class="px-6 py-5 space-y-4" onsubmit="submitSpecialtyForm(event)" novalidate>
+            <!-- Name -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Nome da Especialidade <span class="text-red-500">*</span></label>
+              <input id="sf-name" type="text" placeholder="Ex: Cardiologia"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+              <p id="err-sf-name" class="text-xs text-red-600 hidden">Nome obrigatório</p>
+            </div>
+
+            <!-- Description -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Descrição <span class="text-red-500">*</span></label>
+              <input id="sf-description" type="text" placeholder="Ex: Doenças do coração e vasos sanguíneos"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+              <p id="err-sf-description" class="text-xs text-red-600 hidden">Descrição obrigatória</p>
+            </div>
+
+            <!-- Emoji -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Emoji / Ícone <span class="text-red-500">*</span></label>
+              <div class="flex items-center gap-3">
+                <input id="sf-emoji" type="text" placeholder="Ex: 🫀" maxlength="4"
+                  class="w-24 px-4 py-3 text-2xl text-center border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+                <div class="flex-1">
+                  <p class="text-xs text-gray-400">Sugestões:</p>
+                  <div class="flex flex-wrap gap-1.5 mt-1" id="emoji-suggestions">
+                    <!-- filled by JS -->
+                  </div>
+                </div>
+              </div>
+              <p id="err-sf-emoji" class="text-xs text-red-600 hidden">Emoji obrigatório</p>
+            </div>
+
+            <!-- Slots -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-gray-700">Vagas Disponíveis <span class="text-red-500">*</span></label>
+              <input id="sf-slots" type="number" min="1" max="50" placeholder="Ex: 10"
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
+              <p id="err-sf-slots" class="text-xs text-red-600 hidden">Vagas obrigatórias (mín. 1)</p>
+            </div>
+
+            <!-- Preview -->
+            <div id="sp-preview" class="hidden border-2 border-dashed border-gray-200 rounded-xl p-4">
+              <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Pré-visualização</p>
+              <div class="text-left p-4 rounded-2xl border-2 border-gray-100 bg-white card-shadow w-full max-w-[180px]">
+                <div class="text-3xl mb-2" id="prev-emoji">🫀</div>
+                <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight" id="prev-name">Especialidade</h3>
+                <p class="text-[11px] text-gray-400 mb-2 leading-tight" id="prev-desc">Descrição</p>
+                <span class="text-[11px] font-bold text-green-600" id="prev-slots">10 vagas</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+              <button type="button" onclick="closeSpecialtyModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" class="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors">
+                <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Especialidade
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ========== TOAST ========== -->
+      <div id="toast" class="fixed bottom-6 right-6 z-[300] hidden">
+        <div class="flex items-center gap-3 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-xl text-sm font-medium animate-fade-in">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-green-400 shrink-0"></i>
+          <span id="toast-msg">Operação concluída</span>
+        </div>
+      </div>
   </div>
-</div>
 
 <script>
 // ===== DATA =====
