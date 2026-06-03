@@ -5,7 +5,7 @@ export class ApiConsultas{
     async get(modelo){
         try{
             const res = await fetch(`${apiBaseUrl}/${modelo}`)
-            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ' + res.status + ')`);
+            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ${res.status})`);
             return await res.json()
         }catch(err){
             console.error(err)
@@ -22,8 +22,7 @@ export class ApiConsultas{
                 body:JSON.stringify(data)
 
             })
-            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ' + res.status + ')`);
-
+            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ${res.status})`);
             return await res.json()
         }catch(err){
             console.error(err)
@@ -39,7 +38,7 @@ export class ApiConsultas{
                 body:JSON.stringify(data)
 
             })
-            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ' + res.status + ')`);
+           
 
             return await res.json()
         }catch(err){
@@ -56,7 +55,7 @@ export class ApiConsultas{
                 body:JSON.stringify(data)
 
             })
-            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ' + res.status + ')`);
+            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ${res.status})`);
 
             return await res.json()
         }catch(err){

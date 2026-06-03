@@ -157,7 +157,7 @@
                   <p id="login-error-msg" class="text-sm text-red-700"></p>
                 </div>
 
-                <!--laternar entre usuarios medico/paciete-->
+                <!--alternar entre usuarios medico/paciete-->
                 <div class="user_radio">
                   <div>
                     <input type="radio" id="radioPaciente" name="radioPaciente">
@@ -185,7 +185,7 @@
                 <div class="space-y-1.5">
                   <div class="flex items-center justify-between">
                     <label for="login-password" class="block text-sm font-semibold text-gray-700">Senha</label>
-                    <a href="#" class="text-xs text-[#C0152B] hover:underline font-medium">Esqueceu a senha?</a>
+                    <a href="#" id="log-change-pass" class="text-xs text-[#C0152B] hover:underline font-medium">Esqueceu a senha?</a>
                   </div>
                   <div class="relative">
                     <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••••"
@@ -246,30 +246,30 @@
                 <!-- Full name -->
                 <div class="space-y-1.5">
                   <label for="reg-name" class="block text-sm font-semibold text-gray-700">Nome completo</label>
-                  <input id="reg-name" type="text" placeholder="João Silva"
+                  <input id="reg-name" name="regName" type="text" placeholder="João Silva"
                     class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
-                  <p id="reg-name-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                  <p id="reg-name-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="reg-name-err-msg"></span></p>
                 </div>
 
                 <!-- Email -->
                 <div class="space-y-1.5">
                   <label for="reg-email" class="block text-sm font-semibold text-gray-700">Email</label>
-                  <input id="reg-email" type="email" placeholder="joao@email.pt"
+                  <input id="reg-email" name="regEmail" type="email" placeholder="joao@email.pt"
                     class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
-                  <p id="reg-email-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                  <p id="reg-email-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="reg-email-err-msg"></span></p>
                 </div>
 
                 <!-- NIF + SNS -->
                 <div class="grid grid-cols-2 gap-3">
                   <div class="space-y-1.5">
                     <label for="reg-nif" class="block text-sm font-semibold text-gray-700">NIF</label>
-                    <input id="reg-nif" type="text" placeholder="123456789" maxlength="9"
+                    <input id="reg-nif" name="regNif" type="text" placeholder="123456789" maxlength="14"
                       class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
-                    <p id="reg-nif-err" class="hidden text-xs text-red-600"><span></span></p>
+                    <p id="reg-nif-err" class="hidden text-xs text-red-600"><span id="reg-nif-err-msg"></span></p>
                   </div>
                   <div class="space-y-1.5">
                     <label for="reg-sns" class="block text-sm font-semibold text-gray-700">Nº SNS</label>
-                    <input id="reg-sns" type="text" placeholder="123456789" maxlength="9"
+                    <input id="reg-sns" name="regSns" type="text" placeholder="123456789" maxlength="9"
                       class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
                     <p id="reg-sns-err" class="hidden text-xs text-red-600"><span></span></p>
                   </div>
@@ -278,16 +278,45 @@
                 <!-- Phone -->
                 <div class="space-y-1.5">
                   <label for="reg-phone" class="block text-sm font-semibold text-gray-700">Telemóvel</label>
-                  <input id="reg-phone" type="tel" placeholder="9XX XXX XXX"
+                  <input id="reg-phone" name="regPhone" type="tel" placeholder="9XX XXX XXX"
                     class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
                   <p id="reg-phone-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                </div>
+
+                 <!-- dataNascimento -->
+                <div class="space-y-1.5">
+                  <label for="reg-data" class="block text-sm font-semibold text-gray-700">Data de Nascimento</label>
+                  <input id="reg-data" name="regData" type="date"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  <p id="reg-data-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="reg-data-err-msg"></span></p>
+                </div>
+
+                  <!-- Morada -->
+                <div class="space-y-1.5">
+                  <label for="reg-morada" class="block text-sm font-semibold text-gray-700">Morada</label>
+                  <input id="reg-morada" name="regMorada" type="text" placeholder="Rua, Número, Cidade"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  <p id="reg-morada-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="reg-morada-err-msg"></span></p>
+                </div>
+
+                <!-- sexo -->
+                <div>
+                  <label for="reg-sexo" class="block text-sm font-semibold text-gray-700">Sexo</label>
+                  <select id="reg-sexo" name="regSexo"
+                    class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all">
+                    <option value="" disabled selected>Selecione o sexo</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                  <p id="reg-sexo-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="reg-sexo-err-msg"></span></p>
                 </div>
 
                 <!-- Password -->
                 <div class="space-y-1.5">
                   <label for="reg-password" class="block text-sm font-semibold text-gray-700">Senha</label>
                   <div class="relative">
-                    <input id="reg-password" type="password" placeholder="Mínimo 8 caracteres"
+                    <input id="reg-password" name="regSenha" type="password" placeholder="Mínimo 8 caracteres"
                       class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
                     <button type="button" onclick="togglePassword('reg-password','reg-pw-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                       <i id="reg-pw-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
@@ -300,13 +329,13 @@
                 <div class="space-y-1.5">
                   <label for="reg-confirm" class="block text-sm font-semibold text-gray-700">Confirmar Senha</label>
                   <div class="relative">
-                    <input id="reg-confirm" type="password" placeholder="Repita a senha"
+                    <input id="reg-confirm" name="regConfirmSenha" type="password" placeholder="Repita a senha"
                       class="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
                     <button type="button" onclick="togglePassword('reg-confirm','reg-confirm-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                       <i id="reg-confirm-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
                     </button>
                   </div>
-                  <p id="reg-confirm-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
+                  <p id="reg-confirm-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span id="reg-confirm-err-msg"></span></p>
                 </div>
 
                 <!-- Terms -->
@@ -319,7 +348,7 @@
                 <p id="reg-terms-err" class="hidden text-xs text-red-600 flex items-center gap-1"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> <span></span></p>
 
                 <!-- Submit -->
-                <button type="submit" id="register-btn"
+                <button type="submit" id="register-btn" name="regSubmitBtn"
                   class="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-150 shadow-sm"
                   style="min-height:48px;">
                   <i data-lucide="user-plus" style="width:18px;height:18px;"></i>
@@ -337,6 +366,71 @@
           </div>
         </div>
 
+      <!-- ========== MODAL: ADD DOCTOR ========== -->
+      <div id="modal-change-pass" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-doctor')">
+        <div class="bg-white rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in">
+          <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div>
+              <h2 class="font-bold text-gray-900 text-base">Alterar a Password</h2>
+              <p id="titulo-inf" class="text-xs text-gray-500 mt-0.5">Preencha o campo vamos verificar o teu email</p>
+            </div>
+            <button onclick="closeDoctorModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <form id="doctor-form" class="px-6 py-5 space-y-4" onsubmit="submitDoctorForm(event)" novalidate>
+
+            <!-- Auth error -->
+              <div id="ch-pass-error" class="hidden flex items-start gap-2.5 p-3.5 bg-green-50 border border-green-200 rounded-xl">
+                  <i data-lucide="alert-circle" style="width:16px;height:16px;color:#22c55e;flex-shrink:0;margin-top:2px;"></i>
+                  <p id="ch-error-msg" class="text-sm text-green-700"></p>
+              </div>   
+
+            <div>
+                <!-- email -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
+                <input id="f-email" name="fEmail" type="email" placeholder="exemplo@email.com"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+                <p id="err-f-email" class="text-xs text-red-600 hidden">campo  obrigatório</p>
+              </div>
+            </div>
+
+            <div>
+                  <!-- Nova pass -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Nova Senha <span class="text-red-500">*</span></label>
+                <input id="f-nova-senha" name="fNovaSenha" type="password" placeholder="Nova senha"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" disabled />
+                <p id="err-f-n-senha" class="text-xs text-red-600 hidden">campo  obrigatório</p>
+              </div>
+
+              <!-- Confirmar Senha -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Confirmar a Senha <span class="text-red-500">*</span></label>
+                <input id="f-conf-senha" name="fConfSenha" type="password" placeholder="exemplo@email.com"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" disabled/>
+                <p id="err-f-conf-senha" class="text-xs text-red-600 hidden">campo obrigatório</p>
+              </div>
+            </div>
+           
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+              <button type="button"  class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors" name="chPassBtnCancelar">
+                Cancelar
+              </button>
+              <button type="button" class="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors" name="chPassBtnSubmit">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                  Verificar Email
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
         <!-- Demo credentials -->
         <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
           <p class="text-xs font-bold text-blue-700 mb-1">Credenciais de demonstração</p>
@@ -351,28 +445,6 @@
 <script>
   //lucide.createIcons();
 
-  // ===== TAB SWITCHING =====
-  function switchTab(tab) {
-    const tabLogin = document.getElementById('tab-login');
-    const tabRegister = document.getElementById('tab-register');
-    const panelLogin = document.getElementById('panel-login');
-    const panelRegister = document.getElementById('panel-register');
-
-    if (tab === 'login') {
-      tabLogin.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-active';
-      tabRegister.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-inactive';
-      panelLogin.classList.add('active');
-      panelRegister.classList.remove('active');
-    } else {
-      tabRegister.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-active';
-      tabLogin.className = 'flex-1 py-4 text-sm font-semibold transition-all duration-200 tab-inactive';
-      panelRegister.classList.add('active');
-      panelLogin.classList.remove('active');
-      // Reset success state
-      document.getElementById('register-success').classList.remove('active');
-      document.getElementById('register-form').style.display = '';
-    }
-  }
 
   // ===== TOGGLE PASSWORD =====
   function togglePassword(inputId, iconId) {
@@ -434,9 +506,9 @@
 
     // Loading state
     const btn = document.getElementById('login-btn');
-    btn.disabled = true;
-    btn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A autenticar...`;
-    document.getElementById('login-error').classList.add('hidden');
+    // btn.disabled = true;
+    // btn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A autenticar...`;
+    // document.getElementById('login-error').classList.add('hidden');
 
     await new Promise(r => setTimeout(r, 1400));
 
