@@ -96,6 +96,8 @@ loginSubmitBtn.addEventListener('click', async()=>{
 
                 sessionStorage.setItem('NomeUsuario',NomeUsuario)
                 sessionStorage.setItem("typeUser","medico")
+                sessionStorage.setItem("Id",user.Id)
+
 
 
                 setTimeout(()=>{
@@ -452,19 +454,19 @@ const chErrorMsg = document.getElementById('ch-error-msg')
         }else{
             errfEmail.classList.add('hidden')
         }
-        
-         const verifyEmail = user.find(item => item.email === fEmail.value)
 
-         if(!verifyEmail){
+        const verifyEmail = user.find(item => item.email === fEmail.value)
+
+        if(!verifyEmail){
             errfEmail.classList.remove('hidden')
             errfEmail.innerText ='não foi encontrado nenhuma conta associada a este email'
             return
-         }else{
+        }else{
             errfEmail.classList.add('hidden')
-         }
+        }
 
          //codigo que vai colocar o efeito de processamento no botão de login
-        
+
         chPassBtnSubmit.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A verificar...`;
          
         setTimeout(()=>{
