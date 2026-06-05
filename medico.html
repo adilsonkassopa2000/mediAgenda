@@ -54,8 +54,8 @@
         <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
       </div>
       <div class="min-w-0">
-        <p class="font-semibold text-gray-900 text-sm truncate" id="sidebar-name">Dr.</p>
-        <p class="text-xs text-gray-500" id="sidebar-specialty"></p>
+        <p class="font-semibold text-gray-900 text-sm truncate" id="sidebar-name">Dr. Manuel Ferreira</p>
+        <p class="text-xs text-gray-500" id="sidebar-specialty">❤️ Cardiologia</p>
       </div>
     </div>
   </div>
@@ -224,8 +224,11 @@
                 <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                 <span class="text-xs font-semibold text-red-200">Em breve</span>
               </div>
-              <div id='proxima-consulta-info'>
-                
+              <p class="text-xl font-black font-tabular">10:30</p>
+              <p class="text-red-200 text-xs mt-0.5">Hoje, 26 de Março</p>
+              <div class="border-t border-red-400/30 mt-3 pt-3">
+                <p class="text-sm font-bold">Ana Beatriz Sousa</p>
+                <p class="text-xs text-red-200 mt-0.5">❤️ Cardiologia · Consulta de rotina</p>
               </div>
             </div>
             <div id="proxima-consulta-info-2" class="space-y-2 mt-1">
@@ -439,14 +442,14 @@
               <label class="block text-sm font-semibold text-gray-700">Especialidade</label>
               <select id="p-specialty"
                 class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all">
-                <option value="cardiologia" selected>❤️ Cardiologia</option>
-                <option value="ortopedia">🦴 Ortopedia</option>
-                <option value="dermatologia">🩺 Dermatologia</option>
-                <option value="neurologia">🧠 Neurologia</option>
-                <option value="oftalmologia">👁️ Oftalmologia</option>
-                <option value="pediatria">👶 Pediatria</option>
-                <option value="medicina-geral">🏥 Medicina Geral e Familiar</option>
-                <option value="psiquiatria">🧬 Psiquiatria</option>
+                <option value="cardiologia" selected>Cardiologia</option>
+                <option value="ortopedia">Ortopedia</option>
+                <option value="dermatologia">Dermatologia</option>
+                <option value="neurologia">Neurologia</option>
+                <option value="oftalmologia">Oftalmologia</option>
+                <option value="pediatria">Pediatria</option>
+                <option value="medicina-geral">Medicina Geral e Familiar</option>
+                <option value="psiquiatria">Psiquiatria</option>
               </select>
             </div>
             <div class="space-y-1.5">
@@ -609,16 +612,16 @@ const STATUS_CONFIG = {
 };
 
 const APPOINTMENTS = [
-  { id: 'AGD-2026-00841', patient: 'João Silva',         sns: '123 456 789', phone: '912 111 222', date: '2026-03-26', time: '08:00', specialty: '❤️ Cardiologia', status: 'completed' },
-  { id: 'AGD-2026-00842', patient: 'Maria Santos',       sns: '234 567 890', phone: '913 222 333', date: '2026-03-26', time: '09:00', specialty: '❤️ Cardiologia', status: 'completed' },
-  { id: 'AGD-2026-00843', patient: 'Ana Beatriz Sousa',  sns: '987 654 321', phone: '912 345 678', date: '2026-03-26', time: '10:30', specialty: '❤️ Cardiologia', status: 'confirmed' },
-  { id: 'AGD-2026-00844', patient: 'Pedro Rodrigues',    sns: '345 678 901', phone: '914 333 444', date: '2026-03-26', time: '11:00', specialty: '❤️ Cardiologia', status: 'confirmed' },
-  { id: 'AGD-2026-00845', patient: 'Carla Oliveira',     sns: '456 789 012', phone: '915 444 555', date: '2026-03-26', time: '14:00', specialty: '❤️ Cardiologia', status: 'pending' },
-  { id: 'AGD-2026-00846', patient: 'Rui Fernandes',      sns: '567 890 123', phone: '916 555 666', date: '2026-03-26', time: '15:30', specialty: '❤️ Cardiologia', status: 'pending' },
-  { id: 'AGD-2026-00831', patient: 'Luísa Cardoso',      sns: '678 901 234', phone: '917 666 777', date: '2026-03-25', time: '09:30', specialty: '❤️ Cardiologia', status: 'completed' },
-  { id: 'AGD-2026-00822', patient: 'António Soares',     sns: '789 012 345', phone: '918 777 888', date: '2026-03-24', time: '11:00', specialty: '❤️ Cardiologia', status: 'cancelled' },
-  { id: 'AGD-2026-00810', patient: 'Beatriz Lopes',      sns: '890 123 456', phone: '919 888 999', date: '2026-03-23', time: '14:30', specialty: '❤️ Cardiologia', status: 'completed' },
-  { id: 'AGD-2026-00805', patient: 'Carlos Mendes',      sns: '901 234 567', phone: '920 999 000', date: '2026-03-20', time: '10:00', specialty: '❤️ Cardiologia', status: 'cancelled' },
+  { id: 'AGD-2026-00841', patient: 'João Silva',         sns: '123 456 789', phone: '912 111 222', date: '2026-03-26', time: '08:00', specialty: 'Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00842', patient: 'Maria Santos',       sns: '234 567 890', phone: '913 222 333', date: '2026-03-26', time: '09:00', specialty: 'Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00843', patient: 'Ana Beatriz Sousa',  sns: '987 654 321', phone: '912 345 678', date: '2026-03-26', time: '10:30', specialty: 'Cardiologia', status: 'confirmed' },
+  { id: 'AGD-2026-00844', patient: 'Pedro Rodrigues',    sns: '345 678 901', phone: '914 333 444', date: '2026-03-26', time: '11:00', specialty: 'Cardiologia', status: 'confirmed' },
+  { id: 'AGD-2026-00845', patient: 'Carla Oliveira',     sns: '456 789 012', phone: '915 444 555', date: '2026-03-26', time: '14:00', specialty: 'Cardiologia', status: 'pending' },
+  { id: 'AGD-2026-00846', patient: 'Rui Fernandes',      sns: '567 890 123', phone: '916 555 666', date: '2026-03-26', time: '15:30', specialty: 'Cardiologia', status: 'pending' },
+  { id: 'AGD-2026-00831', patient: 'Luísa Cardoso',      sns: '678 901 234', phone: '917 666 777', date: '2026-03-25', time: '09:30', specialty: 'Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00822', patient: 'António Soares',     sns: '789 012 345', phone: '918 777 888', date: '2026-03-24', time: '11:00', specialty: 'Cardiologia', status: 'cancelled' },
+  { id: 'AGD-2026-00810', patient: 'Beatriz Lopes',      sns: '890 123 456', phone: '919 888 999', date: '2026-03-23', time: '14:30', specialty: 'Cardiologia', status: 'completed' },
+  { id: 'AGD-2026-00805', patient: 'Carlos Mendes',      sns: '901 234 567', phone: '920 999 000', date: '2026-03-20', time: '10:00', specialty: 'Cardiologia', status: 'cancelled' },
 ];
 
 const ALL_SLOTS = [

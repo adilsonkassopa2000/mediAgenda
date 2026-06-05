@@ -73,6 +73,7 @@
         </nav>
 
         <!-- Logout -->
+
         <div class="p-4 border-t border-gray-100">
           <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
             <i data-lucide="log-out" class="w-[18px] h-[18px] shrink-0"></i> Sair
@@ -171,7 +172,7 @@
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="doctors-grid"></div>
             <div id="doctors-empty" class="hidden bg-white rounded-2xl card-shadow p-12 text-center">
-              <p class="text-gray-500 text-sm">Nenhum médico encontrado.</p>
+              <p class="text-gray-500 text-sm">Nenhum médico registrado.</p>
             </div>
           </div>
 
@@ -282,6 +283,7 @@
           </div>
 
           <form id="doctor-form" class="px-6 py-5 space-y-4" onsubmit="submitDoctorForm(event)" novalidate>
+            <input type="hidden" id="f-id" />
             <!-- Name -->
             <div class="space-y-1.5">
               <label class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
@@ -336,10 +338,10 @@
 
             <!-- Email -->
             <div class="space-y-1.5">
-              <label class="block text-sm font-semibold text-gray-700">Email</label>
+              <label class="block text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
               <input id="f-email" type="email" placeholder="Ex: medico@hospital.pt"
                 class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-              <p id="err-f-email" class="text-xs text-red-600 hidden">Email inválido</p>
+              <p id="err-f-email" class="text-xs text-red-600 hidden">Email obrigatório ou inválido</p>
             </div>
 
             <!-- Education -->
@@ -383,7 +385,7 @@
             </div>
 
             <!-- Actions -->
-            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+            <div class="flex flex-row flex-nowrap items-center justify-end gap-3 pt-2 border-t border-gray-100">
               <button type="button" onclick="closeDoctorModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
                 Cancelar
               </button>
@@ -395,9 +397,30 @@
         </div>
       </div>
 
+      <div id="modal-delete-doctor" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-delete-doctor')">
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in">
+          <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div>
+              <h2 class="font-bold text-gray-900 text-base">Confirmar remoção</h2>
+              <p class="text-xs text-gray-500 mt-0.5">Tem a certeza que deseja remover este médico?</p>
+            </div>
+            <button onclick="closeDeleteDoctorModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <div class="px-6 py-6 space-y-4">
+            <p class="text-sm text-gray-700">O médico <span id="delete-doctor-name" class="font-semibold text-gray-900"></span> será removido permanentemente.</p>
+              <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                <button type="button" onclick="closeDeleteDoctorModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">Cancelar</button>
+                <button type="button" onclick="deleteDoctor()" class="px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] border border-[#C0152B] transition-colors">Confirmar</button>
+              </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ========== MODAL: ADD SPECIALTY ========== -->
       <div id="modal-specialty" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-specialty')">
-        <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in">
+        <div class="bg-white rounded-2xl w-full max-w-4xl mx-4 shadow-2xl animate-fade-in">
           <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
             <div>
               <h2 class="font-bold text-gray-900 text-base">Adicionar Especialidade</h2>
@@ -408,60 +431,39 @@
             </button>
           </div>
 
-          <form id="specialty-form" class="px-6 py-5 space-y-4" onsubmit="submitSpecialtyForm(event)" novalidate>
-            <!-- Name -->
-            <div class="space-y-1.5">
-              <label class="block text-sm font-semibold text-gray-700">Nome da Especialidade <span class="text-red-500">*</span></label>
-              <input id="sf-name" type="text" placeholder="Ex: Cardiologia"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-              <p id="err-sf-name" class="text-xs text-red-600 hidden">Nome obrigatório</p>
-            </div>
-
-            <!-- Description -->
-            <div class="space-y-1.5">
-              <label class="block text-sm font-semibold text-gray-700">Descrição <span class="text-red-500">*</span></label>
-              <input id="sf-description" type="text" placeholder="Ex: Doenças do coração e vasos sanguíneos"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-              <p id="err-sf-description" class="text-xs text-red-600 hidden">Descrição obrigatória</p>
-            </div>
-
-            <!-- Emoji -->
-            <div class="space-y-1.5">
-              <label class="block text-sm font-semibold text-gray-700">Emoji / Ícone <span class="text-red-500">*</span></label>
-              <div class="flex items-center gap-3">
-                <input id="sf-emoji" type="text" placeholder="Ex: 🫀" maxlength="4"
-                  class="w-24 px-4 py-3 text-2xl text-center border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
-                <div class="flex-1">
-                  <p class="text-xs text-gray-400">Sugestões:</p>
-                  <div class="flex flex-wrap gap-1.5 mt-1" id="emoji-suggestions">
-                    <!-- filled by JS -->
-                  </div>
-                </div>
+          <form id="specialty-form" class="px-6 py-5 grid gap-6 lg:grid-cols-[1fr_280px]" onsubmit="submitSpecialtyForm(event)" novalidate>
+            <div class="space-y-4">
+              <!-- Name -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Nome da Especialidade <span class="text-red-500">*</span></label>
+                <input id="sf-name" type="text" placeholder="Ex: Cardiologia"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+                <p id="err-sf-name" class="text-xs text-red-600 hidden">Nome obrigatório</p>
               </div>
-              <p id="err-sf-emoji" class="text-xs text-red-600 hidden">Emoji obrigatório</p>
+
+              <!-- Description -->
+              <div class="space-y-1.5">
+                <label class="block text-sm font-semibold text-gray-700">Descrição <span class="text-red-500">*</span></label>
+                <input id="sf-description" type="text" placeholder="Ex: Doenças do coração e vasos sanguíneos"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
+                <p id="err-sf-description" class="text-xs text-red-600 hidden">Descrição obrigatória</p>
+              </div>
+
             </div>
 
-            <!-- Slots -->
-            <div class="space-y-1.5">
-              <label class="block text-sm font-semibold text-gray-700">Vagas Disponíveis <span class="text-red-500">*</span></label>
-              <input id="sf-slots" type="number" min="1" max="50" placeholder="Ex: 10"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
-              <p id="err-sf-slots" class="text-xs text-red-600 hidden">Vagas obrigatórias (mín. 1)</p>
-            </div>
-
-            <!-- Preview -->
-            <div id="sp-preview" class="hidden border-2 border-dashed border-gray-200 rounded-xl p-4">
-              <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Pré-visualização</p>
-              <div class="text-left p-4 rounded-2xl border-2 border-gray-100 bg-white card-shadow w-full max-w-[180px]">
-                <div class="text-3xl mb-2" id="prev-emoji">🫀</div>
-                <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight" id="prev-name">Especialidade</h3>
-                <p class="text-[11px] text-gray-400 mb-2 leading-tight" id="prev-desc">Descrição</p>
-                <span class="text-[11px] font-bold text-green-600" id="prev-slots">10 vagas</span>
+            <div class="space-y-4">
+              <!-- Preview -->
+              <div id="sp-preview" class="hidden border-2 border-dashed border-gray-200 rounded-xl p-4">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Pré-visualização</p>
+                <div class="text-left p-4 rounded-2xl border-2 border-gray-100 bg-white card-shadow w-full max-w-[180px]">
+                    <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight" id="prev-name">Especialidade</h3>
+                  <p class="text-[11px] text-gray-400 mb-2 leading-tight" id="prev-desc">Descrição</p>
+                </div>
               </div>
             </div>
 
             <!-- Actions -->
-            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+            <div class="lg:col-span-2 flex flex-row flex-nowrap items-center justify-end gap-3 pt-2 border-t border-gray-100">
               <button type="button" onclick="closeSpecialtyModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
                 Cancelar
               </button>
@@ -470,6 +472,28 @@
               </button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <div id="modal-delete-specialty" class="modal-overlay" onclick="handleModalOutsideClick(event,'modal-delete-specialty')">
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in">
+          <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div>
+              <h2 class="font-bold text-gray-900 text-base">Confirmar remoção</h2>
+              <p class="text-xs text-gray-500 mt-0.5">Tem a certeza que deseja remover esta especialidade?</p>
+            </div>
+            <button onclick="closeDeleteSpecialtyModal()" class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 transition-colors">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <div class="px-6 py-6 space-y-4">
+            <p class="text-sm text-gray-700">A especialidade <span id="delete-specialty-name" class="font-semibold text-gray-900"></span> será removida permanentemente.</p>
+            <p class="text-xs text-amber-700 bg-amber-100 rounded-xl p-3 border border-amber-200">Se esta especialidade tiver médicos ou consultas associados, a remoção não será permitida.</p>
+              <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                <button type="button" onclick="closeDeleteSpecialtyModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">Cancelar</button>
+                <button type="button" onclick="deleteSpecialty()" class="px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] border border-[#C0152B] transition-colors">Confirmar</button>
+              </div>
+          </div>
         </div>
       </div>
 
@@ -484,33 +508,8 @@
 
 <script>
 // ===== DATA =====
-let doctors = [
-  { id: 'd1', name: 'Dr. Manuel Ferreira', specialty: 'Cardiologia', specialtyEmoji: '❤️', crm: '45.821', rating: 4.9, totalAppointments: 1247, todayAppointments: 8, status: 'active', initials: 'MF', color: 'from-red-500 to-red-700' },
-  { id: 'd2', name: 'Dra. Sofia Mendes', specialty: 'Ortopedia', specialtyEmoji: '🦴', crm: '38.492', rating: 4.8, totalAppointments: 983, todayAppointments: 6, status: 'active', initials: 'SM', color: 'from-blue-500 to-blue-700' },
-  { id: 'd3', name: 'Dr. Carlos Neves', specialty: 'Dermatologia', specialtyEmoji: '🩺', crm: '52.103', rating: 4.7, totalAppointments: 756, todayAppointments: 5, status: 'active', initials: 'CN', color: 'from-green-500 to-green-700' },
-  { id: 'd4', name: 'Dra. Ana Costa', specialty: 'Neurologia', specialtyEmoji: '🧠', crm: '41.677', rating: 4.9, totalAppointments: 1102, todayAppointments: 0, status: 'on_leave', initials: 'AC', color: 'from-purple-500 to-purple-700' },
-  { id: 'd5', name: 'Dr. Pedro Alves', specialty: 'Oftalmologia', specialtyEmoji: '👁️', crm: '33.215', rating: 4.6, totalAppointments: 621, todayAppointments: 4, status: 'active', initials: 'PA', color: 'from-amber-500 to-amber-700' },
-  { id: 'd6', name: 'Dra. Mariana Lima', specialty: 'Pediatria', specialtyEmoji: '👶', crm: '29.884', rating: 4.8, totalAppointments: 1389, todayAppointments: 0, status: 'inactive', initials: 'ML', color: 'from-pink-500 to-pink-700' },
-];
-
-let specialties = [
-  { id: 'sp-cardio', emoji: '🫀', name: 'Cardiologia', slots: 12, description: 'Doenças do coração e vasos sanguíneos' },
-  { id: 'sp-ortho', emoji: '🦴', name: 'Ortopedia', slots: 8, description: 'Ossos, articulações e músculos' },
-  { id: 'sp-neuro', emoji: '🧠', name: 'Neurologia', slots: 5, description: 'Sistema nervoso central e periférico' },
-  { id: 'sp-onco', emoji: '🎗️', name: 'Oncologia', slots: 3, description: 'Diagnóstico e tratamento do cancro' },
-  { id: 'sp-ophtalmo', emoji: '👁️', name: 'Oftalmologia', slots: 14, description: 'Saúde ocular e visão' },
-  { id: 'sp-dermato', emoji: '🩺', name: 'Dermatologia', slots: 9, description: 'Pele, cabelo e unhas' },
-  { id: 'sp-pneumo', emoji: '🫁', name: 'Pneumologia', slots: 7, description: 'Pulmões e sistema respiratório' },
-  { id: 'sp-gastro', emoji: '🔬', name: 'Gastroenterologia', slots: 6, description: 'Aparelho digestivo' },
-  { id: 'sp-endo', emoji: '⚕️', name: 'Endocrinologia', slots: 4, description: 'Sistema hormonal e metabólico' },
-  { id: 'sp-rheum', emoji: '🦾', name: 'Reumatologia', slots: 11, description: 'Artrite e doenças autoimunes' },
-  { id: 'sp-urol', emoji: '🩻', name: 'Urologia', slots: 8, description: 'Sistema urinário e reprodutor masculino' },
-  { id: 'sp-gyne', emoji: '🌸', name: 'Ginecologia', slots: 10, description: 'Saúde da mulher' },
-  { id: 'sp-psych', emoji: '💬', name: 'Psiquiatria', slots: 6, description: 'Saúde mental e comportamental' },
-  { id: 'sp-pedia', emoji: '👶', name: 'Pediatria', slots: 13, description: 'Saúde infantil e juvenil' },
-  { id: 'sp-otorino', emoji: '👂', name: 'Otorrinolaringologia', slots: 7, description: 'Ouvido, nariz e garganta' },
-  { id: 'sp-nefro', emoji: '🫘', name: 'Nefrologia', slots: 5, description: 'Rins e sistema renal' },
-];
+let doctors = [];
+let doctorsLoaded = false;
 
 const todaySchedule = [
   { time: '08:00', doctor: 'Dr. Manuel Ferreira', patient: 'João Silva', specialty: 'Cardiologia', status: 'completed' },
@@ -539,6 +538,26 @@ const appointmentsBySpecialty = [
   { name: 'Oftalmologia', value: 87 },
 ];
 
+let specialties = [];
+const SPECIALTY_ICONS = {
+  cardiologia: '',
+  ortopedia: '',
+  neurologia: '',
+  oftalmologia: '',
+  dermatologia: '',
+  pneumologia: '',
+  gastroenterologia: '',
+  endocrinologia: '',
+  reumatologia: '',
+  urologia: '',
+  ginecologia: '',
+  psiquiatria: '',
+  pediatria: '',
+  otorrinolaringologia: '',
+  nefrologia: '',
+  oncologia: ''
+};
+
 const statusConfig = {
   confirmed: { label: 'Confirmada', color: 'bg-green-100 text-green-700', dot: 'bg-green-500' },
   completed: { label: 'Realizada', color: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
@@ -552,8 +571,130 @@ const doctorStatusConfig = {
   on_leave: { label: 'De Licença', color: 'bg-amber-100 text-amber-700' },
 };
 
+const API_BASE_URL = 'http://localhost:3001';
 let selectedColor = 'from-red-500 to-red-700';
-const EMOJI_SUGGESTIONS = ['🫀','🦴','🧠','👁️','🩺','🫁','🔬','⚕️','🦾','🩻','🌸','💬','👶','👂','🫘','🎗️','💉','🏥','🩹','🧬'];
+let currentDoctorMode = 'add';
+let currentDoctorId = '';
+let deleteDoctorId = '';
+let deleteDoctorName = '';
+let currentSpecialtyMode = 'add';
+let currentSpecialtyId = '';
+let deleteSpecialtyId = '';
+let deleteSpecialtyName = '';
+
+async function fetchDoctors() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/medico`);
+    if (!response.ok) throw new Error('Falha ao carregar médicos');
+    const storedColors = getStoredDoctorColors();
+    const storedRatings = getStoredDoctorRatings();
+    const data = await response.json();
+    doctors = data.map(d => {
+      const id = d.Id || d.id || 'd' + Date.now();
+      const rating = storedRatings[id] ?? getRandomRating();
+      if (!storedRatings[id]) setStoredDoctorRating(id, rating);
+      return {
+        id,
+        name: d.nome || d.name || 'Sem nome',
+        specialty: d.especialidade?.especialidade || d.especialidadeId || 'Sem especialidade',
+        specialtyEmoji: specialties.find(s => s.name === (d.especialidade?.especialidade || ''))?.emoji || '',
+        crm: d.crm || '---',
+        rating,
+        totalAppointments: Number(d.totalAppointments ?? 0),
+        todayAppointments: Number(d.todayAppointments ?? 0),
+        status: d.estado?.estado || 'active',
+        initials: getInitials(d.nome || d.name || ''),
+        color: storedColors[id] || selectedColor,
+        especialidadeId: d.especialidadeId || '',
+        estadoId: d.estadoId || '',
+        userId: d.userId || ''
+      };
+    });
+    doctorsLoaded = true;
+  } catch (error) {
+    doctors = [];
+    doctorsLoaded = true;
+  }
+  renderDoctors();
+}
+
+function getStoredDoctorColors() {
+  const raw = localStorage.getItem('doctorColors');
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+function getStoredDoctorRatings() {
+  const raw = localStorage.getItem('doctorRatings');
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+function setStoredDoctorColor(id, color) {
+  if (!id) return;
+  const colors = getStoredDoctorColors();
+  colors[id] = color;
+  localStorage.setItem('doctorColors', JSON.stringify(colors));
+}
+
+function setStoredDoctorRating(id, rating) {
+  if (!id) return;
+  const ratings = getStoredDoctorRatings();
+  ratings[id] = rating;
+  localStorage.setItem('doctorRatings', JSON.stringify(ratings));
+}
+
+function removeStoredDoctorColor(id) {
+  if (!id) return;
+  const colors = getStoredDoctorColors();
+  if (colors[id]) {
+    delete colors[id];
+    localStorage.setItem('doctorColors', JSON.stringify(colors));
+  }
+}
+
+function removeStoredDoctorRating(id) {
+  if (!id) return;
+  const ratings = getStoredDoctorRatings();
+  if (ratings[id]) {
+    delete ratings[id];
+    localStorage.setItem('doctorRatings', JSON.stringify(ratings));
+  }
+}
+
+function getRandomRating() {
+  return Math.floor(Math.random() * 5) + 1;
+}
+
+function getSpecialtyEmoji(name, img) {
+  return '';
+}
+
+async function fetchSpecialties() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/especialidade`);
+    if (!response.ok) throw new Error('Falha ao carregar especialidades');
+    const data = await response.json();
+    specialties = data.map(item => ({
+      id: item.Id || item.id || 'sp-' + Date.now(),
+      name: item.especialidade || item.name || 'Sem especialidade',
+      description: item.descricao || item.description || '',
+      emoji: getSpecialtyEmoji(item.especialidade || item.name, item.img),
+      slots: Number(item.slots ?? item.vagas ?? 0),
+      img: item.img || ''
+    }));
+  } catch (error) {
+    specialties = [];
+  }
+}
 
 // ===== TAB NAVIGATION =====
 let currentTab = 'overview';
@@ -648,7 +789,7 @@ function doctorCardHTML(d) {
         <div class="flex items-start justify-between gap-2 flex-wrap">
           <div>
             <p class="font-bold text-gray-900 text-sm">${d.name}</p>
-            <p class="text-xs text-gray-500">${d.specialtyEmoji} ${d.specialty} · CRM ${d.crm}</p>
+            <p class="text-xs text-gray-500">${d.specialty} · CRM ${d.crm}</p>
           </div>
           <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${cfg.color}">${cfg.label}</span>
         </div>
@@ -672,27 +813,26 @@ function doctorCardHTML(d) {
       </div>
     </div>
     <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
-      <button class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+      <button type="button" onclick="viewDoctor('${d.id}')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
         <i data-lucide="eye" class="w-3 h-3"></i> Ver
       </button>
-      <button class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
+      <button type="button" onclick="editDoctor('${d.id}')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
         <i data-lucide="edit-2" class="w-3 h-3"></i> Editar
+      </button>
+      <button type="button" onclick="confirmDeleteDoctor('${d.id}','${d.name.replace(/'/g,"\\'") }')" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+        <i data-lucide="trash-2" class="w-3 h-3"></i> Remover
       </button>
     </div>
   </div>`;
 }
 
 // ===== DOCTOR MODAL =====
-function openDoctorModal() {
-  populateSpecialtySelect();
-  document.getElementById('modal-doctor').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
 function closeDoctorModal() {
   document.getElementById('modal-doctor').classList.remove('open');
   document.body.style.overflow = '';
   document.getElementById('doctor-form').reset();
+  currentDoctorMode = 'add';
+  currentDoctorId = '';
   // reset color
   document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('ring-[#C0152B]'));
   document.querySelector('.color-chip').classList.add('ring-[#C0152B]');
@@ -702,6 +842,131 @@ function closeDoctorModal() {
     const err = document.getElementById('err-' + f);
     if (err) err.classList.add('hidden');
   });
+  setDoctorFormMode('add');
+}
+
+function openDeleteDoctorModal(id, name) {
+  deleteDoctorId = id;
+  deleteDoctorName = name;
+  document.getElementById('delete-doctor-name').textContent = name;
+  document.getElementById('modal-delete-doctor').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function confirmDeleteDoctor(id, name) {
+  openDeleteDoctorModal(id, name);
+}
+
+function closeDeleteDoctorModal() {
+  document.getElementById('modal-delete-doctor').classList.remove('open');
+  document.body.style.overflow = '';
+  deleteDoctorId = '';
+  deleteDoctorName = '';
+}
+
+async function deleteDoctor() {
+  if (!deleteDoctorId) return;
+  try {
+    const response = await fetch(`${API_BASE_URL}/medico/delete`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: deleteDoctorId })
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      showToast(error.message || 'Erro ao remover médico');
+      return;
+    }
+    removeStoredDoctorColor(deleteDoctorId);
+    removeStoredDoctorRating(deleteDoctorId);
+    doctors = doctors.filter(d => d.id !== deleteDoctorId);
+    renderDoctors();
+    closeDeleteDoctorModal();
+    showToast('Médico removido com sucesso');
+  } catch (error) {
+    showToast('Não foi possível conectar ao servidor');
+  }
+}
+
+function setDoctorFormMode(mode) {
+  currentDoctorMode = mode;
+  const modal = document.getElementById('modal-doctor');
+  const title = modal.querySelector('h2');
+  const subtitle = modal.querySelector('p');
+  const submitButton = document.querySelector('#doctor-form button[type="submit"]');
+  if (!submitButton) return;
+
+  if (mode === 'view') {
+    title.textContent = 'Ver Médico';
+    subtitle.textContent = 'Visualize os dados do médico';
+    submitButton.classList.add('hidden');
+    setDoctorFormDisabled(true);
+  } else if (mode === 'edit') {
+    title.textContent = 'Editar Médico';
+    subtitle.textContent = 'Atualize os dados do médico';
+    submitButton.classList.remove('hidden');
+    submitButton.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Salvar Alterações';
+    setDoctorFormDisabled(false);
+  } else {
+    title.textContent = 'Adicionar Médico';
+    subtitle.textContent = 'Preencha os dados do novo médico';
+    submitButton.classList.remove('hidden');
+    submitButton.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i> Adicionar Médico';
+    setDoctorFormDisabled(false);
+  }
+  lucide.createIcons();
+}
+
+function setDoctorFormDisabled(disabled) {
+  const fields = ['f-name','f-specialty','f-crm','f-experience','f-status','f-phone','f-email','f-education'];
+  fields.forEach(id => {
+    const field = document.getElementById(id);
+    if (field) field.disabled = disabled;
+  });
+  document.querySelectorAll('#lang-chips input').forEach(input => input.disabled = disabled);
+  document.querySelectorAll('#color-chips button').forEach(button => button.disabled = disabled);
+}
+
+function openDoctorModal(mode = 'add', doctor = null) {
+  populateSpecialtySelect();
+  currentDoctorId = doctor?.id || '';
+  const form = document.getElementById('doctor-form');
+  form.reset();
+  if (doctor) {
+    document.getElementById('f-id').value = doctor.id;
+    document.getElementById('f-name').value = doctor.name;
+    document.getElementById('f-specialty').value = doctor.specialty;
+    document.getElementById('f-crm').value = doctor.crm;
+    document.getElementById('f-experience').value = doctor.experience || '';
+    document.getElementById('f-status').value = doctor.status || 'active';
+    document.getElementById('f-phone').value = doctor.phone || '';
+    document.getElementById('f-email').value = doctor.email || '';
+    document.getElementById('f-education').value = doctor.education || '';
+    selectedColor = doctor.color || 'from-red-500 to-red-700';
+    document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('ring-[#C0152B]'));
+    const selected = Array.from(document.querySelectorAll('.color-chip')).find(btn => btn.getAttribute('data-color') === selectedColor);
+    if (selected) selected.classList.add('ring-[#C0152B]');
+  } else {
+    document.getElementById('f-id').value = '';
+    selectedColor = 'from-red-500 to-red-700';
+    document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('ring-[#C0152B]'));
+    document.querySelector('.color-chip').classList.add('ring-[#C0152B]');
+  }
+  setDoctorFormMode(mode);
+  document.getElementById('modal-doctor').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function viewDoctor(id) {
+  const doctor = doctors.find(d => d.id === id);
+  if (!doctor) return;
+  openDoctorModal('view', doctor);
+}
+
+function editDoctor(id) {
+  const doctor = doctors.find(d => d.id === id);
+  if (!doctor) return;
+  openDoctorModal('edit', doctor);
 }
 
 function populateSpecialtySelect() {
@@ -727,7 +992,7 @@ function getInitials(name) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-function submitDoctorForm(e) {
+async function submitDoctorForm(e) {
   e.preventDefault();
   let valid = true;
   const name = document.getElementById('f-name').value.trim();
@@ -742,28 +1007,87 @@ function submitDoctorForm(e) {
   if (!name) { document.getElementById('err-f-name').classList.remove('hidden'); valid = false; }
   if (!specialty) { document.getElementById('err-f-specialty').classList.remove('hidden'); valid = false; }
   if (!crm) { document.getElementById('err-f-crm').classList.remove('hidden'); valid = false; }
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('err-f-email').classList.remove('hidden'); valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('err-f-email').classList.remove('hidden'); valid = false; }
 
   if (!valid) return;
 
-  const sp = specialties.find(s => s.name === specialty);
-  const newDoctor = {
-    id: 'd' + Date.now(),
-    name,
-    specialty,
-    specialtyEmoji: sp ? sp.emoji : '🩺',
-    crm,
-    rating: 0,
-    totalAppointments: 0,
-    todayAppointments: 0,
-    status: document.getElementById('f-status').value,
-    initials: getInitials(name),
-    color: selectedColor,
+  const status = document.getElementById('f-status').value;
+  const experience = document.getElementById('f-experience').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const education = document.getElementById('f-education').value.trim();
+  const payload = {
+    nome: name,
+    crm: crm,
+    escola: education || 'Não especificado',
+    anoExperiencia: experience || '0',
+    especialidadeName: specialty,
+    estadoName: status,
+    email: email || undefined,
+    senha: 'MediAgenda123',
   };
-  doctors.unshift(newDoctor);
-  closeDoctorModal();
-  renderDoctors();
-  showToast(`${name} adicionado com sucesso!`);
+
+  try {
+    if (currentDoctorMode === 'edit') {
+      const id = document.getElementById('f-id').value;
+      const doctorIndex = doctors.findIndex(d => d.id === id);
+      if (doctorIndex === -1) throw new Error('Médico não encontrado');
+      doctors[doctorIndex] = {
+        ...doctors[doctorIndex],
+        name,
+        specialty,
+        crm,
+        experience: experience || doctors[doctorIndex].experience || '0',
+        status,
+        phone: phone || doctors[doctorIndex].phone || '',
+        email,
+        education: education || doctors[doctorIndex].education || '',
+        initials: getInitials(name),
+        color: selectedColor,
+      };
+      setStoredDoctorColor(id, selectedColor);
+      renderDoctors();
+      closeDoctorModal();
+      showToast('Dados do médico atualizados com sucesso!');
+      return;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/medico/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      showToast(error.message || 'Erro ao adicionar médico');
+      return;
+    }
+
+    const created = await response.json();
+    const sp = specialties.find(s => s.name === specialty);
+    const newDoctor = {
+      id: created.Id || 'd' + Date.now(),
+      name,
+      specialty,
+      specialtyEmoji: sp ? sp.emoji : '',
+      crm,
+      rating: getRandomRating(),
+      totalAppointments: 0,
+      todayAppointments: 0,
+      status,
+      initials: getInitials(name),
+      color: selectedColor,
+    };
+
+    setStoredDoctorColor(newDoctor.id, selectedColor);
+    setStoredDoctorRating(newDoctor.id, newDoctor.rating);
+    doctors.unshift(newDoctor);
+    closeDoctorModal();
+    renderDoctors();
+    showToast(`${name} adicionado com sucesso!`);
+  } catch (error) {
+    showToast('Não foi possível conectar ao servidor');
+  }
 }
 
 // ===== SPECIALTIES ADMIN =====
@@ -796,22 +1120,58 @@ function specialtyAdminCardHTML(s) {
       <p class="text-[11px] text-gray-400 leading-tight">${s.description}</p>
     </div>
     <div class="flex items-center justify-end gap-2 mt-4 pt-3 border-t border-gray-100">
-      <button onclick="deleteSpecialty('${s.id}')" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
-        <i data-lucide="trash-2" class="w-3 h-3"></i>
+      <button onclick="confirmDeleteSpecialty('${s.id}','${s.name.replace(/'/g,"\\'")}')" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+        <i data-lucide="trash-2" class="w-3 h-3"></i> Remover
       </button>
-      <button onclick="editSpecialtySlots('${s.id}')" class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
+      <button onclick="openSpecialtyModal('edit','${s.id}')" class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
         <i data-lucide="edit-2" class="w-3 h-3"></i> Editar
       </button>
     </div>
   </div>`;
 }
 
-function deleteSpecialty(id) {
-  if (!confirm('Tem a certeza que deseja remover esta especialidade?')) return;
-  specialties = specialties.filter(s => s.id !== id);
-  renderSpecialtiesAdmin();
-  updateSpecialtyStats();
-  showToast('Especialidade removida.');
+async function deleteSpecialty(id) {
+  const targetId = id || deleteSpecialtyId;
+  if (!targetId) {
+    showToast('Não foi possível identificar a especialidade para exclusão.');
+    closeDeleteSpecialtyModal();
+    return;
+  }
+  try {
+    const response = await fetch(`${API_BASE_URL}/especialidade/delete?id=${encodeURIComponent(targetId)}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: targetId })
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: response.statusText || 'Erro ao remover especialidade' }));
+      showToast(error.message || 'Erro ao remover especialidade');
+      return;
+    }
+    await fetchSpecialties();
+    renderSpecialtiesAdmin();
+    updateSpecialtyStats();
+    populateSpecialtySelect();
+    showToast('Especialidade removida.');
+    closeDeleteSpecialtyModal();
+  } catch (error) {
+    showToast('Não foi possível conectar ao servidor');
+  }
+}
+
+function confirmDeleteSpecialty(id, name) {
+  deleteSpecialtyId = id;
+  deleteSpecialtyName = name;
+  document.getElementById('delete-specialty-name').textContent = name;
+  document.getElementById('modal-delete-specialty').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteSpecialtyModal() {
+  document.getElementById('modal-delete-specialty').classList.remove('open');
+  document.body.style.overflow = '';
+  deleteSpecialtyId = '';
+  deleteSpecialtyName = '';
 }
 
 function editSpecialtySlots(id) {
@@ -838,37 +1198,55 @@ function updateSpecialtyStats() {
 }
 
 // ===== SPECIALTY MODAL =====
-function openSpecialtyModal() {
-  renderEmojiSuggestions();
+function openSpecialtyModal(mode = 'add', specialtyId = '') {
+  currentSpecialtyMode = mode;
+  currentSpecialtyId = specialtyId;
+
+  const form = document.getElementById('specialty-form');
+  form.reset();
+  document.getElementById('sp-preview').classList.add('hidden');
+
+  if (mode === 'edit' && specialtyId) {
+    const sp = specialties.find(item => item.id === specialtyId);
+    if (sp) {
+      document.getElementById('sf-name').value = sp.name;
+      document.getElementById('sf-description').value = sp.description;
+      updateSpecialtyPreview();
+    }
+  }
+
+  setSpecialtyFormMode(mode);
   document.getElementById('modal-specialty').classList.add('open');
   document.body.style.overflow = 'hidden';
   // live preview
-  ['sf-name','sf-description','sf-emoji','sf-slots'].forEach(id => {
+  ['sf-name','sf-description'].forEach(id => {
     document.getElementById(id).addEventListener('input', updateSpecialtyPreview);
   });
 }
 
-function renderEmojiSuggestions() {
-  const el = document.getElementById('emoji-suggestions');
-  el.innerHTML = EMOJI_SUGGESTIONS.map(e =>
-    `<button type="button" onclick="pickEmoji('${e}')" class="text-xl hover:scale-125 transition-transform">${e}</button>`
-  ).join('');
-}
+function setSpecialtyFormMode(mode) {
+  const modal = document.getElementById('modal-specialty');
+  const title = modal.querySelector('h2');
+  const subtitle = modal.querySelector('p');
+  const submitButton = modal.querySelector('button[type="submit"]');
 
-function pickEmoji(e) {
-  document.getElementById('sf-emoji').value = e;
-  updateSpecialtyPreview();
+  if (mode === 'edit') {
+    title.textContent = 'Editar Especialidade';
+    subtitle.textContent = 'Atualize os dados da especialidade';
+    submitButton.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Salvar Alterações';
+  } else {
+    title.textContent = 'Adicionar Especialidade';
+    subtitle.textContent = 'Configure a nova especialidade';
+    submitButton.innerHTML = '<i data-lucide="plus" class="w-4 h-4"></i> Adicionar Especialidade';
+  }
+  lucide.createIcons();
 }
 
 function updateSpecialtyPreview() {
   const name = document.getElementById('sf-name').value || 'Especialidade';
   const desc = document.getElementById('sf-description').value || 'Descrição';
-  const emoji = document.getElementById('sf-emoji').value || '🏥';
-  const slots = document.getElementById('sf-slots').value || '0';
-  document.getElementById('prev-emoji').textContent = emoji;
   document.getElementById('prev-name').textContent = name;
   document.getElementById('prev-desc').textContent = desc;
-  document.getElementById('prev-slots').textContent = slots + ' vagas';
   document.getElementById('sp-preview').classList.remove('hidden');
 }
 
@@ -877,49 +1255,87 @@ function closeSpecialtyModal() {
   document.body.style.overflow = '';
   document.getElementById('specialty-form').reset();
   document.getElementById('sp-preview').classList.add('hidden');
-  ['sf-name','sf-description','sf-emoji','sf-slots'].forEach(f => {
+  ['sf-name','sf-description'].forEach(f => {
     document.getElementById('err-'+f)?.classList.add('hidden');
   });
+  currentSpecialtyMode = 'add';
+  currentSpecialtyId = '';
+  setSpecialtyFormMode('add');
 }
 
-function submitSpecialtyForm(e) {
+async function submitSpecialtyForm(e) {
   e.preventDefault();
   let valid = true;
   const name = document.getElementById('sf-name').value.trim();
   const description = document.getElementById('sf-description').value.trim();
-  const emoji = document.getElementById('sf-emoji').value.trim();
-  const slotsRaw = document.getElementById('sf-slots').value;
-  const slots = parseInt(slotsRaw);
 
-  ['sf-name','sf-description','sf-emoji','sf-slots'].forEach(f =>
+  ['sf-name','sf-description'].forEach(f =>
     document.getElementById('err-'+f).classList.add('hidden')
   );
 
   if (!name) { document.getElementById('err-sf-name').classList.remove('hidden'); valid = false; }
   if (!description) { document.getElementById('err-sf-description').classList.remove('hidden'); valid = false; }
-  if (!emoji) { document.getElementById('err-sf-emoji').classList.remove('hidden'); valid = false; }
-  if (!slotsRaw || isNaN(slots) || slots < 1) { document.getElementById('err-sf-slots').classList.remove('hidden'); valid = false; }
 
   if (!valid) return;
 
-  if (specialties.find(s => s.name.toLowerCase() === name.toLowerCase())) {
+  const duplicate = specialties.find(s => s.name.toLowerCase() === name.toLowerCase() && s.id !== currentSpecialtyId);
+  if (duplicate) {
     alert('Já existe uma especialidade com este nome.');
     return;
   }
 
-  specialties.push({ id: 'sp-' + Date.now(), emoji, name, slots, description });
-  closeSpecialtyModal();
-  renderSpecialtiesAdmin();
-  updateSpecialtyStats();
-  populateSpecialtySelect();
-  showToast(`Especialidade "${name}" adicionada com sucesso!`);
+  try {
+    if (currentSpecialtyMode === 'edit' && currentSpecialtyId) {
+      const response = await fetch(`${API_BASE_URL}/especialidade/update`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: currentSpecialtyId, especialidade: name, descricao: description })
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        showToast(error.message || 'Erro ao atualizar especialidade');
+        return;
+      }
+      await response.json();
+      await fetchSpecialties();
+      closeSpecialtyModal();
+      renderSpecialtiesAdmin();
+      updateSpecialtyStats();
+      populateSpecialtySelect();
+      showToast(`Especialidade "${name}" atualizada com sucesso!`);
+      return;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/especialidade/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ especialidade: name, descricao: description })
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      showToast(error.message || 'Erro ao adicionar especialidade');
+      return;
+    }
+
+    await response.json();
+    await fetchSpecialties();
+    closeSpecialtyModal();
+    renderSpecialtiesAdmin();
+    updateSpecialtyStats();
+    populateSpecialtySelect();
+    showToast(`Especialidade "${name}" adicionada com sucesso!`);
+  } catch (error) {
+    showToast('Não foi possível conectar ao servidor');
+  }
 }
 
 // ===== MODAL outside click =====
 function handleModalOutsideClick(e, id) {
   if (e.target.id === id) {
     if (id === 'modal-doctor') closeDoctorModal();
-    else closeSpecialtyModal();
+    else if (id === 'modal-specialty') closeSpecialtyModal();
+    else if (id === 'modal-delete-doctor') closeDeleteDoctorModal();
+    else if (id === 'modal-delete-specialty') closeDeleteSpecialtyModal();
   }
 }
 
@@ -1007,7 +1423,7 @@ function renderPerfTable() {
           <span class="text-sm font-semibold text-gray-900 truncate max-w-[120px]">${d.name}</span>
         </div>
       </td>
-      <td class="px-5 py-3.5 hidden sm:table-cell"><span class="text-sm text-gray-600">${d.specialtyEmoji} ${d.specialty}</span></td>
+      <td class="px-5 py-3.5 hidden sm:table-cell"><span class="text-sm text-gray-600">${d.specialty}</span></td>
       <td class="px-5 py-3.5 text-right"><span class="text-sm font-semibold text-gray-900 font-tabular">${d.totalAppointments.toLocaleString('pt-PT')}</span></td>
       <td class="px-5 py-3.5 text-right hidden md:table-cell"><span class="text-sm font-semibold text-gray-700 font-tabular">${d.todayAppointments}</span></td>
       <td class="px-5 py-3.5 text-right">
@@ -1031,14 +1447,15 @@ function showToast(msg) {
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   lucide.createIcons();
   renderSchedulePreview();
   renderScheduleFull();
-  renderDoctors();
+  await fetchSpecialties();
+  await fetchDoctors();
   renderPerfTable();
-  updateSpecialtyStats();
   renderSpecialtiesAdmin();
+  updateSpecialtyStats();
   setTimeout(renderOverviewChart, 50);
 });
 </script>
