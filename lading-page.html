@@ -528,6 +528,12 @@
   // ===== LUCIDE ICONS =====
   lucide.createIcons();
 
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log(localStorage.getItem('NomeUsuario'));
+    console.log(localStorage.getItem('typeUser'));
+    console.log(localStorage.getItem('Id'));
+});
+
   // ===== HEADER SCROLL =====
   const header = document.getElementById('main-header');
   window.addEventListener('scroll', () => {

@@ -92,12 +92,17 @@ loginSubmitBtn.addEventListener('click', async()=>{
                 loginSubmitBtn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A autenticar...`;
                
 
+                localStorage.removeItem('NomeUsuario')
+                localStorage.removeItem("typeUser")
+                localStorage.removeItem("Id")
 
+                
+                localStorage.setItem('NomeUsuario',NomeUsuario)
+                localStorage.setItem("typeUser","medico")
+                localStorage.setItem("Id",user.Id)
 
-                sessionStorage.setItem('NomeUsuario',NomeUsuario)
-                sessionStorage.setItem("typeUser","medico")
-                sessionStorage.setItem("Id",user.Id)
-
+               
+                 
 
 
                 setTimeout(()=>{
@@ -143,9 +148,9 @@ loginSubmitBtn.addEventListener('click', async()=>{
                 loginSubmitBtn.disabled = true;
                 loginSubmitBtn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A autenticar...`;
 
-                sessionStorage.setItem('NomeUsuario',NomeUsuario)
-                sessionStorage.setItem("typeUser","paciente")
-                
+                localStorage.setItem('NomeUsuario',NomeUsuario)
+                localStorage.setItem("typeUser","paciente")
+                localStorage.setItem("Id",user.Id)
                 
 
                 
@@ -189,8 +194,8 @@ loginSubmitBtn.addEventListener('click', async()=>{
                     loginSubmitBtn.innerHTML = `<svg style="width:18px;height:18px;" class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> A autenticar...`;
                     
 
-                    sessionStorage.setItem('adminUser',user.email)
-                    sessionStorage.setItem("typeUser","admin")
+                    localStorage.setItem('adminUser',user.email)
+                    localStorage.setItem("typeUser","admin")
 
 
                     
