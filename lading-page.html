@@ -56,11 +56,19 @@
         <a href="#como-funciona" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Como Funciona</a>
         <a href="#especialidades" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Especialidades</a>
         <a href="#beneficios" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Benefícios</a>
+
         <a href="#contacto" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Contacto</a>
-        <a href="patient-dashboard.html" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
+
+        <a id="painel-paciente" href="./patient-dashboard.html" class=" hidden px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
           <i data-lucide="layout-dashboard" style="width:14px;height:14px;"></i> Painel
         </a>
-        <a href="admin-panel.html" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
+
+        <a id="painel-medico" href="./medico.html" class=" hidden px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
+          <i data-lucide="layout-dashboard" style="width:14px;height:14px;"></i> Painel
+        </a>
+
+        <a id="painel-admin" href="./admin.html" class="hidden px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] round
+        ed-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
           <i data-lucide="shield" style="width:14px;height:14px;"></i> Admin
         </a>
       </nav>
@@ -71,8 +79,8 @@
           <i data-lucide="phone" style="width:15px;height:15px;"></i>
           <span class="font-medium">210 000 000</span>
         </a>
-        <a href="sign-up-login-screen.html" class="px-4 py-2 text-sm font-semibold text-[#C0152B] border border-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Entrar</a>
-        <a href="appointment-booking-flow.html" class="px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-lg hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm">Agendar Consulta</a>
+        <a id="btn-entrar" href="sign-up-login-screen.html" class="px-4 py-2 text-sm font-semibold text-[#C0152B] border border-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Entrar</a>
+        <a id="ir-consulta" href="#" class="px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-lg hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm ir-consulta">Agendar Consulta</a>
       </div>
 
       <!-- Mobile Toggle -->
@@ -92,7 +100,7 @@
       <a href="patient-dashboard.html" class="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">
         <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Painel do Paciente
       </a>
-      <a href="admin-panel.html" class="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">
+      <a href="admi.html" class="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">
         <i data-lucide="shield" style="width:16px;height:16px;"></i> Painel de Administração
       </a>
       <div class="pt-3 border-t border-gray-100 space-y-2">
@@ -146,7 +154,7 @@
 
           <!-- CTAs -->
           <div class="flex flex-col sm:flex-row gap-3">
-            <a href="appointment-booking-flow.html" class="inline-flex items-center justify-center gap-2.5 px-7 py-4 text-base font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-lg" style="box-shadow:0 8px 24px rgba(192,21,43,0.25)">
+            <a  id="ir-consulta-1" href="#" class="inline-flex items-center justify-center gap-2.5 px-7 py-4 text-base font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-lg ir-consulta" style="box-shadow:0 8px 24px rgba(192,21,43,0.25)">
               Agendar Consulta Agora
               <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
             </a>
@@ -342,7 +350,7 @@
       </div>
 
       <div class="text-center mt-12">
-        <a href="appointment-booking-flow.html" class="inline-flex items-center gap-2 px-8 py-4 text-base font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-lg" style="box-shadow:0 8px 24px rgba(192,21,43,0.25)">
+        <a id="ir-consulta-2" href="#" class="inline-flex items-center gap-2 px-8 py-4 text-base font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-lg" style="box-shadow:0 8px 24px rgba(192,21,43,0.25)">
           Começar Agora — É Gratuito
         </a>
       </div>
@@ -358,9 +366,7 @@
           <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900">Consultas disponíveis hoje</h2>
           <p class="text-gray-500 mt-2">Horários actualizados em tempo real</p>
         </div>
-        <a href="appointment-booking-flow.html" class="flex items-center gap-1.5 text-sm font-semibold text-[#C0152B] hover:underline shrink-0">
-          Ver todas as especialidades <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
-        </a>
+        
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4" id="specialties-grid">
@@ -412,7 +418,7 @@
             Aceda ao sistema de marcação online e evite as filas. Rápido, seguro e disponível 24 horas por dia.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="appointment-booking-flow.html" class="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-[#C0152B] bg-white rounded-xl hover:bg-red-50 active:scale-95 transition-all duration-150 shadow-lg">
+            <a id="ir-consulta-4" href="#" class="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-[#C0152B] bg-white rounded-xl hover:bg-red-50 active:scale-95 transition-all duration-150 shadow-lg">
               Agendar Consulta Agora
               <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
             </a>
@@ -524,13 +530,64 @@
 
 <script>
   // ===== LUCIDE ICONS =====
-  lucide.createIcons();
+  
 
-  window.addEventListener('DOMContentLoaded', () => {
-    console.log(localStorage.getItem('NomeUsuario'));
-    console.log(localStorage.getItem('typeUser'));
-    console.log(localStorage.getItem('Id'));
-});
+ 
+const tipoUser = localStorage.getItem('typeUser');
+document.getElementById('ir-consulta').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './index.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+document.getElementById('ir-consulta-1').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './index.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+document.getElementById('ir-consulta-2').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './index.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+document.getElementById('ir-consulta-4').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './index.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+if(tipoUser ==='admin'){
+  document.getElementById('painel-admin').classList.remove('hidden')
+  document.getElementById('btn-entrar').classList.add('hidden')
+  window.location.href = './sign-up-login-screen.html'
+}else if(tipoUser ==='medico'){
+  document.getElementById('painel-medico').classList.remove('hidden')
+  document.getElementById('btn-entrar').classList.add('hidden')
+  window.location.href = './sign-up-login-screen.html'
+
+}else if(tipoUser ==='paciente'){
+  document.getElementById('painel-paciente').classList.remove('hidden')
+  document.getElementById('btn-entrar').classList.add('hidden')
+
+}else{
+  document.getElementById('painel-admin').classList.add('hidden')
+  document.getElementById('painel-medico').classList.add('hidden')
+  document.getElementById('painel-paciente').classList.add('hidden')
+  document.getElementById('btn-entrar').classList.remove('hidden')
+
+
+
+}
 
   // ===== HEADER SCROLL =====
   const header = document.getElementById('main-header');

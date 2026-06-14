@@ -14,6 +14,7 @@ export class ApiConsultas{
 
     async create(modelo,data){
         try{
+            
             const res = await fetch(`${apiBaseUrl}/${modelo}/create`,{
                 method:'POST',
                 headers:{
@@ -22,6 +23,8 @@ export class ApiConsultas{
                 body:JSON.stringify(data)
 
             })
+            
+            
             if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ${res.status})`);
             return await res.json()
         }catch(err){

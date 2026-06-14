@@ -109,7 +109,7 @@ loginSubmitBtn.addEventListener('click', async()=>{
                     loginErr.classList.add('hidden')
                     loginErrMsg.innerText= ''
 
-                    window.location.href='../lading-page.html'
+                    window.location.href='../medico.html'
                 }, 1400)
                 
             }
@@ -204,7 +204,7 @@ loginSubmitBtn.addEventListener('click', async()=>{
                     loginErr.classList.add('hidden')
                     loginErrMsg.innerText= ''
 
-                    window.location.href='../lading-page.html'
+                    window.location.href='../admin.html'
                 }, 1400)
                 }
                 
