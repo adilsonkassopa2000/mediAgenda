@@ -1,13 +1,14 @@
 
 import { ApiConsultas } from "./funcoes/api.Consultas.js";
 
-const  apiConsulta = new ApiConsultas()
+const apiConsulta = new ApiConsultas()
 const medico = (await apiConsulta.get('medico')) || []
 const consultas = (await apiConsulta.get('consulta')) || []
 const especialidades = (await apiConsulta.get('especialidade')) || []
 const vaga = (await apiConsulta.get('vaga')) || []
 const estado = (await apiConsulta.get('estado')) || []
 const paciente = (await apiConsulta.get('paciente')) || []
+const users = (await apiConsulta.get('user')) || []
 
 
 /**
@@ -46,7 +47,7 @@ const btnSairMedico = document.getElementById('btn-sair-medico')//elemento do bo
 
 const typeUser = localStorage.getItem('typeUser')
 const currentUserId = localStorage.getItem('Id')
-const medicoLogado = medico.find(item => item.userId === currentUserId)
+let medicoLogado = medico.find(item => item.userId === currentUserId)
 const medicoId = medicoLogado?.Id
 console.log('medico logado:',medicoId);
 
@@ -535,4 +536,106 @@ window.addEventListener('load', () => {
   window.saveVaga = salvarVagasNoBanco
   window.clearVaga = limparSelecaoVaga
 })
+
+/**
+ * Espaço para o código do perfil do medico
+ */
+
+//Elementos Html 
+const PInpNome = document.querySelector('input[name = PInpNome]')
+
+const PInpCrm = document.querySelector('input[name = PInpCrm]')
+
+const PInpPhone = document.querySelector('input[name = PInpPhone]')
+
+const PInpEmail = document.querySelector('input[name = PInpEmail]')
+
+const PInpEspecialidade = document.querySelector('input[name = PInpEspecialidade]')
+
+
+//elementos de segurança 
+const pPwdCurrent = document.querySelector('input[name = pPwdCurrent]')
+
+const PPwdNew = document.querySelector('input[name = PPwdNew ]')
+
+const PPwdConfirm = document.querySelector('input[name = PPwdConfirm]')
+
+//botão d esalvar
+const PBtnSalvar = document.querySelector('button[name = PBtnSalvar]')
+
+renderDadosPerfil()
+
+
+PBtnSalvar.addEventListener('click', async ()=>{
+    const dados = {}
+    if(PInpNome.value !== medicoLogado.nome)
+      dados['nome'] = PInpNome.value
+
+    if(PInpPhone.value !== medicoLogado.phone)
+      dados['phone'] = parseInt(PInpPhone.value)
+
+    
+    if(pPwdCurrent.value){
+      const data = {
+        email: users.find(item => item.Id === medicoLogado.userId).email,
+        senha:pPwdCurrent.value
+      }
+      const res  = await fetch('http://localhost:3001/user/login',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(data)
+        })
+
+      const verify = await res.json()
+
+      if(!verify.email){
+        document.getElementById('p-label-err').innerText = 'A senha atual esta errada'
+        return
+      }else{
+        document.getElementById('p-label-err').innerText = ''
+      }
+
+      if (PPwdNew.value != PPwdConfirm.value) {
+          document.getElementById('p-label-confirm').innerText = 'as senhas não são iguais'
+          return
+      }else{
+        document.getElementById('p-label-confirm').innerText = ''
+      }
+
+      const SUpdate = await apiConsulta.update('user',{
+        id:users.find(item => item.Id === medicoLogado.userId).Id,
+        data:{senha:PPwdConfirm.value}
+      })
+    }
+
+    if(dados === {})
+      return
+    
+    const salvo = await apiConsulta.update('medico',{
+      id:medicoId,
+      data:dados
+    })
+
+    
+    
+
+    if(salvo.nome){
+      medicoLogado =  salvo
+      renderDadosPerfil()
+    }
+     
+})
+
+function renderDadosPerfil(){
+  
+  PInpNome.value = medicoLogado.nome
+  PInpCrm.value = medicoLogado.CRM
+  PInpPhone.value = medicoLogado.phone
+  PInpEmail.value = users.find(item => item.Id === medicoLogado.userId).email
+  PInpEspecialidade.value = especialidades.find(item => item.Id === medicoLogado.especialidadeId).especialidade
+
+}
+
 

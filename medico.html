@@ -415,45 +415,41 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1.5">
                 <label class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
-                <input id="p-name" type="text" value="Dr. Manuel Ferreira"
+                <input id="p-name" name="PInpNome" type="text" value="Dr. Manuel Ferreira"
                   class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
               </div>
               <div class="space-y-1.5">
                 <label class="block text-sm font-semibold text-gray-700">Ordem dos Médicos (CRM) <span class="text-red-500">*</span></label>
-                <input id="p-crm" type="text" value="45.821"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
+                <input id="p-crm" name="PInpCrm" type="text" value="45.821"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular"  disabled/>
               </div>
             </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1.5">
                 <label class="block text-sm font-semibold text-gray-700">Telemóvel <span class="text-red-500">*</span></label>
-                <input id="p-phone" type="tel" value="963 210 987"
+                <input id="p-phone" name="PInpPhone" type="tel" value="963 210 987"
                   class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
               </div>
+
+
               <div class="space-y-1.5">
                 <label class="block text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
-                <input id="p-email" type="email" value="m.ferreira@mediagenda.pt"
+                <input id="p-email" name="PInpEmail" type="email" value="m.ferreira@mediagenda.pt"
                   class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
               </div>
             </div>
             <div class="space-y-1.5">
               <label class="block text-sm font-semibold text-gray-700">Especialidade</label>
-              <select id="p-specialty"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all">
-                <option value="cardiologia" selected>Cardiologia</option>
-                <option value="ortopedia">Ortopedia</option>
-                <option value="dermatologia">Dermatologia</option>
-                <option value="neurologia">Neurologia</option>
-                <option value="oftalmologia">Oftalmologia</option>
-                <option value="pediatria">Pediatria</option>
-                <option value="medicina-geral">Medicina Geral e Familiar</option>
-                <option value="psiquiatria">Psiquiatria</option>
-              </select>
+              <input id="p-especialidade" name="PInpEspecialidade" type="text" value="m.ferreira@mediagenda.pt"
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" disabled/>
             </div>
+
+
             <div class="space-y-1.5">
               <label class="block text-sm font-semibold text-gray-700">Biografia / Descrição</label>
               <textarea id="p-bio" rows="3"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all resize-none">Especialista em Cardiologia com 15 anos de experiência. Formado pela Faculdade de Medicina da Universidade de Lisboa. Membro da Sociedade Portuguesa de Cardiologia.</textarea>
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all resize-none" disabled>Especialista em Cardiologia com 15 anos de experiência. Formado pela Faculdade de Medicina da Universidade de Lisboa. Membro da Sociedade Portuguesa de Cardiologia.</textarea>
             </div>
           </div>
         </div>
@@ -464,28 +460,35 @@
           <div class="space-y-4">
             <div class="space-y-1.5">
               <label class="block text-sm font-semibold text-gray-700">Password Atual</label>
-              <input id="p-pwd-current" type="password" placeholder="••••••••"
+              <input id="p-pwd-current" name="pPwdCurrent" placeholder="••••••••"
+              type="password"
                 class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
             </div>
+            <label for="#" id="p-label-err" class="text-xs text-red-600"></label>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1.5">
                 <label class="block text-sm font-semibold text-gray-700">Nova Password</label>
-                <input id="p-pwd-new" type="password" placeholder="••••••••"
+                <input id="p-pwd-new" name="PPwdNew" placeholder="••••••••"
+                type="password"
                   class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
               </div>
               <div class="space-y-1.5">
                 <label class="block text-sm font-semibold text-gray-700">Confirmar Password</label>
-                <input id="p-pwd-confirm" type="password" placeholder="••••••••"
+                <input id="p-pwd-confirm" name="PPwdConfirm" placeholder="••••••••"
+                type="password"
                   class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  
               </div>
+              <label for="#" id="p-label-confirm" class="text-xs text-red-600"></label>
             </div>
           </div>
         </div>
 
         <!-- Save button -->
         <div class="flex justify-end">
-          <button onclick="saveProfile()"
-            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm">
+          <button 
+            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm" name="PBtnSalvar">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Guardar Alterações
           </button>

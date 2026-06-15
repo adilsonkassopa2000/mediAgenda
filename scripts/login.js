@@ -507,14 +507,14 @@ const chErrorMsg = document.getElementById('ch-error-msg')
 
         
 
-        const userSave = await fetch(`http://localhost:3001/user/updatePassword`,{
+        const userSave = await fetch(`http://localhost:3001/user/update`,{
             method:'PUT',
             headers:{
                 'Content-Type': 'application/json'
             },
             body:JSON.stringify({
                 id:data.Id,
-                senha:fConfSenha.value.trim()
+                data:{senha:fConfSenha.value.trim()}
             })
         })
 
