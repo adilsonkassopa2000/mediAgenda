@@ -83,7 +83,7 @@
             <div class="space-y-1.5">
               <label for="patientName" class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
               <input id="patientName" name="patientName" type="text" value="Ana Beatriz Sousa"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" required />
               <p class="text-xs text-red-600 hidden flex items-center gap-1" id="err-patientName">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 Nome obrigatório
@@ -96,7 +96,7 @@
                 <label for="patientNIF" class="block text-sm font-semibold text-gray-700">NIF <span class="text-red-500">*</span></label>
                 <p class="text-xs text-gray-400">Número de Identificação Fiscal</p>
                 <input id="patientNIF" name="patientNIF" type="text" value="234567891"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" required />
                 <p class="text-xs text-red-600 hidden" id="err-patientNIF">NIF obrigatório (9 dígitos)</p>
               </div>
               <!-- SNS -->
@@ -104,7 +104,7 @@
                 <label for="patientSNS" class="block text-sm font-semibold text-gray-700">Número de Utente SNS <span class="text-red-500">*</span></label>
                 <p class="text-xs text-gray-400">Número de utente do SNS</p>
                 <input id="patientSNS" name="patientSNS" type="text" value="987654321"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" required/>
                 <p class="text-xs text-red-600 hidden" id="err-patientSNS">Nº SNS obrigatório (9 dígitos)</p>
               </div>
             </div>
@@ -114,14 +114,14 @@
               <div class="space-y-1.5">
                 <label for="patientPhone" class="block text-sm font-semibold text-gray-700">Telemóvel <span class="text-red-500">*</span></label>
                 <input id="patientPhone" name="patientPhone" type="tel" value="912345678"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" />
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" required/>
                 <p class="text-xs text-red-600 hidden" id="err-patientPhone">Formato inválido</p>
               </div>
               <!-- Email -->
               <div class="space-y-1.5">
                 <label for="patientEmail" class="block text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
                 <input id="patientEmail" name="patientEmail" type="email" value="paciente@mediagenda.pt"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
+                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" required/>
                 <p class="text-xs text-red-600 hidden" id="err-patientEmail">Email inválido</p>
               </div>
             </div>
@@ -148,7 +148,7 @@
 
         <div class="relative mb-6">
           <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" id="specialty-search" placeholder="Pesquisar especialidade..."
+          <input type="text" id="specialty-search" name="specialtySearch" placeholder="Pesquisar especialidade..."
             class="w-full pl-11 pr-4 py-3.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
         </div>
 
@@ -457,8 +457,9 @@
 
   </div>
 </main>
-
+<script type="module" src="./scripts/marcarConsulta.js"></script>
 <script>
+
 // ===== DATA =====
 const STEPS = [
   { number: 1, label: 'Dados Pessoais' },
@@ -529,11 +530,11 @@ const AVAILABLE_DAYS_OFFSET = [1, 2, 3, 5, 6, 8, 9, 10, 12, 13];
 
 // ===== STATE =====
 let currentStep = 1;
-let bookingData = {
-  patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
-  specialty: null, doctor: null, date: '', time: '', appointmentId: ''
-};
-let selectedSpecialty = null;
+// let bookingData = {
+//   patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
+//   specialty: null, doctor: null, date: '', time: '', appointmentId: ''
+// };
+// let selectedSpecialty = null;
 let selectedDoctor = null;
 let selectedDate = '';
 let selectedTime = '';
@@ -658,7 +659,7 @@ document.getElementById('patient-form').addEventListener('submit', function(e) {
   };
 
   if (!name) showErr('patientName');
-  if (!/^\d{9}$/.test(nif)) showErr('patientNIF');
+  //if (!/^\d{14}$/.test(nif)) showErr('patientNIF');
   if (!/^\d{9}$/.test(sns)) showErr('patientSNS');
   if (!/^[9][0-9]{8}$/.test(phone)) showErr('patientPhone');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) showErr('patientEmail');
@@ -674,56 +675,54 @@ document.getElementById('patient-form').addEventListener('submit', function(e) {
   }
 });
 
-// ===== STEP 2: Specialty =====
-function renderSpecialtyGrid(filter) {
-  const grid = document.getElementById('specialty-grid');
-  grid.innerHTML = '';
-  const filtered = SPECIALTIES.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
+// // ===== STEP 2: Specialty =====
+// function renderSpecialtyGrid(filter) {
+//   const grid = document.getElementById('specialty-grid');
+//   grid.innerHTML = '';
+//   const filtered = SPECIALTIES.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
 
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="col-span-full py-16 text-center"><p class="text-4xl mb-3">🔍</p><p class="text-gray-500 font-medium">Nenhuma especialidade encontrada para "${filter}"</p></div>`;
-    return;
-  }
+//   if (filtered.length === 0) {
+//     grid.innerHTML = `<div class="col-span-full py-16 text-center"><p class="text-4xl mb-3">🔍</p><p class="text-gray-500 font-medium">Nenhuma especialidade encontrada para "${filter}"</p></div>`;
+//     return;
+//   }
 
-  filtered.forEach(sp => {
-    const isSelected = selectedSpecialty?.id === sp.id;
-    const btn = document.createElement('button');
-    btn.className = `text-left p-4 rounded-2xl border-2 transition-all duration-200 hover:-translate-y-0.5 ${
-      isSelected ? 'border-[#C0152B] bg-red-50 shadow-lg shadow-red-100' : 'border-gray-100 bg-white card-shadow hover:border-red-200'
-    }`;
-    btn.innerHTML = `
-      <div class="text-3xl mb-2">${sp.emoji}</div>
-      <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight">${sp.name}</h3>
-      <p class="text-[11px] text-gray-400 mb-2 leading-tight">${sp.description}</p>
-      <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold ${sp.slots <= 4 ? 'text-amber-600' : 'text-green-600'}">${sp.slots} vagas</span>
-        ${isSelected ? `<span class="w-4 h-4 rounded-full bg-[#C0152B] flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-white"></span></span>` : ''}
-      </div>`;
-    btn.addEventListener('click', () => {
-      selectedSpecialty = sp;
-      document.getElementById('btn-specialty-next').disabled = false;
-      document.getElementById('specialty-selected-indicator').classList.remove('hidden');
-      document.getElementById('specialty-selected-indicator').classList.add('flex');
-      document.getElementById('specialty-selected-emoji').textContent = sp.emoji;
-      document.getElementById('specialty-selected-text').textContent = `${sp.name} · ${sp.slots} vagas disponíveis`;
-      renderSpecialtyGrid(document.getElementById('specialty-search').value);
-    });
-    grid.appendChild(btn);
-  });
-}
+//   filtered.forEach(sp => {
+//     const isSelected = selectedSpecialty?.id === sp.id;
+//     const btn = document.createElement('button');
+//     btn.className = `text-left p-4 rounded-2xl border-2 transition-all duration-200 hover:-translate-y-0.5 ${
+//       isSelected ? 'border-[#C0152B] bg-red-50 shadow-lg shadow-red-100' : 'border-gray-100 bg-white card-shadow hover:border-red-200'
+//     }`;
+//     btn.innerHTML = `
+//       <div class="text-3xl mb-2">${sp.emoji}</div>
+//       <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight">${sp.name}</h3>
+//       <p class="text-[11px] text-gray-400 mb-2 leading-tight">${sp.description}</p>
+//       <div class="flex items-center justify-between">
+//         <span class="text-[11px] font-bold ${sp.slots <= 4 ? 'text-amber-600' : 'text-green-600'}">${sp.slots} vagas</span>
+//         ${isSelected ? `<span class="w-4 h-4 rounded-full bg-[#C0152B] flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-white"></span></span>` : ''}
+//       </div>`;
+//     btn.addEventListener('click', () => {
+//       selectedSpecialty = sp;
+//       document.getElementById('btn-specialty-next').disabled = false;
+//       document.getElementById('specialty-selected-indicator').classList.remove('hidden');
+//       document.getElementById('specialty-selected-indicator').classList.add('flex');
+//       document.getElementById('specialty-selected-emoji').textContent = sp.emoji;
+//       document.getElementById('specialty-selected-text').textContent = `${sp.name} · ${sp.slots} vagas disponíveis`;
+//       renderSpecialtyGrid(document.getElementById('specialty-search').value);
+//     });
+//     grid.appendChild(btn);
+//   });
+// }
 
-document.getElementById('specialty-search').addEventListener('input', function() {
-  renderSpecialtyGrid(this.value);
-});
+// document.getElementById('specialty-search').addEventListener('input', function() {
+//   renderSpecialtyGrid(this.value);
+// });
 
 function goNextSpecialty() {
-  if (!selectedSpecialty) return;
-  bookingData.specialty = selectedSpecialty;
   renderDoctors();
   showStep(3);
 }
 
-// ===== STEP 3: Doctor =====
+// // ===== STEP 3: Doctor =====
 function renderDoctors() {
   const sp = bookingData.specialty;
   document.getElementById('doctor-specialty-emoji').textContent = sp?.emoji || '';
@@ -1030,7 +1029,7 @@ function resetWizard() {
 // ===== INIT =====
 renderDesktopSteps();
 updateHeader();
-renderSpecialtyGrid('');
+//renderSpecialtyGrid('');
 </script>
 </body>
 </html>
