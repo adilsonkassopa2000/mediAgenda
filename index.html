@@ -207,7 +207,7 @@
     </div>
 
     <!-- STEP 4: DateTime -->
-    <div class="step-content" id="step-4">
+    <div class="step-content" id="step-5">
       <div class="max-w-4xl mx-auto">
         <div class="mb-8">
           <div class="flex items-center gap-3 mb-3">
@@ -293,7 +293,7 @@
     </div>
 
     <!-- STEP 5: Confirmation -->
-    <div class="step-content" id="step-5">
+    <div class="step-content" id="step-4">
       <div class="max-w-2xl mx-auto">
         <div class="text-center mb-8 animate-slide-up">
           <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-100">
@@ -458,15 +458,28 @@
   </div>
 </main>
 <script type="module" src="./scripts/marcarConsulta.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+//redirecionar para página de login se o usuario não estiver logado
+
+const typeUser = localStorage.getItem('typeUser')
+
+if(!typeUser || (typeUser && typeUser != 'paciente')){
+  localStorage.removeItem('Id')
+  localStorage.removeItem('typeUser')
+  window.location.href = './sign-up-login-screen.html'
+}
+
+
 
 // ===== DATA =====
 const STEPS = [
   { number: 1, label: 'Dados Pessoais' },
   { number: 2, label: 'Especialidade' },
   { number: 3, label: 'Médico' },
-  { number: 4, label: 'Data e Hora' },
-  { number: 5, label: 'Confirmação' },
+  // { number: 4, label: 'Data e Hora' },
+  { number: 4, label: 'Confirmação' },
 ];
 
 const SPECIALTIES = [
@@ -530,11 +543,11 @@ const AVAILABLE_DAYS_OFFSET = [1, 2, 3, 5, 6, 8, 9, 10, 12, 13];
 
 // ===== STATE =====
 let currentStep = 1;
-// let bookingData = {
-//   patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
-//   specialty: null, doctor: null, date: '', time: '', appointmentId: ''
-// };
-// let selectedSpecialty = null;
+let bookingData = {
+  patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
+  specialty: null, doctor: null, date: '', time: '', appointmentId: ''
+};
+let selectedSpecialty = null;
 let selectedDoctor = null;
 let selectedDate = '';
 let selectedTime = '';
@@ -718,6 +731,8 @@ document.getElementById('patient-form').addEventListener('submit', function(e) {
 // });
 
 function goNextSpecialty() {
+  if (!selectedSpecialty) return;
+  bookingData.specialty = selectedSpecialty
   renderDoctors();
   showStep(3);
 }
@@ -781,9 +796,11 @@ function renderDoctors() {
 }
 
 function goNextDoctor() {
+  
   if (!selectedDoctor) return;
   bookingData.doctor = selectedDoctor;
   initDateTime();
+  renderConfirmation();
   showStep(4);
 }
 
@@ -958,7 +975,7 @@ function renderConfirmation() {
   document.getElementById('r-phone').textContent = bookingData.patientPhone || '912 345 678';
   document.getElementById('r-sns').textContent = bookingData.patientSNS || '987 654 321';
   document.getElementById('r-specialty').textContent = `${bookingData.specialty?.emoji || ''} ${bookingData.specialty?.name || 'Cardiologia'}`;
-  document.getElementById('r-doctor').textContent = bookingData.doctor?.name || 'Dr. Manuel Ferreira';
+  document.getElementById('r-doctor').textContent = bookingData.doctor?.nome || 'Dr. Manuel Ferreira';
   document.getElementById('r-crm').textContent = `CRM ${bookingData.doctor?.crm || '45.821'}`;
   document.getElementById('r-date').textContent = bookingData.date ? formatDate(bookingData.date) : 'Sexta-feira, 28 de Março de 2026';
   document.getElementById('r-time').textContent = bookingData.time || '10:30';
@@ -976,8 +993,14 @@ async function handleDownloadPDF() {
   label.textContent = 'A gerar PDF...';
 
   try {
-    const html2canvas = (await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.esm.js')).default;
-    const { jsPDF } = await import('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.esm.min.js');
+    // 1. Pegamos as instâncias globais injetadas no navegador pelas tags <script>
+    const html2canvas = window.html2canvas;
+    const { jsPDF } = window.jspdf;
+
+    // Validação de segurança caso as bibliotecas falhem ao carregar no HTML
+    if (!html2canvas || !jsPDF) {
+      throw new Error("Bibliotecas de PDF não foram carregadas corretamente.");
+    }
 
     const receipt = document.getElementById('receipt');
     const canvas = await html2canvas(receipt, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false });
@@ -1009,22 +1032,22 @@ function handleShare() {
   }
 }
 
-function resetWizard() {
-  bookingData = { patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '', specialty: null, doctor: null, date: '', time: '', appointmentId: '' };
-  selectedSpecialty = null;
-  selectedDoctor = null;
-  selectedDate = '';
-  selectedTime = '';
-  viewMonth = TODAY.getMonth();
-  viewYear = TODAY.getFullYear();
-  document.getElementById('patient-form').reset();
-  document.getElementById('patientName').value = 'Ana Beatriz Sousa';
-  document.getElementById('patientNIF').value = '234567891';
-  document.getElementById('patientSNS').value = '987654321';
-  document.getElementById('patientPhone').value = '912345678';
-  document.getElementById('patientEmail').value = 'paciente@mediagenda.pt';
-  showStep(1);
-}
+// function resetWizard() {
+//   bookingData = { patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '', specialty: null, doctor: null, date: '', time: '', appointmentId: '' };
+//   selectedSpecialty = null;
+//   selectedDoctor = null;
+//   selectedDate = '';
+//   selectedTime = '';
+//   viewMonth = TODAY.getMonth();
+//   viewYear = TODAY.getFullYear();
+//   document.getElementById('patient-form').reset();
+//   document.getElementById('patientName').value = 'Ana Beatriz Sousa';
+//   document.getElementById('patientNIF').value = '234567891';
+//   document.getElementById('patientSNS').value = '987654321';
+//   document.getElementById('patientPhone').value = '912345678';
+//   document.getElementById('patientEmail').value = 'paciente@mediagenda.pt';
+//   showStep(1);
+// }
 
 // ===== INIT =====
 renderDesktopSteps();

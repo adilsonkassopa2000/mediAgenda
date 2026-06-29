@@ -21,7 +21,17 @@ if(typeUser !== 'paciente'){
 }
 
 const paciente = pacientes.find(item => item.userId === currentUserId)
-console.log(paciente);
+
+// let bookingData = {
+//   patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
+//   specialty: null, doctor: null, date: '', time: '', appointmentId: ''
+// };
+
+// let selectedSpecialty = null;
+// let selectedDoctor = null;
+
+
+resetWizard()
 
 
 /**
@@ -99,12 +109,15 @@ specialtySearch.addEventListener('input',()=>{
     
 })
 
-let selectedSpecialty = null;
+
 
 
 // ===== STEP 2: Specialty =====
 function renderSpecialtyGrid() {
   specialtyGrid.innerHTML = '';
+
+  if(!selectedSpecialty)
+    document.getElementById('btn-specialty-next').disabled = true;
   
 
   if (stepEspecialidade.length === 0) {
@@ -155,10 +168,8 @@ const doutor = medicos.filter(medico => stepEspecialidade.map(md => md.Id).inclu
 
 let vetMarcarList = []
 
-let bookingData = {
-  patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
-  specialty: null, doctor: null, date: '', time: '', appointmentId: ''
-};
+
+
 
 const doutorVaga = vagas.filter(vaga =>{
   if(!vetMarcarList.find(item => item?.medicoId === vaga.medicoId)&&
@@ -178,6 +189,9 @@ function renderDoctors() {
   document.getElementById('doctor-specialty-emoji').textContent = sp?.emoji || '';
   document.getElementById('doctor-specialty-name').textContent = sp?.name || '';
   document.getElementById('doctor-specialty-label').textContent = sp?.name || '';
+
+  if(!selectedDoctor)
+    document.getElementById('btn-doctor-next').disabled = true;
 
   
   // const list = document.getElementById('doctors-list');
@@ -200,7 +214,7 @@ function renderDoctors() {
               <h3 class="text-base font-bold text-gray-900">${medicos.find(medico => medico.Id === doctor.medicoId).nome}</h3>
               <p class="text-xs text-gray-500">${especialidades.find(item => item.Id === medicos.find(medico => medico.Id === doctor.medicoId).especialidadeId).especialidade} · CRM ${medicos.find(medico => medico.Id === doctor.medicoId).CRM}</p>
             </div>
-            <div class="flex items-center gap-1 shrink-0">${starsHtml}<span class="text-sm font-bold text-gray-700 font-tabular">${doctor.rating}</span><span class="text-xs text-gray-400">(${doctor.reviews})</span></div>
+            <div class="flex items-center gap-1 shrink-0">${starsHtml}<span class="text-sm font-bold text-gray-700 font-tabular">5.7</span><span class="text-xs text-gray-400"></span></div>
           </div>
           <p class="text-xs text-gray-500 mb-3">${medicos.find(medico => medico.Id === doctor.medicoId).escola}</p>
           <div class="flex flex-wrap items-center gap-3">
@@ -233,6 +247,80 @@ function renderDoctors() {
   });
 }
 
+function resetWizard() {
+  bookingData = { patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '', specialty: null, doctor: null, date: '', time: '', appointmentId: '' };
+  selectedSpecialty = null;
+  selectedDoctor = null;
+  // selectedDate = '';
+  // selectedTime = '';
+  // viewMonth = TODAY.getMonth();
+  // viewYear = TODAY.getFullYear();
+  
+  showStep(1);
+}
+
+// ===== STEP 5: Confirmation =====
+async function renderConfirmation() {
+  
+
+  const data = {
+    pacienteId: pacientes.find(item => item.userId === localStorage.getItem('Id')).Id,
+    especialidadeId: bookingData.specialty.Id,
+    medicoId: bookingData.doctor.medicoId,
+    vagaId: bookingData.doctor.Id,
+    estadoId: estados.find(item => item.estado === 'pendente').Id
+  }
+
+    // .trim() serve para ignorar campos que tenham apenas espaços em branco
+  const temCampoVazio = Object.values(data).some(valor => 
+    valor === null || valor === undefined || String(valor).trim() === ""
+  );
+
+  if (temCampoVazio) {
+    console.log("Atenção: O objeto tem campos vazios!"); // Vai cair aqui
+    return
+  }
+
+  const dataSave = await apiConsultas.create('consulta', data)
+  
+  if(!dataSave || dataSave === undefined) return
+  
+  
+    
+
+  document.getElementById('confirm-email').textContent = bookingData.patientEmail || 'paciente@mediagenda.pt';
+  document.getElementById('confirm-id').textContent = '#' + (bookingData.appointmentId || 'AGD-2026-00847');
+  document.getElementById('confirm-emitted').textContent = `Emitido em ${getNow()}`;
+  document.getElementById('r-name').textContent = bookingData.patientName || 'Ana Beatriz Sousa';
+  document.getElementById('r-nif').textContent = bookingData.patientNIF || '234 567 891';
+  document.getElementById('r-phone').textContent = bookingData.patientPhone || '912 345 678';
+  document.getElementById('r-sns').textContent = bookingData.patientSNS || '987 654 321';
+  document.getElementById('r-specialty').textContent = `${bookingData.specialty?.emoji || ''} ${bookingData.specialty?.especialidade || 'Cardiologia'}`;
+  document.getElementById('r-doctor').textContent = medicos.find(item => item.Id === bookingData.doctor?.medicoId).nome || 'Dr. Manuel Ferreira';
+  document.getElementById('r-crm').textContent = `CRM ${medicos.find(item => item.Id === bookingData.doctor?.medicoId).CRM || '45.821'}`;
+  document.getElementById('r-date').textContent = new Date(bookingData.doctor.hora).toLocaleString("pt-BR", {
+      weekday: 'long',  // "sexta-feira"
+      day: 'numeric',   // "5"
+      month: 'long',    // "junho"
+      year: 'numeric'   // "2026"
+  }) || 'Sexta-feira, 28 de Março de 2026';
+  document.getElementById('r-time').textContent = new Date(bookingData.doctor.hora).toLocaleString("pt-BR", {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }) || '10:30';
+  document.getElementById('r-location-specialty').textContent = bookingData.specialty?.especialidade || 'Cardiologia';
+
+  
+  
+  
+  
+}
+
 
 window.renderDoctors = renderDoctors
 window.bookingData = bookingData
+// window.selectedDoctor = selectedDoctor
+window.resetWizard = resetWizard
+// window.selectedSpecialty = selectedSpecialty
+window.renderConfirmation = renderConfirmation
