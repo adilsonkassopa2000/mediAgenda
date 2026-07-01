@@ -3,10 +3,10 @@ import { ApiConsultas } from "./funcoes/api.Consultas.js";
 const apiConsultas = new ApiConsultas()
 const pacientes = await apiConsultas.get('paciente')
 const medicos = await apiConsultas.get('medico')
-const especialidades = await apiConsultas.get('especialidade')
+let especialidades = await apiConsultas.get('especialidade')
 const estados = await apiConsultas.get('estado')
 const users = await apiConsultas.get('user')
-const vagas = await apiConsultas.get('vaga')
+let vagas = await apiConsultas.get('vaga')
 
 
 const typeUser = localStorage.getItem('typeUser')
@@ -31,7 +31,7 @@ const paciente = pacientes.find(item => item.userId === currentUserId)
 // let selectedDoctor = null;
 
 
-resetWizard()
+// resetWizard()
 
 
 /**
@@ -77,7 +77,8 @@ const specialtyGrid = document.getElementById('specialty-grid')
 
 
 
-let stepEspecialidade = especialidades.filter(sp => (medicos.filter(medico => (vagas.filter(vaga => vaga.medicoId).map(vaga => vaga.medicoId).includes(medico.Id)))).map(medico => medico.especialidadeId).includes(sp.Id) )
+let stepEspecialidade = especialidades.filter(sp => (medicos.filter(medico => (vagas.filter(vaga => vaga.medicoId && vaga.estadoId !== estados.find(estado => estado.estado === 'inactivo').Id).map(vaga => vaga.medicoId).includes(medico.Id)))).map(medico => medico.especialidadeId).includes(sp.Id) )
+
 
 
 
@@ -116,8 +117,11 @@ specialtySearch.addEventListener('input',()=>{
 function renderSpecialtyGrid() {
   specialtyGrid.innerHTML = '';
 
-  if(!selectedSpecialty)
+  if(!selectedSpecialty){
+    document.getElementById('specialty-selected-indicator').classList.add('hidden');
     document.getElementById('btn-specialty-next').disabled = true;
+  }
+    
   
 
   if (stepEspecialidade.length === 0) {
@@ -135,7 +139,7 @@ function renderSpecialtyGrid() {
       <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight">${sp.especialidade}</h3>
       <p class="text-[11px] text-gray-400 mb-2 leading-tight">${sp.descricao}</p>
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold ${vagas.filter(vaga => (medicos.filter(medico => medico.especialidadeId === sp.Id )).map(medico => medico.Id).includes(vaga.medicoId)).length <= 4 ? 'text-amber-600' : 'text-green-600'}">${vagas.filter(vaga => (medicos.filter(medico => medico.especialidadeId === sp.Id )).map(medico => medico.Id).includes(vaga.medicoId)).length} vagas</span>
+        <span class="text-[11px] font-bold ${vagas.filter(vaga => (medicos.filter(medico => medico.especialidadeId === sp.Id )).map(medico => medico.Id).includes(vaga.medicoId)).length <= 4 ? 'text-amber-600' : 'text-green-600'}">${vagas.filter(vaga => (medicos.filter(medico => medico.especialidadeId === sp.Id )).map(medico => medico.Id).includes(vaga.medicoId) && vaga.estadoId !== estados.find(estado => estado.estado === 'inactivo').Id).length} vagas</span>
         ${isSelected ? `<span class="w-4 h-4 rounded-full bg-[#C0152B] flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-white"></span></span>` : ''}
       </div>`;
     btn.addEventListener('click', () => {
@@ -144,7 +148,7 @@ function renderSpecialtyGrid() {
       document.getElementById('specialty-selected-indicator').classList.remove('hidden');
       document.getElementById('specialty-selected-indicator').classList.add('flex');
       document.getElementById('specialty-selected-emoji').textContent = sp.emoji;
-      document.getElementById('specialty-selected-text').textContent = `${sp.especialidade} · ${vagas.filter(vaga => (medicos.filter(medico => medico.especialidadeId === sp.Id )).map(medico => medico.Id).includes(vaga.medicoId)).length} vagas disponíveis`;
+      document.getElementById('specialty-selected-text').textContent = `${sp.especialidade} · ${vagas.filter(vaga => (medicos.filter(medico => medico.especialidadeId === sp.Id )).map(medico => medico.Id).includes(vaga.medicoId) && vaga.estadoId !== estados.find(estado => estado.estado === 'inactivo').Id).length} vagas disponíveis`;
       renderSpecialtyGrid();
     });
     specialtyGrid.appendChild(btn);
@@ -171,7 +175,7 @@ let vetMarcarList = []
 
 
 
-const doutorVaga = vagas.filter(vaga =>{
+let doutorVaga = vagas.filter(vaga =>{
   if(!vetMarcarList.find(item => item?.medicoId === vaga.medicoId)&&
   vaga.estadoId === estados.find(estado => estado.estado === 'Ativo').Id
   ){
@@ -256,6 +260,8 @@ function resetWizard() {
   // viewMonth = TODAY.getMonth();
   // viewYear = TODAY.getFullYear();
   
+
+  renderConsulta()
   showStep(1);
 }
 
@@ -263,7 +269,7 @@ function resetWizard() {
 async function renderConfirmation() {
   
 
-  const data = {
+  const datas = {
     pacienteId: pacientes.find(item => item.userId === localStorage.getItem('Id')).Id,
     especialidadeId: bookingData.specialty.Id,
     medicoId: bookingData.doctor.medicoId,
@@ -272,7 +278,7 @@ async function renderConfirmation() {
   }
 
     // .trim() serve para ignorar campos que tenham apenas espaços em branco
-  const temCampoVazio = Object.values(data).some(valor => 
+  const temCampoVazio = Object.values(datas).some(valor => 
     valor === null || valor === undefined || String(valor).trim() === ""
   );
 
@@ -281,12 +287,24 @@ async function renderConfirmation() {
     return
   }
 
-  const dataSave = await apiConsultas.create('consulta', data)
+  const dataSave = await apiConsultas.create('consulta', datas)
   
-  if(!dataSave || dataSave === undefined) return
+  if(!dataSave || dataSave == undefined) return
+
+  const data = {
+    estadoId: estados.find(estado => estado.estado === 'inactivo').Id
+  }
   
+  const mudarVaga = await apiConsultas.update('vaga',{
+    id:bookingData.doctor.Id,
+    data
+  })
+
   
-    
+
+  if(!mudarVaga || mudarVaga == undefined) return
+
+  
 
   document.getElementById('confirm-email').textContent = bookingData.patientEmail || 'paciente@mediagenda.pt';
   document.getElementById('confirm-id').textContent = '#' + (bookingData.appointmentId || 'AGD-2026-00847');
@@ -309,12 +327,35 @@ async function renderConfirmation() {
     minute: '2-digit',
     hour12: false
   }) || '10:30';
+
+  
   document.getElementById('r-location-specialty').textContent = bookingData.specialty?.especialidade || 'Cardiologia';
 
   
+  showStep(4);
   
   
-  
+}
+
+ async function renderConsulta(params) {
+    especialidades = await apiConsultas.get('especialidade')
+    vagas =  await apiConsultas.get('vaga')
+    vetMarcarList = []
+    //renovar as especialidades
+    stepEspecialidade = especialidades.filter(sp => (medicos.filter(medico => (vagas.filter(vaga => vaga.medicoId && vaga.estadoId !== estados.find(estado => estado.estado === 'inactivo').Id).map(vaga => vaga.medicoId).includes(medico.Id)))).map(medico => medico.especialidadeId).includes(sp.Id) )
+
+
+    //renovar doutor com vagas
+    doutorVaga = vagas.filter(vaga =>{
+    if(!vetMarcarList.find(item => item?.medicoId === vaga.medicoId)&&
+    vaga.estadoId === estados.find(estado => estado.estado === 'Ativo').Id
+    ){
+      vetMarcarList.push(vaga)
+      return vaga
+    }
+  }) 
+
+    
 }
 
 
@@ -324,3 +365,4 @@ window.bookingData = bookingData
 window.resetWizard = resetWizard
 // window.selectedSpecialty = selectedSpecialty
 window.renderConfirmation = renderConfirmation
+window.renderConsulta = renderConsulta
