@@ -25,7 +25,7 @@ export class ApiConsultas{
             })
             
             
-            if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ${res.status})`);
+             if (!res.ok) throw new Error(`Falha ao carregar rota ${modelo} (status ${res.status})`);
             return await res.json()
         }catch(err){
             console.error(err)

@@ -94,7 +94,7 @@
               </button>
               <h1 id="page-title" class="font-bold text-gray-900 text-base">Painel de Administração</h1>
             </div>
-            <div class="text-xs text-gray-500 hidden sm:block">26 de Março de 2026</div>
+            <div id="admin-hd-data" class="text-xs text-gray-500 hidden sm:block">26 de Março de 2026</div>
           </div>
         </header>
 
@@ -109,23 +109,23 @@
                 <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-3">
                   <i data-lucide="calendar" class="w-[18px] h-[18px] text-blue-700"></i>
                 </div>
-                <p class="text-2xl font-extrabold text-gray-900">6</p>
+                <p id="admin-st-total-hj" class="text-2xl font-extrabold text-gray-900">6</p>
                 <p class="text-xs text-gray-500 mt-0.5">Consultas Hoje</p>
-                <p class="text-[11px] text-gray-400 mt-1">2 realizadas</p>
+                <p id="admin-st-total-rz" class="text-[11px] text-gray-400 mt-1">2 realizadas</p>
               </div>
               <div class="bg-white rounded-2xl p-4 card-shadow">
                 <div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center mb-3">
                   <i data-lucide="stethoscope" class="w-[18px] h-[18px] text-green-700"></i>
                 </div>
-                <p class="text-2xl font-extrabold text-gray-900">4</p>
+                <p id="admin-st-total-md-at" class="text-2xl font-extrabold text-gray-900">4</p>
                 <p class="text-xs text-gray-500 mt-0.5">Médicos Ativos</p>
-                <p class="text-[11px] text-gray-400 mt-1">6 total</p>
+                <p id="admin-st-md-total" class="text-[11px] text-gray-400 mt-1">6 total</p>
               </div>
               <div class="bg-white rounded-2xl p-4 card-shadow">
                 <div class="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center mb-3">
                   <i data-lucide="trending-up" class="w-[18px] h-[18px] text-[#C0152B]"></i>
                 </div>
-                <p class="text-2xl font-extrabold text-gray-900">389</p>
+                <p id="admin-st-total-ct" class="text-2xl font-extrabold text-gray-900">389</p>
                 <p class="text-xs text-gray-500 mt-0.5">Este Mês</p>
                 <p class="text-[11px] text-gray-400 mt-1">+9% vs mês anterior</p>
               </div>
@@ -317,24 +317,17 @@
                 <input id="f-experience" type="number" min="0" max="60" placeholder="Ex: 12"
                   class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
               </div>
-              <!-- Status -->
-              <div class="space-y-1.5">
-                <label class="block text-sm font-semibold text-gray-700">Estado <span class="text-red-500">*</span></label>
-                <select id="f-status"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all">
-                  <option value="active">Ativo</option>
-                  <option value="inactive">Inativo</option>
-                  <option value="on_leave">De Licença</option>
-                </select>
-              </div>
-            </div>
 
-            <!-- Phone -->
+              <!-- Phone -->
             <div class="space-y-1.5">
               <label class="block text-sm font-semibold text-gray-700">Telemóvel</label>
               <input id="f-phone" type="tel" placeholder="Ex: 912 345 678"
                 class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all font-tabular" />
             </div>
+              
+            </div>
+
+            
 
             <!-- Email -->
             <div class="space-y-1.5">
@@ -351,7 +344,7 @@
                 class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#C0152B]/20 focus:border-[#C0152B] focus:outline-none transition-all" />
             </div>
 
-            <!-- Languages -->
+            <!-- Languages
             <div class="space-y-1.5">
               <label class="block text-sm font-semibold text-gray-700">Idiomas</label>
               <div class="flex flex-wrap gap-2" id="lang-chips">
@@ -368,7 +361,7 @@
                   <input type="checkbox" name="lang" value="Espanhol" class="hidden" /> Espanhol
                 </label>
               </div>
-            </div>
+            </div> -->
 
             <!-- Avatar color -->
             <div class="space-y-1.5">
@@ -506,6 +499,7 @@
       </div>
   </div>
 
+<script type="module" src="./scripts/admin.js"></script>
 <script>
 // ===== DATA =====
 let doctors = [];
@@ -1018,21 +1012,20 @@ async function submitDoctorForm(e) {
 
   if (!valid) return;
 
-  const status = document.getElementById('f-status').value;
+  
   const experience = document.getElementById('f-experience').value.trim();
   const phone = document.getElementById('f-phone').value.trim();
   const education = document.getElementById('f-education').value.trim();
   const payload = {
     nome: name,
-    crm: crm,
+    CRM: parseInt(crm) || 0,
     escola: education || 'Não especificado',
     anoExperiencia: experience || '0',
-    especialidadeName: specialty,
-    estadoName: status,
-    email: email || undefined,
-    senha: 'MediAgenda123',
+    especialidadeId: (await apiConsultas.get('especialidade')).find(especialidade => especialidade.especialidade === specialty)?.Id,
+    estadoId: (await apiConsultas.get('estado')).find(estado => estado.estado === 'inactivo')?.Id,
+    phone: parseInt(phone) || '',
+    userId:''
   };
-
   try {
     if (currentDoctorMode === 'edit') {
       const id = document.getElementById('f-id').value;
@@ -1058,19 +1051,34 @@ async function submitDoctorForm(e) {
       return;
     }
 
-    const response = await fetch(`${API_BASE_URL}/medico/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    const newUser = await apiConsultas.create('user', {
+      email: email,
+      senha: 'MediAgenda123',
     });
 
-    if (!response.ok) {
+    console.log('Response from user/create:', newUser);
+
+    if (!newUser || !newUser.Id) {
+      showToast('Erro ao criar usuário para o médico');
+      return;
+    }
+    payload.userId = newUser.Id;
+    const response = await apiConsultas.create('medico', payload);
+
+    console.log('Response from medico/create:', response);
+    // const response = await fetch(`${API_BASE_URL}/medico/create`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(payload)
+    // });
+
+    if (!response || !response.Id) {
       const error = await response.json().catch(() => ({}));
       showToast(error.message || 'Erro ao adicionar médico');
       return;
     }
 
-    const created = await response.json();
+    const created = response;
     const sp = specialties.find(s => s.name === specialty);
     const newDoctor = {
       id: created.Id || 'd' + Date.now(),
