@@ -2,11 +2,11 @@
 module.exports = {
   content: [
     './index.html',
+    './page-consulta.html',
     './admin.html',
     './medico.html',
     './patient-dashboard.html',
     './sign-up-login-screen.html',
-    './lading-page.html',
   ],
   theme: {
     extend: {

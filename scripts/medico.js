@@ -140,7 +140,7 @@ const listConsultasHoje = consultasDoMedico.filter(item => item.vagaId === vagaH
 
 if(listConsultasHoje.length > 0) {
 listConsultasHoje.forEach(consulta => {
-    const cfg = STATUS_CONFIG[(estado.find(item => item.Id === consulta.statusId)?.estado) || 'pending'] || STATUS_CONFIG['pending'];
+    const cfg = STATUS_CONFIG[(estado.find(item => item.Id === consulta.estadoId)?.estado) || 'pending'] || STATUS_CONFIG['pending'];
     const row = document.createElement('div');
     row.className = 'px-5 py-3.5 flex items-center gap-3 hover:bg-gray-50 transition-colors';
     row.innerHTML = `

@@ -44,7 +44,7 @@ loginSubmitBtn.addEventListener('click', async()=>{
         }
 
         
-        const res  = await fetch('http://localhost:3001/user/login',{
+        const res  = await fetch('https://mediagenda-api.onrender.com/user/login',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -160,7 +160,7 @@ loginSubmitBtn.addEventListener('click', async()=>{
                     loginErr.classList.add('hidden')
                     loginErrMsg.innerText= ''
 
-                    window.location.href='../lading-page.html'
+                    window.location.href='../index.html'
                 }, 1400)
             }
         }else{
@@ -272,7 +272,7 @@ regSubmitBtn.addEventListener('click', async(e)=>{
             confirmSenha:regConfirmSenha.value
         }
 
-        console.log(data);
+        
 
         if(data.senha !== data.confirmSenha){
             regConfirmerr.classList.remove('hidden')
@@ -507,7 +507,7 @@ const chErrorMsg = document.getElementById('ch-error-msg')
 
         
 
-        const userSave = await fetch(`http://localhost:3001/user/update`,{
+        const userSave = await fetch(`https://mediagenda-api.onrender.com/user/update`,{
             method:'PUT',
             headers:{
                 'Content-Type': 'application/json'

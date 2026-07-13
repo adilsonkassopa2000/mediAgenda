@@ -1,5 +1,5 @@
 
-const apiBaseUrl = 'http://localhost:3001';
+const apiBaseUrl = 'https://mediagenda-api.onrender.com';
 
 export class ApiConsultas{
     async get(modelo){

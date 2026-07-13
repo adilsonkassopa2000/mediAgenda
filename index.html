@@ -5,1053 +5,707 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MediAgenda — Consultas Externas Online</title>
   <meta name="description" content="Agende a sua consulta externa no hospital público de forma rápida, segura e sem filas. Escolha a especialidade, médico e horário disponível online." />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="./styles.css" rel="stylesheet">
   <link href="./custom-styles.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    .gradient-hero {
+      background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #f0f4ff 100%);
+    }
+    .card-shadow-hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.1);
+    }
+
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+    .animate-slide-up { animation: slide-up 0.6s ease forwards; }
+    .animate-fade-in { animation: fade-in 0.2s ease forwards; }
+
+    .hover-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .hover-card:hover { transform: translateY(-4px); box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.1); }
+
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen bg-white">
 
-<!-- ========== HEADER ========== -->
-<header class="bg-white border-b border-gray-100 sticky top-0 z-40">
+<!-- ===== HEADER ===== -->
+<header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+
       <!-- Logo -->
-      <a href="./lading-page.html" class="flex items-center gap-2">
-        <!-- AppLogo SVG (32px) -->
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="#C0152B"/>
-          <path d="M16 7v18M7 16h18" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-        </svg>
-        <span class="font-bold text-gray-900 text-base">MediAgenda</span>
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#C0152B,#8b0e1e);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-lg leading-tight text-gray-900 tracking-tight">MediAgenda</span>
+          <span class="text-[10px] text-[#C0152B] font-medium tracking-widest uppercase leading-none">Hospital Público</span>
+        </div>
       </a>
 
-      <!-- Step indicator desktop -->
-      <div class="hidden md:flex items-center gap-1" id="desktop-steps"></div>
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1">
+        <a href="#como-funciona" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Como Funciona</a>
+        <a href="#especialidades" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Especialidades</a>
+        <a href="#beneficios" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Benefícios</a>
 
-      <!-- Exit -->
-      <a href="./lading-page.html" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-        Sair
-      </a>
-    </div>
+        <a href="#contacto" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Contacto</a>
 
-    <!-- Mobile progress bar -->
-    <div class="md:hidden pb-3">
-      <div class="flex items-center justify-between text-xs text-gray-500 mb-1.5">
-        <span id="mobile-step-count">Passo 1 de 5</span>
-        <span class="font-semibold text-[#C0152B]" id="mobile-step-label">Dados Pessoais</span>
+        <a id="painel-paciente" href="./patient-dashboard.html" class=" hidden px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
+          <i data-lucide="layout-dashboard" style="width:14px;height:14px;"></i> Painel
+        </a>
+
+        <a id="painel-medico" href="./medico.html" class=" hidden px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
+          <i data-lucide="layout-dashboard" style="width:14px;height:14px;"></i> Painel
+        </a>
+
+        <a id="painel-admin" href="./admin.html" class="hidden px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#C0152B] round
+        ed-lg hover:bg-red-50 transition-all duration-150 flex items-center gap-1.5">
+          <i data-lucide="shield" style="width:14px;height:14px;"></i> Admin
+        </a>
+      </nav>
+
+      <!-- Desktop Actions -->
+      <div class="hidden lg:flex items-center gap-3">
+        <a href="tel:+351210000000" class="flex items-center gap-2 text-sm text-gray-500 hover:text-[#C0152B] transition-colors">
+          <i data-lucide="phone" style="width:15px;height:15px;"></i>
+          <span class="font-medium">210 000 000</span>
+        </a>
+        <a id="btn-entrar" href="sign-up-login-screen.html" class="px-4 py-2 text-sm font-semibold text-[#C0152B] border border-[#C0152B] rounded-lg hover:bg-red-50 transition-all duration-150">Entrar</a>
+        <a id="ir-consulta" href="#" class="px-5 py-2.5 text-sm font-semibold text-white bg-[#C0152B] rounded-lg hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm ir-consulta">Agendar Consulta</a>
       </div>
-      <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-        <div class="h-full bg-[#C0152B] rounded-full transition-all duration-500" id="progress-bar" style="width:0%"></div>
+
+      <!-- Mobile Toggle -->
+      <button id="mobile-toggle" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" aria-label="Menu">
+        <i id="menu-icon" data-lucide="menu" style="width:22px;height:22px;"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="lg:hidden bg-white border-t border-gray-100 shadow-lg animate-fade-in">
+    <div class="px-4 py-4 space-y-1">
+      <a href="#como-funciona" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">Como Funciona</a>
+      <a href="#especialidades" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">Especialidades</a>
+      <a href="#beneficios" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">Benefícios</a>
+      <a href="#contacto" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">Contacto</a>
+      <a href="patient-dashboard.html" class="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">
+        <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Painel do Paciente
+      </a>
+      <a href="admi.html" class="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#C0152B] hover:bg-red-50 rounded-lg transition-colors mobile-link">
+        <i data-lucide="shield" style="width:16px;height:16px;"></i> Painel de Administração
+      </a>
+      <div class="pt-3 border-t border-gray-100 space-y-2">
+        <a href="sign-up-login-screen.html" class="block px-4 py-3 text-sm font-semibold text-center text-[#C0152B] border border-[#C0152B] rounded-lg">Entrar</a>
+        <a href="appointment-booking-flow.html" class="block px-4 py-3 text-sm font-semibold text-center text-white bg-[#C0152B] rounded-lg">Agendar Consulta</a>
       </div>
     </div>
   </div>
 </header>
 
-<!-- ========== MAIN ========== -->
-<main class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-  <div class="animate-fade-in">
+<!-- ===== MAIN ===== -->
+<main>
 
-    <!-- STEP 1: Patient Data -->
-    <div class="step-content active" id="step-1">
-      <div class="max-w-2xl mx-auto">
-        <div class="mb-8">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div>
-              <h1 class="text-2xl font-extrabold text-gray-900">Confirme os seus dados</h1>
-              <p class="text-sm text-gray-500">Verifique se os dados estão correctos antes de prosseguir.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl mb-6">
-          <svg class="mt-0.5 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <div>
-            <p class="text-sm font-semibold text-blue-800">Dados pré-preenchidos</p>
-            <p class="text-xs text-blue-600 mt-0.5">Os seus dados foram carregados automaticamente. Verifique e corrija se necessário antes de avançar.</p>
-          </div>
-        </div>
-
-        <form id="patient-form" class="space-y-5" novalidate>
-          <div class="bg-white rounded-2xl border border-gray-100 card-shadow p-6 space-y-5">
-            <!-- Name -->
-            <div class="space-y-1.5">
-              <label for="patientName" class="block text-sm font-semibold text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
-              <input id="patientName" name="patientName" type="text" value="Ana Beatriz Sousa"
-                class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" required />
-              <p class="text-xs text-red-600 hidden flex items-center gap-1" id="err-patientName">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Nome obrigatório
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- NIF -->
-              <div class="space-y-1.5">
-                <label for="patientNIF" class="block text-sm font-semibold text-gray-700">NIF <span class="text-red-500">*</span></label>
-                <p class="text-xs text-gray-400">Número de Identificação Fiscal</p>
-                <input id="patientNIF" name="patientNIF" type="text" value="234567891"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" required />
-                <p class="text-xs text-red-600 hidden" id="err-patientNIF">NIF obrigatório (9 dígitos)</p>
-              </div>
-              <!-- SNS -->
-              <div class="space-y-1.5">
-                <label for="patientSNS" class="block text-sm font-semibold text-gray-700">Número de Utente SNS <span class="text-red-500">*</span></label>
-                <p class="text-xs text-gray-400">Número de utente do SNS</p>
-                <input id="patientSNS" name="patientSNS" type="text" value="987654321"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" required/>
-                <p class="text-xs text-red-600 hidden" id="err-patientSNS">Nº SNS obrigatório (9 dígitos)</p>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- Phone -->
-              <div class="space-y-1.5">
-                <label for="patientPhone" class="block text-sm font-semibold text-gray-700">Telemóvel <span class="text-red-500">*</span></label>
-                <input id="patientPhone" name="patientPhone" type="tel" value="912345678"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all font-tabular" required/>
-                <p class="text-xs text-red-600 hidden" id="err-patientPhone">Formato inválido</p>
-              </div>
-              <!-- Email -->
-              <div class="space-y-1.5">
-                <label for="patientEmail" class="block text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
-                <input id="patientEmail" name="patientEmail" type="email" value="paciente@mediagenda.pt"
-                  class="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" required/>
-                <p class="text-xs text-red-600 hidden" id="err-patientEmail">Email inválido</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-end">
-            <button type="submit"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-sm">
-              Próximo Passo
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5 7 7-7 7"/><path d="M5 12h14"/></svg>
-            </button>
-          </div>
-        </form>
-      </div>
+  <!-- HERO SECTION -->
+  <section class="relative pt-24 lg:pt-32 pb-16 lg:pb-24 overflow-hidden gradient-hero">
+    <!-- Background blobs -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-red-50/60" style="filter:blur(80px);"></div>
+      <div class="absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-blue-50/40" style="filter:blur(80px);"></div>
+      <div class="absolute bottom-0 right-1/4 w-[300px] h-[300px] rounded-full bg-rose-50/50" style="filter:blur(60px);"></div>
     </div>
 
-    <!-- STEP 2: Specialty -->
-    <div class="step-content" id="step-2">
-      <div class="max-w-4xl mx-auto">
-        <div class="mb-8">
-          <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Escolha a especialidade</h1>
-          <p class="text-gray-500">Selecione a especialidade médica para a qual pretende agendar consulta.</p>
-        </div>
+    <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-        <div class="relative mb-6">
-          <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" id="specialty-search" name="specialtySearch" placeholder="Pesquisar especialidade..."
-            class="w-full pl-11 pr-4 py-3.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-[#C0152B] transition-all" />
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-8" id="specialty-grid"></div>
-
-        <div id="specialty-selected-indicator" class="hidden items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl mb-6 animate-fade-in">
-          <span class="text-2xl" id="specialty-selected-emoji"></span>
-          <div>
-            <p class="text-sm font-bold text-[#C0152B]">Especialidade seleccionada</p>
-            <p class="text-sm text-gray-700" id="specialty-selected-text"></p>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between">
-          <button onclick="goBack()"
-            class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all duration-150">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            Voltar
-          </button>
-          <button id="btn-specialty-next" onclick="goNextSpecialty()" disabled
-            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 shadow-sm">
-            Próximo Passo
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5 7 7-7 7"/><path d="M5 12h14"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 3: Doctor -->
-    <div class="step-content" id="step-3">
-      <div class="max-w-3xl mx-auto">
-        <div class="mb-8">
-          <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-            <span class="text-xl" id="doctor-specialty-emoji"></span>
-            <span class="font-medium" id="doctor-specialty-name"></span>
-          </div>
-          <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Escolha o médico</h1>
-          <p class="text-gray-500">Selecione o médico da especialidade de <span id="doctor-specialty-label"></span>.</p>
-        </div>
-
-        <div class="space-y-4 mb-8" id="doctors-list"></div>
-
-        <div class="flex items-center justify-between">
-          <button onclick="goBack()"
-            class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all duration-150">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            Voltar
-          </button>
-          <button id="btn-doctor-next" onclick="goNextDoctor()" disabled
-            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 shadow-sm">
-            Próximo Passo
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5 7 7-7 7"/><path d="M5 12h14"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 4: DateTime -->
-    <div class="step-content" id="step-5">
-      <div class="max-w-4xl mx-auto">
-        <div class="mb-8">
-          <div class="flex items-center gap-3 mb-3">
-            <div id="dt-doctor-avatar" class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm"></div>
-            <div>
-              <p class="text-xs text-gray-500 mb-0.5" id="dt-doctor-name"></p>
-              <h1 class="text-2xl font-extrabold text-gray-900">Escolha a data e hora</h1>
-            </div>
-          </div>
-          <p class="text-gray-500">Selecione o dia e horário disponível para a sua consulta.</p>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-6">
-          <!-- Calendar -->
-          <div class="bg-white rounded-2xl border border-gray-100 card-shadow p-6">
-            <div class="flex items-center justify-between mb-5">
-              <button onclick="prevMonth()" class="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
-              <h3 class="text-base font-bold text-gray-900" id="cal-month-label"></h3>
-              <button onclick="nextMonth()" class="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-              </button>
-            </div>
-            <div class="grid grid-cols-7 mb-2" id="cal-day-headers"></div>
-            <div class="grid grid-cols-7 gap-1" id="cal-grid"></div>
-            <div class="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
-              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-green-100 border border-green-200"></div><span class="text-xs text-gray-500">Disponível</span></div>
-              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-[#C0152B]"></div><span class="text-xs text-gray-500">Seleccionado</span></div>
-              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-gray-100"></div><span class="text-xs text-gray-500">Indisponível</span></div>
-            </div>
+        <!-- Left: Copy -->
+        <div class="space-y-8">
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-100 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-[#C0152B] animate-pulse"></span>
+            <span class="text-sm font-semibold text-[#C0152B]">Sistema Nacional de Saúde — Consultas Externas</span>
           </div>
 
-          <!-- Time slots -->
-          <div class="bg-white rounded-2xl border border-gray-100 card-shadow p-6">
-            <div class="flex items-center gap-2 mb-5">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <h3 class="text-base font-bold text-gray-900" id="time-panel-title">Selecione primeiro uma data</h3>
-            </div>
-            <div id="time-empty-state" class="flex flex-col items-center justify-center py-16 text-center">
-              <div class="text-5xl mb-4">📅</div>
-              <p class="text-gray-500 font-medium">Selecione uma data disponível no calendário</p>
-              <p class="text-sm text-gray-400 mt-1">Os horários disponíveis aparecerão aqui</p>
-            </div>
-            <div id="time-slots-container" class="hidden">
-              <div class="mb-3"><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Manhã</p></div>
-              <div class="grid grid-cols-4 gap-2 mb-5" id="morning-slots"></div>
-              <div class="mb-3"><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Tarde</p></div>
-              <div class="grid grid-cols-4 gap-2" id="afternoon-slots"></div>
-              <div id="time-selected-info" class="hidden mt-5 p-3.5 bg-green-50 border border-green-200 rounded-xl flex items-center gap-2.5 animate-fade-in">
-                <svg class="shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <p class="text-sm font-semibold text-green-800" id="time-selected-text"></p>
-              </div>
-            </div>
+          <!-- Headline -->
+          <div class="space-y-4">
+            <h1 class="text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-gray-900 leading-[1.1] tracking-tight">
+              Agende a sua
+              <span class="text-[#C0152B] relative">
+                consulta médica
+                <svg class="absolute -bottom-1 left-0 w-full" height="6" viewBox="0 0 300 6" fill="none">
+                  <path d="M0 3 Q75 0 150 3 Q225 6 300 3" stroke="#C0152B" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+                </svg>
+              </span>
+              sem sair de casa
+            </h1>
+            <p class="text-lg lg:text-xl text-gray-500 leading-relaxed max-w-lg">
+              Aceda ao sistema de marcação de consultas externas do hospital público.
+              Escolha a especialidade, o médico e o horário que mais lhe convém — de forma rápida, segura e sem filas.
+            </p>
           </div>
-        </div>
 
-        <!-- Summary strip -->
-        <div id="dt-summary" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex flex-wrap items-center gap-4 animate-fade-in">
-          <div class="flex items-center gap-2">
-            <span class="text-xl" id="dt-sum-emoji"></span>
-            <span class="text-sm font-semibold text-gray-800" id="dt-sum-specialty"></span>
+          <!-- CTAs -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a  id="ir-consulta-1" href="#" class="inline-flex items-center justify-center gap-2.5 px-7 py-4 text-base font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-lg ir-consulta" style="box-shadow:0 8px 24px rgba(192,21,43,0.25)">
+              Agendar Consulta Agora
+              <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+            </a>
+            <a href="sign-up-login-screen.html" class="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 active:scale-95 transition-all duration-150 shadow-sm">
+              Criar Conta de Paciente
+            </a>
           </div>
-          <div class="w-px h-5 bg-red-200"></div>
-          <span class="text-sm text-gray-600" id="dt-sum-doctor"></span>
-          <div class="w-px h-5 bg-red-200"></div>
-          <span class="text-sm font-bold text-[#C0152B]" id="dt-sum-datetime"></span>
-        </div>
 
-        <div class="flex items-center justify-between mt-6">
-          <button onclick="goBack()"
-            class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all duration-150">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            Voltar
-          </button>
-          <button id="btn-dt-next" onclick="goNextDateTime()" disabled
-            class="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 shadow-sm">
-            Confirmar Agendamento
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5 7 7-7 7"/><path d="M5 12h14"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 5: Confirmation -->
-    <div class="step-content" id="step-4">
-      <div class="max-w-2xl mx-auto">
-        <div class="text-center mb-8 animate-slide-up">
-          <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Consulta Agendada!</h1>
-          <p class="text-gray-500 text-sm sm:text-base max-w-md mx-auto">
-            O seu agendamento foi confirmado com sucesso. O comprovativo foi enviado para
-            <span class="font-semibold text-gray-700" id="confirm-email"></span>.
-          </p>
-        </div>
-
-        <!-- Digital Receipt -->
-        <div id="receipt" class="bg-white rounded-2xl border-2 border-gray-100 overflow-hidden card-shadow mb-6">
-          <!-- Header -->
-          <div class="gradient-primary px-4 sm:px-6 py-5">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <p class="text-red-200 text-[10px] sm:text-xs font-semibold uppercase tracking-widest mb-1">Comprovativo de Agendamento</p>
-                <p class="text-white text-lg sm:text-xl font-extrabold">MediAgenda</p>
-                <p class="text-red-200 text-xs mt-0.5">Hospital Público Central · Lisboa</p>
-              </div>
-              <div class="text-right shrink-0">
-                <p class="text-red-200 text-[10px] sm:text-xs mb-1">Nº de Agendamento</p>
-                <p class="text-white text-base sm:text-lg font-black font-tabular tracking-wider" id="confirm-id"></p>
-              </div>
-            </div>
-          </div>
-          <!-- Status bar -->
-          <div class="bg-green-50 border-b border-green-100 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <!-- Trust badges -->
+          <div class="flex flex-wrap gap-4 pt-2">
             <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              <span class="text-sm font-bold text-green-700">Consulta Confirmada</span>
+              <i data-lucide="shield" style="width:16px;height:16px;color:#C0152B;"></i>
+              <span class="text-sm font-medium text-gray-500">Dados protegidos RGPD</span>
             </div>
-            <span class="text-xs text-green-600 font-medium" id="confirm-emitted"></span>
+            <div class="flex items-center gap-2">
+              <i data-lucide="clock" style="width:16px;height:16px;color:#C0152B;"></i>
+              <span class="text-sm font-medium text-gray-500">Disponível 24h/7 dias</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#C0152B;"></i>
+              <span class="text-sm font-medium text-gray-500">Confirmação imediata</span>
+            </div>
           </div>
-          <!-- Body -->
-          <div class="p-4 sm:p-6 space-y-5">
-            <!-- Patient -->
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Dados do Paciente</p>
-              <div class="grid grid-cols-2 gap-3">
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Nome</p><p class="text-sm font-semibold text-gray-800" id="r-name"></p></div>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <div><p class="text-[11px] text-gray-400">NIF</p><p class="text-sm font-semibold text-gray-800 font-tabular" id="r-nif"></p></div>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41C2 2.18 3 1 4.27 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91A16 16 0 0 0 15 16.91l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 23 18z"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Telemóvel</p><p class="text-sm font-semibold text-gray-800 font-tabular" id="r-phone"></p></div>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Nº SNS</p><p class="text-sm font-semibold text-gray-800 font-tabular" id="r-sns"></p></div>
-                </div>
-              </div>
-            </div>
-            <div class="border-t border-dashed border-gray-200"></div>
-            <!-- Appointment -->
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Detalhes da Consulta</p>
-              <div class="grid grid-cols-2 gap-3">
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Especialidade</p><p class="text-sm font-semibold text-gray-800" id="r-specialty"></p></div>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Médico</p><p class="text-sm font-semibold text-gray-800" id="r-doctor"></p><p class="text-[11px] text-gray-400" id="r-crm"></p></div>
-                </div>
-                <div class="flex items-start gap-2.5 col-span-2 sm:col-span-1">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Data</p><p class="text-sm font-semibold text-gray-800" id="r-date"></p></div>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0152B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <div><p class="text-[11px] text-gray-400">Hora</p><p class="text-sm font-bold text-gray-800 font-tabular text-lg" id="r-time"></p></div>
-                </div>
-              </div>
-            </div>
-            <div class="border-t border-dashed border-gray-200"></div>
-            <!-- Location -->
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Local da Consulta</p>
-              <div class="flex items-start gap-2.5">
-                <svg class="mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+
+        <!-- Right: Visual card -->
+        <div class="relative hidden lg:block">
+          <div class="relative">
+            <!-- Main card -->
+            <div class="bg-white rounded-2xl p-6 card-shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-5">
                 <div>
-                  <p class="text-sm font-semibold text-gray-800">Hospital Público Central</p>
-                  <p class="text-xs text-gray-500">Av. Prof. Egas Moniz, 1649-035 Lisboa</p>
-                  <p class="text-xs text-gray-500 mt-0.5">Piso 3 · Consultas Externas · <span id="r-location-specialty"></span> · Balcão 3B</p>
+                  <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Próxima Consulta</p>
+                  <h3 class="text-lg font-bold text-gray-900">Cardiologia</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center"></div>
+              </div>
+              <!-- Doctor info -->
+              <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl mb-4">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:linear-gradient(135deg,#60a5fa,#2563eb)">MF</div>
+                <div>
+                  <p class="text-sm font-semibold text-gray-800">Dr. Manuel Ferreira</p>
+                  <p class="text-xs text-gray-500">Cardiologista — CRM 45.821</p>
+                </div>
+                <div class="ml-auto flex items-center gap-1">
+                  <i data-lucide="star" style="width:12px;height:12px;fill:#facc15;color:#facc15;"></i>
+                  <span class="text-xs font-semibold text-gray-700">4.9</span>
                 </div>
               </div>
+              <!-- Date/time -->
+              <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="p-3 bg-red-50 rounded-xl">
+                  <p class="text-xs text-gray-500 mb-1">Data</p>
+                  <p class="text-sm font-bold text-gray-900">28 Mar 2026</p>
+                </div>
+                <div class="p-3 bg-blue-50 rounded-xl">
+                  <p class="text-xs text-gray-500 mb-1">Hora</p>
+                  <p class="text-sm font-bold text-gray-900">10:30</p>
+                </div>
+              </div>
+              <!-- Status -->
+              <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-xs font-semibold rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  Confirmada
+                </span>
+                <span class="text-xs text-gray-400 font-medium">#AGD-2026-00847</span>
+              </div>
             </div>
-            <div class="border-t border-dashed border-gray-200"></div>
-            <!-- Instructions -->
-            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-              <p class="text-xs font-bold text-amber-800 mb-2">⚠️ Instruções Importantes</p>
-              <ul class="space-y-1">
-                <li class="flex items-start gap-2"><span class="text-amber-600 font-bold text-xs mt-0.5">1.</span><span class="text-xs text-amber-700">Apresente este comprovativo (digital ou impresso) na recepção</span></li>
-                <li class="flex items-start gap-2"><span class="text-amber-600 font-bold text-xs mt-0.5">2.</span><span class="text-xs text-amber-700">Chegue 15 minutos antes da hora marcada</span></li>
-                <li class="flex items-start gap-2"><span class="text-amber-600 font-bold text-xs mt-0.5">3.</span><span class="text-xs text-amber-700">Traga o Cartão de Cidadão e o Cartão de Utente SNS</span></li>
-                <li class="flex items-start gap-2"><span class="text-amber-600 font-bold text-xs mt-0.5">4.</span><span class="text-xs text-amber-700">Em caso de falta, cancele com pelo menos 24h de antecedência</span></li>
-              </ul>
-            </div>
-          </div>
-          <!-- Footer -->
-          <div class="bg-gray-50 border-t border-gray-100 px-4 sm:px-6 py-4">
-            <div class="flex items-center justify-between gap-3">
+
+            <!-- Floating notification -->
+            <div class="absolute -top-4 -right-4 bg-white rounded-xl px-4 py-3 card-shadow border border-gray-100 flex items-center gap-2.5 animate-slide-up">
+              <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#16a34a;"></i>
+              </div>
               <div>
-                <p class="text-[11px] text-gray-400">Documento válido como comprovativo oficial</p>
-                <p class="text-[11px] text-gray-400">MediAgenda · SNS · Ministério da Saúde · Portugal</p>
+                <p class="text-xs font-bold text-gray-800">Consulta confirmada!</p>
+                <p class="text-[11px] text-gray-400">Comprovativo enviado por email</p>
               </div>
-              <div class="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center shrink-0">
-                <div class="grid grid-cols-3 gap-0.5 w-10 h-10">
-                  <div class="rounded-sm bg-gray-700"></div><div class="rounded-sm bg-gray-300"></div><div class="rounded-sm bg-gray-700"></div>
-                  <div class="rounded-sm bg-gray-300"></div><div class="rounded-sm bg-gray-700"></div><div class="rounded-sm bg-gray-300"></div>
-                  <div class="rounded-sm bg-gray-700"></div><div class="rounded-sm bg-gray-300"></div><div class="rounded-sm bg-gray-700"></div>
+            </div>
+
+            <!-- Floating availability badge -->
+            <div class="absolute -bottom-5 -left-6 bg-white rounded-xl px-4 py-3 card-shadow border border-gray-100">
+              <div class="flex items-center gap-2">
+                <div class="flex" style="margin-right:4px;">
+                  <div class="w-7 h-7 rounded-full bg-blue-400 border-2 border-white flex items-center justify-center text-white text-[10px] font-bold" style="margin-right:-6px;z-index:3">AC</div>
+                  <div class="w-7 h-7 rounded-full bg-purple-400 border-2 border-white flex items-center justify-center text-white text-[10px] font-bold" style="margin-right:-6px;z-index:2">BM</div>
+                  <div class="w-7 h-7 rounded-full bg-rose-400 border-2 border-white flex items-center justify-center text-white text-[10px] font-bold" style="z-index:1">CF</div>
+                </div>
+                <div style="margin-left:8px;">
+                  <p class="text-xs font-bold text-gray-800">+240 pacientes</p>
+                  <p class="text-[11px] text-gray-400">esta semana</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Actions -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          <button onclick="window.print()"
-            class="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all duration-150">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
-            Imprimir
-          </button>
-          <button id="btn-pdf" onclick="handleDownloadPDF()"
-            class="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150">
-            <svg id="pdf-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span id="pdf-label">Guardar PDF</span>
-          </button>
-          <button onclick="handleShare()"
-            class="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all duration-150">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Partilhar
-          </button>
-        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- Navigation -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a href="./patient-dashboard.html"
-            class="flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] transition-colors w-full sm:w-auto justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Ir para o Painel
-          </a>
-          <button onclick="resetWizard()"
-            class="flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors w-full sm:w-auto justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Nova Consulta
-          </button>
+  <!-- STATS SECTION -->
+  <section class="bg-[#C0152B] py-10 lg:py-12">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div class="text-center">
+          <p class="text-3xl lg:text-4xl font-extrabold text-white">48.000+</p>
+          <p class="text-sm font-semibold text-red-100 mt-1">Consultas realizadas</p>
+          <p class="text-xs text-red-200/70 mt-0.5">desde 2023</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl lg:text-4xl font-extrabold text-white">96%</p>
+          <p class="text-sm font-semibold text-red-100 mt-1">Taxa de satisfação</p>
+          <p class="text-xs text-red-200/70 mt-0.5">avaliações verificadas</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl lg:text-4xl font-extrabold text-white">&lt; 3 dias</p>
+          <p class="text-sm font-semibold text-red-100 mt-1">Tempo médio de espera</p>
+          <p class="text-xs text-red-200/70 mt-0.5">para consulta urgente</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl lg:text-4xl font-extrabold text-white">28</p>
+          <p class="text-sm font-semibold text-red-100 mt-1">Especialidades médicas</p>
+          <p class="text-xs text-red-200/70 mt-0.5">disponíveis online</p>
         </div>
       </div>
     </div>
+  </section>
 
-  </div>
-</main>
-<script type="module" src="./scripts/marcarConsulta.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-//redirecionar para página de login se o usuario não estiver logado
+  <!-- HOW IT WORKS SECTION -->
+  <section id="como-funciona" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="inline-block px-4 py-1.5 bg-red-50 text-[#C0152B] text-xs font-bold uppercase tracking-widest rounded-full mb-4">Como Funciona</span>
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">Agende a sua consulta em 4 passos simples</h2>
+        <p class="text-gray-500 text-lg">Desenhado para ser fácil para todos — independentemente da sua experiência com tecnologia.</p>
+      </div>
 
-const typeUser = localStorage.getItem('typeUser')
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
 
-if(!typeUser || (typeUser && typeUser != 'paciente')){
-  localStorage.removeItem('Id')
-  localStorage.removeItem('typeUser')
-  window.location.href = './sign-up-login-screen.html'
-}
-
-
-
-// ===== DATA =====
-const STEPS = [
-  { number: 1, label: 'Dados Pessoais' },
-  { number: 2, label: 'Especialidade' },
-  { number: 3, label: 'Médico' },
-  // { number: 4, label: 'Data e Hora' },
-  { number: 4, label: 'Confirmação' },
-];
-
-const SPECIALTIES = [
-  { id: 'sp-cardio', emoji: '', name: 'Cardiologia', slots: 12, description: 'Doenças do coração e vasos sanguíneos' },
-  { id: 'sp-ortho', emoji: '', name: 'Ortopedia', slots: 8, description: 'Ossos, articulações e músculos' },
-  { id: 'sp-neuro', emoji: '', name: 'Neurologia', slots: 5, description: 'Sistema nervoso central e periférico' },
-  { id: 'sp-onco', emoji: '', name: 'Oncologia', slots: 3, description: 'Diagnóstico e tratamento do cancro' },
-  { id: 'sp-ophtalmo', emoji: '', name: 'Oftalmologia', slots: 14, description: 'Saúde ocular e visão' },
-  { id: 'sp-dermato', emoji: '', name: 'Dermatologia', slots: 9, description: 'Pele, cabelo e unhas' },
-  { id: 'sp-pneumo', emoji: '', name: 'Pneumologia', slots: 7, description: 'Pulmões e sistema respiratório' },
-  { id: 'sp-gastro', emoji: '', name: 'Gastroenterologia', slots: 6, description: 'Aparelho digestivo' },
-  { id: 'sp-endo', emoji: '', name: 'Endocrinologia', slots: 4, description: 'Sistema hormonal e metabólico' },
-  { id: 'sp-rheum', emoji: '', name: 'Reumatologia', slots: 11, description: 'Artrite e doenças autoimunes' },
-  { id: 'sp-urol', emoji: '', name: 'Urologia', slots: 8, description: 'Sistema urinário e reprodutor masculino' },
-  { id: 'sp-gyne', emoji: '', name: 'Ginecologia', slots: 10, description: 'Saúde da mulher' },
-  { id: 'sp-psych', emoji: '', name: 'Psiquiatria', slots: 6, description: 'Saúde mental e comportamental' },
-  { id: 'sp-pedia', emoji: '', name: 'Pediatria', slots: 13, description: 'Saúde infantil e juvenil' },
-  { id: 'sp-otorino', emoji: '', name: 'Otorrinolaringologia', slots: 7, description: 'Ouvido, nariz e garganta' },
-  { id: 'sp-nefro', emoji: '', name: 'Nefrologia', slots: 5, description: 'Rins e sistema renal' },
-];
-
-const DOCTORS_BY_SPECIALTY = {
-  'sp-cardio': [
-    { id: 'doc-mf', name: 'Dr. Manuel Ferreira', crm: '45.821', specialty: 'Cardiologia', rating: 4.9, reviews: 312, experience: '18 anos', initials: 'MF', color: 'bg-blue-500', nextSlot: 'Hoje, 14:30', languages: ['Português', 'Inglês'], education: 'Faculdade de Medicina de Lisboa' },
-    { id: 'doc-rs', name: 'Dra. Rosa Santos', crm: '38.440', specialty: 'Cardiologia', rating: 4.8, reviews: 198, experience: '14 anos', initials: 'RS', color: 'bg-rose-500', nextSlot: 'Amanhã, 09:00', languages: ['Português'], education: 'Universidade do Porto' },
-    { id: 'doc-jc', name: 'Dr. João Carvalho', crm: '52.117', specialty: 'Cardiologia', rating: 4.7, reviews: 145, experience: '11 anos', initials: 'JC', color: 'bg-teal-500', nextSlot: '28 Mar, 11:00', languages: ['Português', 'Espanhol'], education: 'Universidade de Coimbra' },
-  ],
-  'sp-ortho': [
-    { id: 'doc-al', name: 'Dr. António Lopes', crm: '41.230', specialty: 'Ortopedia', rating: 4.8, reviews: 267, experience: '20 anos', initials: 'AL', color: 'bg-amber-500', nextSlot: 'Hoje, 15:00', languages: ['Português', 'Inglês'], education: 'Faculdade de Medicina de Lisboa' },
-    { id: 'doc-mv', name: 'Dra. Margarida Vieira', crm: '49.882', specialty: 'Ortopedia', rating: 4.7, reviews: 183, experience: '13 anos', initials: 'MV', color: 'bg-purple-500', nextSlot: 'Amanhã, 10:30', languages: ['Português'], education: 'Universidade do Minho' },
-  ],
-  'default': [
-    { id: 'doc-default-1', name: 'Dr. Carlos Mendes', crm: '44.562', specialty: 'Especialista', rating: 4.8, reviews: 221, experience: '15 anos', initials: 'CM', color: 'bg-indigo-500', nextSlot: 'Hoje, 16:00', languages: ['Português'], education: 'Faculdade de Medicina de Lisboa' },
-    { id: 'doc-default-2', name: 'Dra. Sofia Martins', crm: '51.008', specialty: 'Especialista', rating: 4.6, reviews: 167, experience: '10 anos', initials: 'SM', color: 'bg-emerald-500', nextSlot: 'Amanhã, 09:30', languages: ['Português', 'Francês'], education: 'Universidade de Coimbra' },
-    { id: 'doc-default-3', name: 'Dr. Rui Oliveira', crm: '47.334', specialty: 'Especialista', rating: 4.9, reviews: 289, experience: '17 anos', initials: 'RO', color: 'bg-orange-500', nextSlot: '28 Mar, 14:00', languages: ['Português', 'Inglês'], education: 'Universidade do Porto' },
-  ],
-};
-
-const TIME_SLOTS = [
-  { id: 'ts-0830', time: '08:30', available: true },
-  { id: 'ts-0900', time: '09:00', available: false },
-  { id: 'ts-0930', time: '09:30', available: true },
-  { id: 'ts-1000', time: '10:00', available: true },
-  { id: 'ts-1030', time: '10:30', available: false },
-  { id: 'ts-1100', time: '11:00', available: true },
-  { id: 'ts-1130', time: '11:30', available: true },
-  { id: 'ts-1200', time: '12:00', available: false },
-  { id: 'ts-1400', time: '14:00', available: true },
-  { id: 'ts-1430', time: '14:30', available: true },
-  { id: 'ts-1500', time: '15:00', available: false },
-  { id: 'ts-1530', time: '15:30', available: true },
-  { id: 'ts-1600', time: '16:00', available: true },
-  { id: 'ts-1630', time: '16:30', available: false },
-  { id: 'ts-1700', time: '17:00', available: true },
-  { id: 'ts-1730', time: '17:30', available: true },
-];
-
-const DAYS_PT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const AVAILABLE_DAYS_OFFSET = [1, 2, 3, 5, 6, 8, 9, 10, 12, 13];
-
-// ===== STATE =====
-let currentStep = 1;
-let bookingData = {
-  patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '',
-  specialty: null, doctor: null, date: '', time: '', appointmentId: ''
-};
-let selectedSpecialty = null;
-let selectedDoctor = null;
-let selectedDate = '';
-let selectedTime = '';
-const TODAY = new Date(2026, 2, 26);
-let viewMonth = TODAY.getMonth();
-let viewYear = TODAY.getFullYear();
-
-// ===== HELPERS =====
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const days = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  const date = new Date(y, m - 1, d);
-  return `${days[date.getDay()]}, ${d} de ${months[m - 1]} de ${y}`;
-}
-
-function formatDateShort(dateStr) {
-  if (!dateStr) return '';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}/${y}`;
-}
-
-function getNow() {
-  const now = new Date();
-  return `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()} às ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-}
-
-function getAvailableDates() {
-  const set = new Set();
-  AVAILABLE_DAYS_OFFSET.forEach(offset => {
-    const d = new Date(TODAY);
-    d.setDate(d.getDate() + offset);
-    set.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
-  });
-  return set;
-}
-
-// ===== WIZARD NAVIGATION =====
-function showStep(n) {
-  document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-  document.getElementById(`step-${n}`).classList.add('active');
-  currentStep = n;
-  updateHeader();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updateHeader() {
-  const progress = ((currentStep - 1) / (STEPS.length - 1)) * 100;
-  document.getElementById('progress-bar').style.width = `${progress}%`;
-  document.getElementById('mobile-step-count').textContent = `Passo ${currentStep} de ${STEPS.length}`;
-  document.getElementById('mobile-step-label').textContent = STEPS[currentStep - 1].label;
-  renderDesktopSteps();
-}
-
-function renderDesktopSteps() {
-  const container = document.getElementById('desktop-steps');
-  container.innerHTML = '';
-  STEPS.forEach((step, idx) => {
-    const isCompleted = step.number < currentStep;
-    const isCurrent = step.number === currentStep;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'flex items-center gap-1';
-
-    const circle = document.createElement('div');
-    circle.className = `w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 ${
-      isCompleted ? 'bg-green-500 text-white' : isCurrent ? 'bg-[#C0152B] text-white' : 'bg-gray-200 text-gray-400'
-    }`;
-    if (isCompleted) {
-      circle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-    } else {
-      circle.textContent = step.number;
-    }
-
-    const label = document.createElement('span');
-    label.className = `text-xs font-semibold hidden lg:block ${isCurrent ? 'text-[#C0152B]' : isCompleted ? 'text-green-600' : 'text-gray-400'}`;
-    label.textContent = step.label;
-
-    const inner = document.createElement('div');
-    inner.className = 'flex items-center gap-2';
-    inner.appendChild(circle);
-    inner.appendChild(label);
-    wrapper.appendChild(inner);
-    container.appendChild(wrapper);
-
-    if (idx < STEPS.length - 1) {
-      const line = document.createElement('div');
-      line.className = `w-8 h-px mx-1 ${isCompleted ? 'bg-green-300' : 'bg-gray-200'}`;
-      container.appendChild(line);
-    }
-  });
-}
-
-function goBack() {
-  if (currentStep > 1) showStep(currentStep - 1);
-}
-
-// ===== STEP 1: Patient Data =====
-document.getElementById('patient-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  let valid = true;
-
-  const name = document.getElementById('patientName').value.trim();
-  const nif = document.getElementById('patientNIF').value.trim();
-  const sns = document.getElementById('patientSNS').value.trim();
-  const phone = document.getElementById('patientPhone').value.trim();
-  const email = document.getElementById('patientEmail').value.trim();
-
-  const hideAll = () => {
-    ['patientName','patientNIF','patientSNS','patientPhone','patientEmail'].forEach(f => {
-      document.getElementById(`err-${f}`).classList.add('hidden');
-      document.getElementById(f).classList.remove('border-red-300','focus:ring-red-200');
-    });
-  };
-  hideAll();
-
-  const showErr = (field) => {
-    document.getElementById(`err-${field}`).classList.remove('hidden');
-    document.getElementById(field).classList.add('border-red-300');
-    valid = false;
-  };
-
-  if (!name) showErr('patientName');
-  //if (!/^\d{14}$/.test(nif)) showErr('patientNIF');
-  if (!/^\d{9}$/.test(sns)) showErr('patientSNS');
-  if (!/^[9][0-9]{8}$/.test(phone)) showErr('patientPhone');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) showErr('patientEmail');
-
-  if (valid) {
-    bookingData.patientName = name;
-    bookingData.patientNIF = nif;
-    bookingData.patientSNS = sns;
-    bookingData.patientPhone = phone;
-    bookingData.patientEmail = email;
-    renderSpecialtyGrid('');
-    showStep(2);
-  }
-});
-
-// // ===== STEP 2: Specialty =====
-// function renderSpecialtyGrid(filter) {
-//   const grid = document.getElementById('specialty-grid');
-//   grid.innerHTML = '';
-//   const filtered = SPECIALTIES.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
-
-//   if (filtered.length === 0) {
-//     grid.innerHTML = `<div class="col-span-full py-16 text-center"><p class="text-4xl mb-3">🔍</p><p class="text-gray-500 font-medium">Nenhuma especialidade encontrada para "${filter}"</p></div>`;
-//     return;
-//   }
-
-//   filtered.forEach(sp => {
-//     const isSelected = selectedSpecialty?.id === sp.id;
-//     const btn = document.createElement('button');
-//     btn.className = `text-left p-4 rounded-2xl border-2 transition-all duration-200 hover:-translate-y-0.5 ${
-//       isSelected ? 'border-[#C0152B] bg-red-50 shadow-lg shadow-red-100' : 'border-gray-100 bg-white card-shadow hover:border-red-200'
-//     }`;
-//     btn.innerHTML = `
-//       <div class="text-3xl mb-2">${sp.emoji}</div>
-//       <h3 class="text-sm font-bold text-gray-800 mb-1 leading-tight">${sp.name}</h3>
-//       <p class="text-[11px] text-gray-400 mb-2 leading-tight">${sp.description}</p>
-//       <div class="flex items-center justify-between">
-//         <span class="text-[11px] font-bold ${sp.slots <= 4 ? 'text-amber-600' : 'text-green-600'}">${sp.slots} vagas</span>
-//         ${isSelected ? `<span class="w-4 h-4 rounded-full bg-[#C0152B] flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-white"></span></span>` : ''}
-//       </div>`;
-//     btn.addEventListener('click', () => {
-//       selectedSpecialty = sp;
-//       document.getElementById('btn-specialty-next').disabled = false;
-//       document.getElementById('specialty-selected-indicator').classList.remove('hidden');
-//       document.getElementById('specialty-selected-indicator').classList.add('flex');
-//       document.getElementById('specialty-selected-emoji').textContent = sp.emoji;
-//       document.getElementById('specialty-selected-text').textContent = `${sp.name} · ${sp.slots} vagas disponíveis`;
-//       renderSpecialtyGrid(document.getElementById('specialty-search').value);
-//     });
-//     grid.appendChild(btn);
-//   });
-// }
-
-// document.getElementById('specialty-search').addEventListener('input', function() {
-//   renderSpecialtyGrid(this.value);
-// });
-
-function goNextSpecialty() {
-  if (!selectedSpecialty) return;
-  bookingData.specialty = selectedSpecialty
-  renderDoctors();
-  showStep(3);
-}
-
-// // ===== STEP 3: Doctor =====
-function renderDoctors() {
-  const sp = bookingData.specialty;
-  document.getElementById('doctor-specialty-emoji').textContent = sp?.emoji || '';
-  document.getElementById('doctor-specialty-name').textContent = sp?.name || '';
-  document.getElementById('doctor-specialty-label').textContent = sp?.name || '';
-
-  const doctors = DOCTORS_BY_SPECIALTY[sp?.id] || DOCTORS_BY_SPECIALTY['default'];
-  const list = document.getElementById('doctors-list');
-  list.innerHTML = '';
-
-  doctors.forEach(doctor => {
-    const isSelected = selectedDoctor?.id === doctor.id;
-    const btn = document.createElement('button');
-    btn.className = `w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 ${
-      isSelected ? 'border-[#C0152B] bg-red-50/50 shadow-lg shadow-red-100' : 'border-gray-100 bg-white card-shadow hover:border-red-200 hover:bg-red-50/20'
-    }`;
-    const starsHtml = `<svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
-    const langsHtml = doctor.languages.map(l => `<span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[10px] font-medium rounded-full">${l}</span>`).join('');
-    btn.innerHTML = `
-      <div class="flex items-start gap-4">
-        <div class="w-14 h-14 rounded-2xl ${doctor.color} flex items-center justify-center text-white font-extrabold text-lg shrink-0">${doctor.initials}</div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-start justify-between gap-3 mb-1">
-            <div>
-              <h3 class="text-base font-bold text-gray-900">${doctor.name}</h3>
-              <p class="text-xs text-gray-500">${doctor.specialty} · CRM ${doctor.crm}</p>
+        <!-- Step 1 -->
+        <div class="relative">
+          <div class="hidden lg:block absolute top-10 left-[calc(100%-16px)] w-[calc(100%-32px)] border-t-2 border-dashed border-gray-200" style="z-index:0;"></div>
+          <div class="relative bg-white border border-gray-100 rounded-2xl p-6 card-shadow hover-card group" style="z-index:1;">
+            <span class="inline-block text-5xl font-black text-gray-100 leading-none mb-4 group-hover:text-red-50 transition-colors">01</span>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mb-4">
+              <i data-lucide="user-plus" style="width:22px;height:22px;"></i>
             </div>
-            <div class="flex items-center gap-1 shrink-0">${starsHtml}<span class="text-sm font-bold text-gray-700 font-tabular">${doctor.rating}</span><span class="text-xs text-gray-400">(${doctor.reviews})</span></div>
-          </div>
-          <p class="text-xs text-gray-500 mb-3">${doctor.education}</p>
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-1.5">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-              <span class="text-xs text-gray-500">${doctor.experience} experiência</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span class="text-xs font-semibold text-green-700">Próxima vaga: ${doctor.nextSlot}</span>
-            </div>
-            <div class="flex gap-1">${langsHtml}</div>
+            <h3 class="text-base font-bold text-gray-900 mb-2">Crie a sua conta</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">Registe-se com o seu NIF e número de SNS. O processo leva menos de 2 minutos.</p>
           </div>
         </div>
-        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 transition-all ${
-          isSelected ? 'border-[#C0152B] bg-[#C0152B]' : 'border-gray-300'
-        }">
-          ${isSelected ? '<span class="w-2 h-2 rounded-full bg-white block"></span>' : ''}
+
+        <!-- Step 2 -->
+        <div class="relative">
+          <div class="hidden lg:block absolute top-10 left-[calc(100%-16px)] w-[calc(100%-32px)] border-t-2 border-dashed border-gray-200" style="z-index:0;"></div>
+          <div class="relative bg-white border border-gray-100 rounded-2xl p-6 card-shadow hover-card group" style="z-index:1;">
+            <span class="inline-block text-5xl font-black text-gray-100 leading-none mb-4 group-hover:text-red-50 transition-colors">02</span>
+            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center mb-4">
+              <i data-lucide="stethoscope" style="width:22px;height:22px;"></i>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2">Escolha a especialidade</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">Selecione entre 28 especialidades médicas disponíveis no hospital.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative">
+          <div class="hidden lg:block absolute top-10 left-[calc(100%-16px)] w-[calc(100%-32px)] border-t-2 border-dashed border-gray-200" style="z-index:0;"></div>
+          <div class="relative bg-white border border-gray-100 rounded-2xl p-6 card-shadow hover-card group" style="z-index:1;">
+            <span class="inline-block text-5xl font-black text-gray-100 leading-none mb-4 group-hover:text-red-50 transition-colors">03</span>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mb-4">
+              <i data-lucide="calendar-check" style="width:22px;height:22px;"></i>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2">Selecione data e hora</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">Veja os horários disponíveis em tempo real e escolha o que lhe convém.</p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="relative">
+          <div class="relative bg-white border border-gray-100 rounded-2xl p-6 card-shadow hover-card group" style="z-index:1;">
+            <span class="inline-block text-5xl font-black text-gray-100 leading-none mb-4 group-hover:text-red-50 transition-colors">04</span>
+            <div class="w-12 h-12 rounded-xl bg-green-50 text-green-600 border border-green-100 flex items-center justify-center mb-4">
+              <i data-lucide="file-check" style="width:22px;height:22px;"></i>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2">Receba o comprovativo</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">Obtenha o seu comprovativo digital com número único de agendamento.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="text-center mt-12">
+        <a id="ir-consulta-2" href="#" class="inline-flex items-center gap-2 px-8 py-4 text-base font-bold text-white bg-[#C0152B] rounded-xl hover:bg-[#a01224] active:scale-95 transition-all duration-150 shadow-lg" style="box-shadow:0 8px 24px rgba(192,21,43,0.25)">
+          Começar Agora — É Gratuito
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECIALTIES SECTION -->
+  <section id="especialidades" class="py-20 lg:py-28 bg-gray-50">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+        <div>
+          <span class="inline-block px-4 py-1.5 bg-red-50 text-[#C0152B] text-xs font-bold uppercase tracking-widest rounded-full mb-4">Especialidades</span>
+          <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900">Consultas disponíveis hoje</h2>
+          <p class="text-gray-500 mt-2">Horários actualizados em tempo real</p>
+        </div>
+        
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4" id="specialties-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS SECTION -->
+  <section id="beneficios" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="inline-block px-4 py-1.5 bg-red-50 text-[#C0152B] text-xs font-bold uppercase tracking-widest rounded-full mb-4">Vantagens</span>
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">Porque escolher o MediAgenda?</h2>
+        <p class="text-gray-500 text-lg">Desenvolvido para facilitar o acesso aos cuidados de saúde para todos os cidadãos.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="benefits-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section class="py-20 lg:py-28 bg-gray-50">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="inline-block px-4 py-1.5 bg-red-50 text-[#C0152B] text-xs font-bold uppercase tracking-widest rounded-full mb-4">Testemunhos</span>
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">O que dizem os nossos pacientes</h2>
+        <p class="text-gray-500 text-lg">Avaliações reais de pacientes que utilizaram o sistema.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="testimonials-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="py-20 lg:py-28">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative gradient-primary rounded-3xl overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/5"></div>
+          <div class="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-black/5"></div>
+        </div>
+        <div class="relative px-8 py-16 lg:px-16 lg:py-20 text-center">
+          <h2 class="text-3xl lg:text-5xl font-extrabold text-white mb-6">Marque a sua consulta hoje mesmo</h2>
+          <p class="text-red-100 text-lg lg:text-xl max-w-2xl mx-auto mb-10">
+            Aceda ao sistema de marcação online e evite as filas. Rápido, seguro e disponível 24 horas por dia.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a id="ir-consulta-4" href="#" class="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-[#C0152B] bg-white rounded-xl hover:bg-red-50 active:scale-95 transition-all duration-150 shadow-lg">
+              Agendar Consulta Agora
+              <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+            </a>
+            <a href="tel:+351210000000" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white border-2 border-white/30 rounded-xl hover:bg-white/10 transition-all duration-150">
+              <i data-lucide="phone" style="width:18px;height:18px;"></i>
+              Linha de Apoio: 210 000 000
+            </a>
+          </div>
+          <p class="text-red-200/70 text-sm mt-6">Serviço gratuito · Disponível 24h/7 dias · Sem necessidade de instalação</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer id="contacto" class="bg-gray-900 text-gray-300">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="py-16 grid lg:grid-cols-5 gap-10 border-b border-gray-800">
+      <!-- Brand -->
+      <div class="lg:col-span-2 space-y-5">
+        <div class="flex items-center gap-2.5">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#C0152B,#8b0e1e);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div>
+            <span class="font-bold text-lg text-white block leading-tight">MediAgenda</span>
+            <span class="text-xs text-red-400 font-medium tracking-widest uppercase">Hospital Público</span>
+          </div>
+        </div>
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm">
+          Sistema oficial de marcação de consultas externas do Hospital Público Central. Serviço gratuito para todos os utentes do SNS.
+        </p>
+        <div class="space-y-2.5">
+          <div class="flex items-center gap-2.5 text-sm">
+            <i data-lucide="phone" style="width:15px;height:15px;color:#f87171;flex-shrink:0;"></i>
+            <span>210 000 000 (dias úteis, 8h–20h)</span>
+          </div>
+          <div class="flex items-center gap-2.5 text-sm">
+            <i data-lucide="mail" style="width:15px;height:15px;color:#f87171;flex-shrink:0;"></i>
+            <span>consultas@hospitalpublico.pt</span>
+          </div>
+          <div class="flex items-start gap-2.5 text-sm">
+            <i data-lucide="map-pin" style="width:15px;height:15px;color:#f87171;flex-shrink:0;margin-top:2px;"></i>
+            <span>Av. Prof. Egas Moniz, 1649-035 Lisboa</span>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <a href="#" class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors">
+            <i data-lucide="share-2" style="width:16px;height:16px;"></i>
+          </a>
+          <a href="#" class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors">
+            <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+          </a>
+          <a href="#" class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors">
+            <i data-lucide="camera" style="width:16px;height:16px;"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Serviços -->
+      <div>
+        <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-wider">Serviços</h4>
+        <ul class="space-y-2.5">
+          <li><a href="appointment-booking-flow.html" class="text-sm text-gray-400 hover:text-white transition-colors">Marcação de Consultas</a></li>
+          <li><a href="#especialidades" class="text-sm text-gray-400 hover:text-white transition-colors">Especialidades</a></li>
+          <li><a href="#como-funciona" class="text-sm text-gray-400 hover:text-white transition-colors">Como Funciona</a></li>
+          <li><a href="sign-up-login-screen.html" class="text-sm text-gray-400 hover:text-white transition-colors">Área do Paciente</a></li>
+        </ul>
+      </div>
+
+      <!-- Hospital -->
+      <div>
+        <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-wider">Hospital</h4>
+        <ul class="space-y-2.5">
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Sobre o Hospital</a></li>
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Equipa Médica</a></li>
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Localização</a></li>
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Urgências</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-wider">Legal</h4>
+        <ul class="space-y-2.5">
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Política de Privacidade</a></li>
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Termos de Utilização</a></li>
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Protecção de Dados (RGPD)</a></li>
+          <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Acessibilidade</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+      <p>© 2026 MediAgenda — Hospital Público Central. Todos os direitos reservados.</p>
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          Sistema operacional
+        </span>
+        <span>SNS · Ministério da Saúde</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== LUCIDE ICONS =====
+  
+
+ 
+const tipoUser = localStorage.getItem('typeUser');
+document.getElementById('ir-consulta').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './page-consulta.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+document.getElementById('ir-consulta-1').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './page-consulta.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+document.getElementById('ir-consulta-2').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './page-consulta.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+document.getElementById('ir-consulta-4').addEventListener('click',(e)=>{
+  if(tipoUser === 'paciente') {
+    window.location.href = './page-consulta.html'
+  }else{
+    window.location.href = 'sign-up-login-screen.html'
+  }
+})
+
+if(tipoUser ==='admin'){
+  document.getElementById('painel-admin').classList.remove('hidden')
+  document.getElementById('btn-entrar').classList.add('hidden')
+  window.location.href = './sign-up-login-screen.html'
+}else if(tipoUser ==='medico'){
+  document.getElementById('painel-medico').classList.remove('hidden')
+  document.getElementById('btn-entrar').classList.add('hidden')
+  window.location.href = './sign-up-login-screen.html'
+
+}else if(tipoUser ==='paciente'){
+  document.getElementById('painel-paciente').classList.remove('hidden')
+  document.getElementById('btn-entrar').classList.add('hidden')
+
+}else{
+  document.getElementById('painel-admin').classList.add('hidden')
+  document.getElementById('painel-medico').classList.add('hidden')
+  document.getElementById('painel-paciente').classList.add('hidden')
+  document.getElementById('btn-entrar').classList.remove('hidden')
+
+
+
+}
+
+  // ===== HEADER SCROLL =====
+  const header = document.getElementById('main-header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 12) {
+      header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'border-b', 'border-gray-100');
+      header.classList.remove('bg-transparent');
+    } else {
+      header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'border-b', 'border-gray-100');
+      header.classList.add('bg-transparent');
+    }
+  });
+
+  // ===== MOBILE MENU =====
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  mobileToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('open', menuOpen);
+    const icon = mobileToggle.querySelector('i');
+    icon.setAttribute('data-lucide', menuOpen ? 'x' : 'menu');
+    lucide.createIcons();
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.classList.remove('open');
+      const icon = mobileToggle.querySelector('i');
+      icon.setAttribute('data-lucide', 'menu');
+      lucide.createIcons();
+    });
+  });
+
+  // ===== SPECIALTIES =====
+  const specialties = [
+    { id: 'sp-cardio', emoji: '', name: 'Cardiologia', slots: 12, wait: '2 dias' },
+    { id: 'sp-ortho', emoji: '', name: 'Ortopedia', slots: 8, wait: '4 dias' },
+    { id: 'sp-neuro', emoji: '', name: 'Neurologia', slots: 5, wait: '6 dias' },
+    { id: 'sp-onco', emoji: '', name: 'Oncologia', slots: 3, wait: '3 dias' },
+    { id: 'sp-ophtalmo', emoji: '', name: 'Oftalmologia', slots: 14, wait: '1 dia' },
+    { id: 'sp-dermato', emoji: '', name: 'Dermatologia', slots: 9, wait: '3 dias' },
+    { id: 'sp-pneumo', emoji: '', name: 'Pneumologia', slots: 7, wait: '5 dias' },
+    { id: 'sp-gastro', emoji: '', name: 'Gastroenterologia', slots: 6, wait: '4 dias' },
+    { id: 'sp-endo', emoji: '', name: 'Endocrinologia', slots: 4, wait: '7 dias' },
+    { id: 'sp-rheum', emoji: '', name: 'Reumatologia', slots: 11, wait: '2 dias' },
+    { id: 'sp-urol', emoji: '', name: 'Urologia', slots: 8, wait: '3 dias' },
+    { id: 'sp-gyne', emoji: '', name: 'Ginecologia', slots: 10, wait: '2 dias' },
+  ];
+
+  const specialtiesGrid = document.getElementById('specialties-grid');
+  specialties.forEach(sp => {
+    const isLow = sp.slots <= 4;
+    specialtiesGrid.innerHTML += `
+      <a href="appointment-booking-flow.html" class="group bg-white rounded-2xl p-5 border border-gray-100 card-shadow hover-card text-center block">
+        <h3 class="text-sm font-bold text-gray-800 mb-2 leading-tight">${sp.name}</h3>
+        <div class="space-y-1">
+          <p class="text-xs text-gray-400"><span class="font-bold ${isLow ? 'text-amber-600' : 'text-green-600'}">${sp.slots}</span> vagas</p>
+          <p class="text-[11px] text-gray-400">Espera: ${sp.wait}</p>
+        </div>
+        <div class="mt-3 h-1 rounded-full ${isLow ? 'bg-amber-200' : 'bg-green-200'}">
+          <div class="h-full rounded-full ${isLow ? 'bg-amber-500' : 'bg-green-500'}" style="width:${Math.min(100,(sp.slots/15)*100)}%"></div>
+        </div>
+      </a>`;
+  });
+
+  // ===== BENEFITS =====
+  const benefits = [
+    { icon: 'clock', color: 'text-blue-600 bg-blue-50', title: 'Sem filas de espera', description: 'Agende a qualquer hora do dia, sem precisar de se deslocar ao hospital para marcar consulta.' },
+    { icon: 'map-pin', color: 'text-green-600 bg-green-50', title: 'Acesso remoto total', description: 'Marque a sua consulta de qualquer lugar — em casa, no trabalho ou no telemóvel.' },
+    { icon: 'lock', color: 'text-purple-600 bg-purple-50', title: 'Segurança e privacidade', description: 'Os seus dados de saúde são protegidos com encriptação de nível hospitalar, em conformidade com o RGPD.' },
+    { icon: 'smartphone', color: 'text-rose-600 bg-rose-50', title: 'Funciona em qualquer dispositivo', description: 'Interface optimizada para telemóvel, tablet e computador — sem necessidade de instalar nenhuma aplicação.' },
+    { icon: 'bell', color: 'text-amber-600 bg-amber-50', title: 'Lembretes automáticos', description: 'Receba notificações por SMS e email antes da sua consulta para não se esquecer.' },
+    { icon: 'file-text', color: 'text-teal-600 bg-teal-50', title: 'Comprovativo digital', description: 'Gere um comprovativo com código único de agendamento, válido para apresentar no hospital.' },
+  ];
+
+  const benefitsGrid = document.getElementById('benefits-grid');
+  benefits.forEach(b => {
+    const [textColor, bgColor] = b.color.split(' ');
+    benefitsGrid.innerHTML += `
+      <div class="group p-6 rounded-2xl border border-gray-100 bg-white card-shadow hover-card">
+        <div class="w-12 h-12 rounded-xl ${b.color} flex items-center justify-center mb-4">
+          <i data-lucide="${b.icon}" style="width:22px;height:22px;"></i>
+        </div>
+        <h3 class="text-base font-bold text-gray-900 mb-2">${b.title}</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">${b.description}</p>
+      </div>`;
+  });
+
+  // ===== TESTIMONIALS =====
+  const testimonials = [
+    { name: 'Ana Beatriz Sousa', age: 67, location: 'Lisboa', specialty: 'Cardiologia', rating: 5, text: 'Nunca pensei que fosse tão fácil. Marcei a consulta em 5 minutos, recebi o comprovativo no email e fui ao hospital na data certa. Excelente serviço!', initials: 'AS', color: 'bg-rose-400' },
+    { name: 'Carlos Manuel Rodrigues', age: 45, location: 'Porto', specialty: 'Ortopedia', rating: 5, text: 'Trabalho por turnos e nunca conseguia ligar para o hospital dentro do horário. Com o MediAgenda, marquei a minha consulta às 23h. Muito prático.', initials: 'CR', color: 'bg-blue-500' },
+    { name: 'Fátima Conceição Lopes', age: 52, location: 'Setúbal', specialty: 'Endocrinologia', rating: 5, text: 'O sistema é muito simples e intuitivo. Consegui marcar a consulta para a minha mãe sem qualquer dificuldade. O comprovativo chegou imediatamente.', initials: 'FL', color: 'bg-purple-500' },
+  ];
+
+  const testimonialsGrid = document.getElementById('testimonials-grid');
+  testimonials.forEach(t => {
+    const stars = Array.from({length: t.rating}).map(() => `<i data-lucide="star" style="width:14px;height:14px;fill:#facc15;color:#facc15;"></i>`).join('');
+    testimonialsGrid.innerHTML += `
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 card-shadow">
+        <i data-lucide="quote" style="width:28px;height:28px;color:#fee2e2;margin-bottom:16px;display:block;"></i>
+        <div class="flex gap-0.5 mb-4">${stars}</div>
+        <p class="text-gray-600 text-sm leading-relaxed mb-6 italic">&ldquo;${t.text}&rdquo;</p>
+        <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+          <div class="w-10 h-10 rounded-full ${t.color} flex items-center justify-center text-white font-bold text-sm">${t.initials}</div>
+          <div>
+            <p class="text-sm font-bold text-gray-800">${t.name}</p>
+            <p class="text-xs text-gray-400">${t.age} anos · ${t.location} · ${t.specialty}</p>
+          </div>
         </div>
       </div>`;
-    btn.addEventListener('click', () => {
-      selectedDoctor = doctor;
-      document.getElementById('btn-doctor-next').disabled = false;
-      renderDoctors();
-    });
-    list.appendChild(btn);
-  });
-}
-
-function goNextDoctor() {
-  
-  if (!selectedDoctor) return;
-  bookingData.doctor = selectedDoctor;
-  initDateTime();
-  renderConfirmation();
-}
-
-// ===== STEP 4: DateTime =====
-function initDateTime() {
-  const doc = bookingData.doctor;
-  const avatar = document.getElementById('dt-doctor-avatar');
-  avatar.className = `w-10 h-10 rounded-xl ${doc?.color || 'bg-gray-400'} flex items-center justify-center text-white font-bold text-sm`;
-  avatar.textContent = doc?.initials || '';
-  document.getElementById('dt-doctor-name').textContent = doc?.name || '';
-  selectedDate = '';
-  selectedTime = '';
-  renderCalendar();
-}
-
-function renderCalendar() {
-  const monthLabel = document.getElementById('cal-month-label');
-  monthLabel.textContent = `${MONTHS_PT[viewMonth]} ${viewYear}`;
-
-  const headers = document.getElementById('cal-day-headers');
-  headers.innerHTML = '';
-  DAYS_PT.forEach(d => {
-    const el = document.createElement('div');
-    el.className = 'text-center text-xs font-bold text-gray-400 py-1';
-    el.textContent = d;
-    headers.appendChild(el);
   });
 
-  const grid = document.getElementById('cal-grid');
-  grid.innerHTML = '';
-  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const availableDates = getAvailableDates();
-
-  for (let i = 0; i < firstDay; i++) {
-    grid.appendChild(document.createElement('div'));
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const isAvailable = availableDates.has(dateStr);
-    const isSelected = selectedDate === dateStr;
-    const isToday = day === TODAY.getDate() && viewMonth === TODAY.getMonth() && viewYear === TODAY.getFullYear();
-    const isPast = new Date(viewYear, viewMonth, day) < TODAY;
-
-    const btn = document.createElement('button');
-    btn.style.aspectRatio = '1';
-    let cls = 'relative rounded-xl text-sm font-semibold transition-all duration-150 flex items-center justify-center ';
-    if (isSelected) cls += 'bg-[#C0152B] text-white shadow-md shadow-red-200 ';
-    else if (isAvailable && !isPast) cls += 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 cursor-pointer ';
-    else cls += 'text-gray-300 cursor-not-allowed ';
-    if (isToday && !isSelected) cls += 'ring-2 ring-[#C0152B] ring-offset-1 ';
-    btn.className = cls;
-    btn.disabled = !isAvailable || isPast;
-
-    let inner = `<span>${day}</span>`;
-    if (isAvailable && !isPast && !isSelected) {
-      inner += `<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-green-500"></span>`;
-    }
-    btn.innerHTML = inner;
-
-    btn.addEventListener('click', () => {
-      if (!isAvailable || isPast) return;
-      selectedDate = dateStr;
-      selectedTime = '';
-      renderCalendar();
-      showTimeSlots();
-    });
-    grid.appendChild(btn);
-  }
-}
-
-function showTimeSlots() {
-  const empty = document.getElementById('time-empty-state');
-  const container = document.getElementById('time-slots-container');
-  const title = document.getElementById('time-panel-title');
-
-  if (!selectedDate) {
-    empty.classList.remove('hidden');
-    container.classList.add('hidden');
-    title.textContent = 'Selecione primeiro uma data';
-    return;
-  }
-
-  empty.classList.add('hidden');
-  container.classList.remove('hidden');
-  title.textContent = `Horários — ${formatDateShort(selectedDate)}`;
-
-  const morning = TIME_SLOTS.filter(s => parseInt(s.time) < 13);
-  const afternoon = TIME_SLOTS.filter(s => parseInt(s.time) >= 13);
-
-  renderSlots('morning-slots', morning);
-  renderSlots('afternoon-slots', afternoon);
-
-  const infoEl = document.getElementById('time-selected-info');
-  if (selectedTime) {
-    infoEl.classList.remove('hidden');
-    document.getElementById('time-selected-text').textContent = `Horário seleccionado: ${selectedTime} de ${formatDateShort(selectedDate)}`;
-  } else {
-    infoEl.classList.add('hidden');
-  }
-
-  updateDateTimeSummary();
-  document.getElementById('btn-dt-next').disabled = !(selectedDate && selectedTime);
-}
-
-function renderSlots(containerId, slots) {
-  const el = document.getElementById(containerId);
-  el.innerHTML = '';
-  slots.forEach(slot => {
-    const btn = document.createElement('button');
-    const isSelected = selectedTime === slot.time;
-    btn.className = `py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 ${
-      isSelected ? 'bg-[#C0152B] text-white shadow-md shadow-red-200'
-      : slot.available ? 'bg-gray-50 text-gray-700 border border-gray-200 hover:border-[#C0152B] hover:bg-red-50 hover:text-[#C0152B]'
-      : 'bg-gray-50 text-gray-300 cursor-not-allowed line-through'
-    }`;
-    btn.textContent = slot.time;
-    btn.disabled = !slot.available;
-    btn.addEventListener('click', () => {
-      if (!slot.available) return;
-      selectedTime = slot.time;
-      showTimeSlots();
-    });
-    el.appendChild(btn);
-  });
-}
-
-function updateDateTimeSummary() {
-  const summary = document.getElementById('dt-summary');
-  if (selectedDate && selectedTime) {
-    summary.classList.remove('hidden');
-    summary.classList.add('flex');
-    document.getElementById('dt-sum-emoji').textContent = bookingData.specialty?.emoji || '';
-    document.getElementById('dt-sum-specialty').textContent = bookingData.specialty?.name || '';
-    document.getElementById('dt-sum-doctor').textContent = bookingData.doctor?.name || '';
-    document.getElementById('dt-sum-datetime').textContent = `${formatDateShort(selectedDate)} às ${selectedTime}`;
-  } else {
-    summary.classList.add('hidden');
-    summary.classList.remove('flex');
-  }
-}
-
-function prevMonth() {
-  if (viewMonth === 0) { viewMonth = 11; viewYear--; }
-  else viewMonth--;
-  renderCalendar();
-}
-
-function nextMonth() {
-  if (viewMonth === 11) { viewMonth = 0; viewYear++; }
-  else viewMonth++;
-  renderCalendar();
-}
-
-function goNextDateTime() {
-  if (!selectedDate || !selectedTime) return;
-  bookingData.date = selectedDate;
-  bookingData.time = selectedTime;
-  bookingData.appointmentId = 'AGD-2026-00' + String(4 * 213 + 847).slice(0, 3);
-  renderConfirmation();
-  showStep(5);
-}
-
-// ===== STEP 5: Confirmation =====
-function renderConfirmation() {
-  document.getElementById('confirm-email').textContent = bookingData.patientEmail || 'paciente@mediagenda.pt';
-  document.getElementById('confirm-id').textContent = '#' + (bookingData.appointmentId || 'AGD-2026-00847');
-  document.getElementById('confirm-emitted').textContent = `Emitido em ${getNow()}`;
-  document.getElementById('r-name').textContent = bookingData.patientName || 'Ana Beatriz Sousa';
-  document.getElementById('r-nif').textContent = bookingData.patientNIF || '234 567 891';
-  document.getElementById('r-phone').textContent = bookingData.patientPhone || '912 345 678';
-  document.getElementById('r-sns').textContent = bookingData.patientSNS || '987 654 321';
-  document.getElementById('r-specialty').textContent = `${bookingData.specialty?.emoji || ''} ${bookingData.specialty?.name || 'Cardiologia'}`;
-  document.getElementById('r-doctor').textContent = bookingData.doctor?.nome || 'Dr. Manuel Ferreira';
-  document.getElementById('r-crm').textContent = `CRM ${bookingData.doctor?.crm || '45.821'}`;
-  document.getElementById('r-date').textContent = bookingData.date ? formatDate(bookingData.date) : 'Sexta-feira, 28 de Março de 2026';
-  document.getElementById('r-time').textContent = bookingData.time || '10:30';
-  document.getElementById('r-location-specialty').textContent = bookingData.specialty?.name || 'Cardiologia';
-}
-
-async function handleDownloadPDF() {
-  const btn = document.getElementById('btn-pdf');
-  const icon = document.getElementById('pdf-icon');
-  const label = document.getElementById('pdf-label');
-
-  btn.disabled = true;
-  icon.innerHTML = `<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/>`;
-  icon.classList.add('animate-spin');
-  label.textContent = 'A gerar PDF...';
-
-  try {
-    // 1. Pegamos as instâncias globais injetadas no navegador pelas tags <script>
-    const html2canvas = window.html2canvas;
-    const { jsPDF } = window.jspdf;
-
-    // Validação de segurança caso as bibliotecas falhem ao carregar no HTML
-    if (!html2canvas || !jsPDF) {
-      throw new Error("Bibliotecas de PDF não foram carregadas corretamente.");
-    }
-
-    const receipt = document.getElementById('receipt');
-    const canvas = await html2canvas(receipt, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth - 20;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, Math.min(imgHeight, pageHeight - 20));
-    pdf.save(`comprovativo-${bookingData.appointmentId || 'AGD-2026-00847'}.pdf`);
-  } catch (err) {
-    console.error('PDF generation failed:', err);
-    alert('Não foi possível gerar o PDF. Por favor, use a opção Imprimir.');
-  } finally {
-    btn.disabled = false;
-    icon.classList.remove('animate-spin');
-    icon.innerHTML = `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>`;
-    label.textContent = 'Guardar PDF';
-  }
-}
-
-function handleShare() {
-  const id = bookingData.appointmentId || 'AGD-2026-00847';
-  if (navigator.share) {
-    navigator.share({ title: 'Comprovativo MediAgenda', text: `Consulta #${id}` });
-  } else {
-    navigator.clipboard.writeText(`Consulta MediAgenda #${id}`).then(() => alert('Copiado para a área de transferência!'));
-  }
-}
-
-// function resetWizard() {
-//   bookingData = { patientName: '', patientNIF: '', patientSNS: '', patientPhone: '', patientEmail: '', specialty: null, doctor: null, date: '', time: '', appointmentId: '' };
-//   selectedSpecialty = null;
-//   selectedDoctor = null;
-//   selectedDate = '';
-//   selectedTime = '';
-//   viewMonth = TODAY.getMonth();
-//   viewYear = TODAY.getFullYear();
-//   document.getElementById('patient-form').reset();
-//   document.getElementById('patientName').value = 'Ana Beatriz Sousa';
-//   document.getElementById('patientNIF').value = '234567891';
-//   document.getElementById('patientSNS').value = '987654321';
-//   document.getElementById('patientPhone').value = '912345678';
-//   document.getElementById('patientEmail').value = 'paciente@mediagenda.pt';
-//   showStep(1);
-// }
-
-// ===== INIT =====
-renderDesktopSteps();
-updateHeader();
-//renderSpecialtyGrid('');
+  // Re-render lucide icons after dynamic content
+  lucide.createIcons();
 </script>
 </body>
 </html>
