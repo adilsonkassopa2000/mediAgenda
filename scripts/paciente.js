@@ -261,7 +261,7 @@ async function renderVisao() {
       return consulta.vagaId === vg.Id
     })
 
-    const cfg = statusConfig[estados.find(estado => estado.Id === prConsulta.estadoId).estado];
+    const cfg = statusConfig[estados.find(estado => estado.Id === prConsulta.estadoId)?.estado];
 
     
 
